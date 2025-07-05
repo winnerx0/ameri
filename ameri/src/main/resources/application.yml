@@ -1,0 +1,20 @@
+spring:
+    application:
+        name: ameri
+    datasource:
+        url: jdbc:postgresql://localhost:5432/ameri
+        username: postgres 
+        password: 2007
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+logging:
+    level:
+         com:
+             winnerx0: DEBUG
+jwt:
+    secretKey: "qks12vBcAuV1GyI3tFcEFdQZwPIxOb3Loxjc0wo0tv0="
+
