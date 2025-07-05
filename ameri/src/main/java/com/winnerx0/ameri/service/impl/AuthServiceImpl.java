@@ -1,19 +1,7 @@
 package com.winnerx0.ameri.service.impl;
 
-import com.winnerx0.ameri.dto.UserDTO;
-import com.winnerx0.ameri.dto.request.LoginRequest;
-import com.winnerx0.ameri.dto.request.RegisterRequest;
-import com.winnerx0.ameri.dto.response.AuthResponse;
-import com.winnerx0.ameri.model.RefreshToken;
-import com.winnerx0.ameri.model.User;
-import com.winnerx0.ameri.repository.UserRepository;
-import com.winnerx0.ameri.service.AuthService;
-import com.winnerx0.ameri.repository.RefreshTokenRepository;
-
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,10 +9,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
+import com.winnerx0.ameri.dto.UserDTO;
+import com.winnerx0.ameri.dto.request.LoginRequest;
+import com.winnerx0.ameri.dto.request.RegisterRequest;
+import com.winnerx0.ameri.dto.response.AuthResponse;
+import com.winnerx0.ameri.model.RefreshToken;
+import com.winnerx0.ameri.model.User;
+import com.winnerx0.ameri.repository.RefreshTokenRepository;
+import com.winnerx0.ameri.repository.UserRepository;
+import com.winnerx0.ameri.service.AuthService;
 import com.winnerx0.ameri.utils.JwtUtils;
+
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -76,8 +75,6 @@ public class AuthServiceImpl implements AuthService {
 
         user.setRefreshToken(token);
 
-        refreshTokenRepository.deleteByUser(user);
-
         userRepository.save(user);
 
         log.info("user {}", user.toString());
@@ -99,8 +96,6 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = jwtUtils.generateAccessToken(user.getEmail());
         String refreshToken = jwtUtils.generateRefreshToken(user.getId());
-
-        refreshTokenRepository.deleteByUser(user);
 
         RefreshToken token = new RefreshToken();
         token.setToken(refreshToken);
