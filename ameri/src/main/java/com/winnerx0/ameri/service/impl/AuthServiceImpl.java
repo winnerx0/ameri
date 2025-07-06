@@ -3,6 +3,8 @@ package com.winnerx0.ameri.service.impl;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
+import com.winnerx0.ameri.dto.response.TokenResponse;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -109,5 +111,21 @@ public class AuthServiceImpl implements AuthService {
         log.info("user {}", user.toString());
 
         return new AuthResponse<>("Login Successful", accessToken, refreshToken);
+    }
+
+    @Override
+    public TokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenRequest.getRefreshToken()).orElseThrow(() -> new IllegalArgumentException("Invalid Refresh Token"));
+
+        User user = refreshToken.getUser();
+
+        if(refreshToken.getExpirationDate().isBefore(LocalDate.now())){
+            refreshTokenRepository.delete(refreshToken);
+            throw new IllegalArgumentException("Refresh token has expired");
+        }
+        String accessToken = jwtUtils.generateAccessToken(user.getEmail());
+
+        return new TokenResponse(accessToken, refreshTokenRequest.getRefreshToken());
     }
 }

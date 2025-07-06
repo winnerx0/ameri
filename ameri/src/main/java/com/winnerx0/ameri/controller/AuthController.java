@@ -2,8 +2,10 @@ package com.winnerx0.ameri.controller;
 
 import com.winnerx0.ameri.dto.UserDTO;
 import com.winnerx0.ameri.dto.request.LoginRequest;
+import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
 import com.winnerx0.ameri.dto.request.RegisterRequest;
 import com.winnerx0.ameri.dto.response.AuthResponse;
+import com.winnerx0.ameri.dto.response.TokenResponse;
 import com.winnerx0.ameri.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -31,5 +33,10 @@ public class AuthController {
     public ResponseEntity<AuthResponse<UserDTO>> login(@Valid @RequestBody LoginRequest loginRequest) {
 
         return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @PostMapping("refresh-token")
+    public ResponseEntity<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
 }

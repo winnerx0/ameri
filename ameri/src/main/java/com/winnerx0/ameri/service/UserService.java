@@ -1,12 +1,14 @@
 package com.winnerx0.ameri.service;
 
+import com.winnerx0.ameri.dto.UserDTO;
 import com.winnerx0.ameri.dto.request.UpdateUserRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
 import com.winnerx0.ameri.dto.response.UserResponse;
 
 public interface UserService {
 
-    UserResponse updateUserDetails(String email, UpdateUserRequest updateUserRequest);
+    UserResponse<UserDTO> getCurrentUser(String email);
 
-    TokenResponse refreshToken(String token);
+    UserResponse<?> updateUserDetails(String email, UpdateUserRequest updateUserRequest);
+
 }

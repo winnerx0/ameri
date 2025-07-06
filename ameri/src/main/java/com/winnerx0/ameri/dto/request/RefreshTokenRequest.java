@@ -1,4 +1,4 @@
-package com.winnerx0.ameri.dto.response;
+package com.winnerx0.ameri.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse<T> {
+public class RefreshTokenRequest {
 
-    private T data;
-
-    private String message;
+    private String refreshToken;
 }

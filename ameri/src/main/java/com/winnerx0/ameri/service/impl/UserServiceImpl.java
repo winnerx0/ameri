@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.service.impl;
 
+import com.winnerx0.ameri.dto.UserDTO;
 import com.winnerx0.ameri.dto.request.UpdateUserRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
 import com.winnerx0.ameri.dto.response.UserResponse;
@@ -20,18 +21,28 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    private JwtUtils jwtUtils;
-
-    public UserServiceImpl(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, JwtUtils jwtUtils) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.refreshTokenRepository = refreshTokenRepository;
-        this.jwtUtils = jwtUtils;
     }
 
     @Override
-    public UserResponse updateUserDetails(String email, UpdateUserRequest updateUserRequest){
+    public UserResponse<UserDTO> getCurrentUser(String email) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(user.getEmail());
+        userDTO.setGender(user.getGender());
+        userDTO.setWeight(user.getWeight());
+        userDTO.setHeight(user.getHeight());
+        userDTO.setHealthConditions(user.getHealthConditions());
+        userDTO.setUsername(user.getName());
+        userDTO.setDateOfBirth(user.getDateOfBirth());
+        return new UserResponse<>(userDTO, null);
+    }
+
+    @Override
+    public UserResponse<?> updateUserDetails(String email, UpdateUserRequest updateUserRequest){
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
@@ -40,23 +51,9 @@ public class UserServiceImpl implements UserService {
         user.setHealthConditions(updateUserRequest.getHealthConditions());
         user.setWeight(updateUserRequest.getWeight());
         user.setHeight(updateUserRequest.getHeight());
+        user.setDateOfBirth(updateUserRequest.getDateOfBirth());
         userRepository.save(user);
-        return new UserResponse("Updated Successfully");
+        return new UserResponse<>(null, "Updated Successfully");
     }
 
-    @Override
-    public TokenResponse refreshToken(String token) {
-
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new IllegalArgumentException("Invalid Refresh Token"));
-
-        User user = refreshToken.getUser();
-
-       if(refreshToken.getExpirationDate().isBefore(LocalDate.now())){
-           refreshTokenRepository.delete(refreshToken);
-           throw new IllegalArgumentException("Refresh token has expired");
-       }
-        String accessToken = jwtUtils.generateAccessToken(user.getEmail());
-
-        return new TokenResponse(accessToken, token);
-    }
 }

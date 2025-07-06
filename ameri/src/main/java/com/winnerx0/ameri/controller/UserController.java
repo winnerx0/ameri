@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.controller;
 
+import com.winnerx0.ameri.dto.UserDTO;
 import com.winnerx0.ameri.dto.request.UpdateUserRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
 import com.winnerx0.ameri.dto.response.UserResponse;
@@ -23,15 +24,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PutMapping("/me")
-//    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserResponse> updateUserDetails(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UpdateUserRequest updateUserRequest){
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse<UserDTO>> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
 
-        return ResponseEntity.ok(userService.updateUserDetails(userDetails.getUsername(), updateUserRequest));
+        return ResponseEntity.ok(userService.getCurrentUser(userDetails.getUsername()));
     }
 
-    @GetMapping("refresh-token")
-    public ResponseEntity<TokenResponse> refreshToken(@RequestParam String token){
-        return ResponseEntity.ok(userService.refreshToken(token));
+    @PutMapping("/me")
+//    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<UserResponse<?>> updateUserDetails(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UpdateUserRequest updateUserRequest){
+
+        return ResponseEntity.ok(userService.updateUserDetails(userDetails.getUsername(), updateUserRequest));
     }
 }
