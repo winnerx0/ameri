@@ -36,8 +36,6 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        log.info("auth {}", request.getRequestURI());
-
         if (request.getRequestURI().startsWith("/api/v1/auth")) {
 
             filterChain.doFilter(request, response);
@@ -74,8 +72,5 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-
-        log.info("done");
-
     }
 }

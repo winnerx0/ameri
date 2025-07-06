@@ -1,21 +1,19 @@
-package com.winnerx0.ameri.dto;
+package com.winnerx0.ameri.dto.request;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.winnerx0.ameri.enums.Gender;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UpdateUserRequest {
 
     private String username;
 

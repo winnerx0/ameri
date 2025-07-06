@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("user {}", user.toString());
 
-        return new AuthResponse<>("Registration Successful", UserDTO.builder().username(user.getName()).email(user.getEmail()).build(), accessToken, refreshToken);
+        return new AuthResponse<>("Registration Successful", accessToken, refreshToken);
     }
 
     @Override
@@ -108,6 +108,6 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("user {}", user.toString());
 
-        return new AuthResponse<>("Login Successful", UserDTO.builder().username(user.getName()).email(user.getEmail()).build(), accessToken, refreshToken);
+        return new AuthResponse<>("Login Successful", accessToken, refreshToken);
     }
 }

@@ -1,6 +1,10 @@
 package com.winnerx0.ameri.service;
 
+import com.winnerx0.ameri.dto.UserDTO;
+import com.winnerx0.ameri.dto.request.UpdateUserRequest;
+import com.winnerx0.ameri.model.User;
 import com.winnerx0.ameri.repository.UserRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +22,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User does not exist"));
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
