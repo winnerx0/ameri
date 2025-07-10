@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 
 import java.util.HashMap;

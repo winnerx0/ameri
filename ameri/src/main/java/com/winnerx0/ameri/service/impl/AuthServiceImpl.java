@@ -64,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
         user.setWeight(registerRequest.getWeight());
         user.setHeight(registerRequest.getHeight());
         user.setGender(registerRequest.getGender());
+        user.setEnabled(false);
         user.setHealthConditions(registerRequest.getHealthConditions());
         user.setRole("ROLE_USER");
         User savedUser = userRepository.save(user);
@@ -79,14 +80,16 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        log.info("user {}", user.toString());
+        log.info("user {}", user);
 
-        return new AuthResponse<>("Registration Successful", accessToken, refreshToken);
+        return new AuthResponse<>("Registration Successful, please check your email to verify your account", accessToken, refreshToken);
     }
 
     @Override
     @Transactional
     public AuthResponse<UserDTO> login(LoginRequest loginRequest) {
+
+        log.info("user {}", loginRequest.getEmail());
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found"));
 

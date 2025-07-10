@@ -11,10 +11,25 @@ spring:
         hibernate:
             ddl-auto: update
         show-sql: true
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: ${GOOGLE_CLIENT_ID}
+                        client-secret: ${GOOGLE_CLIENT_SECRET}
+
 logging:
     level:
          com:
-             winnerx0: DEBUG
+             winnerx0:
+                 - INFO
+                 - DEBUG
+                 - ERROR
+                 - FATAL
+                 - WARN
+                 - TRACE
 jwt:
     secretKey: "qks12vBcAuV1GyI3tFcEFdQZwPIxOb3Loxjc0wo0tv0="
+
 
