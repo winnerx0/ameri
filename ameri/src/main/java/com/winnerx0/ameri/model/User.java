@@ -33,24 +33,24 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private JsonNode healthConditions;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private int weight;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private int height;
 
     private boolean enabled;

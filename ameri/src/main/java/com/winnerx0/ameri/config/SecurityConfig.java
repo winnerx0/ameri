@@ -1,8 +1,8 @@
-package com.winnerx0.ameri.security;
+package com.winnerx0.ameri.config;
 
 import java.util.List;
+import java.util.Map;
 
-import com.winnerx0.ameri.config.OauthConfig;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizationSuccessHandler;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -50,6 +53,7 @@ public class SecurityConfig {
                 .oauth2Login(auth -> auth
                         .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/authorize"))
 //                        .redirectionEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/oauth2/callback/*"))
+                        .successHandler(oauthConfig.successHandler())
                         .userInfoEndpoint(user -> user
                                 .userService(oauthConfig.oauth2UserService())
                                 .oidcUserService(oauthConfig.oidcOauth2UserService())))

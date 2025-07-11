@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
+import com.winnerx0.ameri.service.EmailService;
+import com.winnerx0.ameri.service.OtpService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,13 +38,23 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationProvider authenticationProvider;
     private final JwtUtils jwtUtils;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final EmailService emailService;
+    private final OtpService otpService;
 
-    public  AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, JwtUtils jwtUtils, RefreshTokenRepository refreshTokenRepository) {
+    public  AuthServiceImpl(UserRepository userRepository,
+                            PasswordEncoder passwordEncoder,
+                            AuthenticationProvider authenticationProvider,
+                            JwtUtils jwtUtils,
+                            RefreshTokenRepository refreshTokenRepository,
+                            EmailService emailService,
+                            OtpService otpService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationProvider = authenticationProvider;
         this.jwtUtils = jwtUtils;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.emailService = emailService;
+        this.otpService = otpService;
     }
 
     @Override
@@ -79,6 +91,8 @@ public class AuthServiceImpl implements AuthService {
         user.setRefreshToken(token);
 
         userRepository.save(user);
+
+        emailService.sendMail(user.getEmail(), "Verify your Ameri account", String.format("Thank you for signing up to Ameri please verify your account using the OTP %d", otpService.generateToken()));
 
         log.info("user {}", user);
 

@@ -30,6 +30,20 @@ logging:
                  - WARN
                  - TRACE
 jwt:
-    secretKey: "qks12vBcAuV1GyI3tFcEFdQZwPIxOb3Loxjc0wo0tv0="
+    secretKey: qks12vBcAuV1GyI3tFcEFdQZwPIxOb3Loxjc0wo0tv0=
+
+cloudinary:
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+
+gemini:
+    api-key: ${GEMINI_API_KEY}
+
+email:
+    sender:
+        host: smtp.gmail.com
+        debug: true
+        user: ${GMAIL_USER}
+        password: ${GMAIL_PASSWORD}
 
 
