@@ -1,10 +1,13 @@
 package com.winnerx0.ameri.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
+import com.winnerx0.ameri.model.Otp;
+import com.winnerx0.ameri.repository.OtpRepository;
 import com.winnerx0.ameri.service.EmailService;
 import com.winnerx0.ameri.service.OtpService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -39,22 +42,19 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
     private final RefreshTokenRepository refreshTokenRepository;
     private final EmailService emailService;
-    private final OtpService otpService;
 
     public  AuthServiceImpl(UserRepository userRepository,
                             PasswordEncoder passwordEncoder,
                             AuthenticationProvider authenticationProvider,
                             JwtUtils jwtUtils,
                             RefreshTokenRepository refreshTokenRepository,
-                            EmailService emailService,
-                            OtpService otpService) {
+                            EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationProvider = authenticationProvider;
         this.jwtUtils = jwtUtils;
         this.refreshTokenRepository = refreshTokenRepository;
         this.emailService = emailService;
-        this.otpService = otpService;
     }
 
     @Override
@@ -84,19 +84,19 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = jwtUtils.generateAccessToken(savedUser.getEmail());
         String refreshToken = jwtUtils.generateRefreshToken(savedUser.getId());
 
-        RefreshToken token = new RefreshToken();
-        token.setToken(refreshToken);
-        token.setExpirationDate(LocalDate.now().plusDays(7));
+        RefreshToken rt = new RefreshToken();
+        rt.setToken(refreshToken);
+        rt.setExpirationDate(LocalDate.now().plusDays(7));
 
-        user.setRefreshToken(token);
+        user.setRefreshToken(rt);
 
         userRepository.save(user);
 
-        emailService.sendMail(user.getEmail(), "Verify your Ameri account", String.format("Thank you for signing up to Ameri please verify your account using the OTP %d", otpService.generateToken()));
+        emailService.sendVerificationToken(user.getEmail());
 
         log.info("user {}", user);
 
-        return new AuthResponse<>("Registration Successful, please check your email to verify your account", accessToken, refreshToken);
+        return new AuthResponse<>("Registration Successful, please check your email to verify your account", null, null);
     }
 
     @Override
@@ -124,8 +124,6 @@ public class AuthServiceImpl implements AuthService {
         user.setRefreshToken(token);
 
         userRepository.save(user);
-
-        log.info("user {}", user.toString());
 
         return new AuthResponse<>("Login Successful", accessToken, refreshToken);
     }

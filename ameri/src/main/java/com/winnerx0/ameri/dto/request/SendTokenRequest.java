@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshTokenRequest {
+public class SendTokenRequest {
 
-    @NotBlank(message = "Refresh token required")
-    private String refreshToken;
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email required")
+    private String email;
 }

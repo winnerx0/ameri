@@ -2,6 +2,7 @@ package com.winnerx0.ameri.controller;
 
 import com.winnerx0.ameri.dto.request.MealImageRequest;
 import com.winnerx0.ameri.service.MealService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,8 @@ public class MealController {
         this.mealService = mealService;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<String> uploadMealImage(@ModelAttribute MealImageRequest mealImageRequest){
+    @PostMapping()
+    public ResponseEntity<String> uploadMealImage(@Valid  @ModelAttribute MealImageRequest mealImageRequest){
         mealService.uploadPhoto(mealImageRequest.getFile());
         return ResponseEntity.ok("Meal Saved Successfully");
     }

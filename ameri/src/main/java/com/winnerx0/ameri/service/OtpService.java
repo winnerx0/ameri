@@ -4,5 +4,5 @@ public interface OtpService {
 
     Integer generateToken();
 
-    boolean verifyOTP(String otp, String email);
+    void verifyOTP(Integer otp, String email);
 }
