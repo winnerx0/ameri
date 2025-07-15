@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AIRequest {
+public class NutritionRequest {
 
-    private String message;
-
+    @NotNull(message = "Image required")
     private MultipartFile file;
 }

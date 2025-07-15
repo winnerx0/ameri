@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.utils;
 
+import com.winnerx0.ameri.exception.GeminiException;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -70,4 +71,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(GeminiException.class)
+    public ResponseEntity<ErrorResponse> handleException(GeminiException e) {
+        return ResponseEntity.status(e.getStatusCode()).body(new ErrorResponse(e.getMessage()));
+    }
 }

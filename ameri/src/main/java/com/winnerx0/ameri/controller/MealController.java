@@ -1,7 +1,8 @@
 package com.winnerx0.ameri.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.winnerx0.ameri.dto.request.AIRequest;
+import com.winnerx0.ameri.dto.request.NutritionRequest;
 import com.winnerx0.ameri.service.MealService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -19,8 +20,14 @@ public class MealController {
     }
 
     @PostMapping(value = "/get-meal-metadata", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<JsonNode> getMealMetadata(@Valid @ModelAttribute AIRequest aiRequest){
+    public ResponseEntity<JsonNode> getMealMetadata(@Valid @ModelAttribute NutritionRequest nutritionRequest) throws JsonProcessingException {
 
-        return ResponseEntity.ok(mealService.getMealMetadata(aiRequest));
+        return ResponseEntity.ok(mealService.getMealMetadata(nutritionRequest));
+    }
+
+    @PostMapping(value = "/create-meal-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<JsonNode> createRecipe(@Valid @ModelAttribute NutritionRequest nutritionRequest) throws JsonProcessingException {
+
+        return ResponseEntity.ok(mealService.createRecipe(nutritionRequest));
     }
 }
