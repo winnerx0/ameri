@@ -1,13 +1,12 @@
 package com.winnerx0.ameri.controller;
 
-import com.winnerx0.ameri.dto.request.MealImageRequest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.winnerx0.ameri.dto.request.AIRequest;
 import com.winnerx0.ameri.service.MealService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 
 @RestController
 @RequestMapping("/api/v1/meal")
@@ -19,10 +18,9 @@ public class MealController {
         this.mealService = mealService;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadMealImage(@Valid @ModelAttribute MealImageRequest mealImageRequest){
-        mealService.uploadPhoto(mealImageRequest.getFile());
-        return ResponseEntity.ok("Meal Saved Successfully");
+    @PostMapping(value = "/get-meal-metadata", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<JsonNode> getMealMetadata(@Valid @ModelAttribute AIRequest aiRequest){
+
+        return ResponseEntity.ok(mealService.getMealMetadata(aiRequest));
     }
-    
 }

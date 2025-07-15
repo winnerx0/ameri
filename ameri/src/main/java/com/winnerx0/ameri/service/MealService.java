@@ -1,11 +1,11 @@
 package com.winnerx0.ameri.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.winnerx0.ameri.dto.request.AIRequest;
 
 public interface MealService {
 
+    JsonNode getMealMetadata(AIRequest request);
 
-    void uploadPhoto(MultipartFile file);
+    JsonNode createRecipe();
 }
