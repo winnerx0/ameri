@@ -7,6 +7,7 @@ import com.winnerx0.ameri.dto.request.NutritionRequest;
 import com.winnerx0.ameri.dto.response.MealResponse;
 import com.winnerx0.ameri.service.MealService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,6 @@ public class MealController {
     @PostMapping(value = "/log-meal")
     public ResponseEntity<MealResponse> createRecipe(@Valid @RequestBody MealRequest mealRequest) {
 
-        return ResponseEntity.ok(new MealResponse(mealService.logMeal(mealRequest)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MealResponse(mealService.logMeal(mealRequest)));
     }
 }
