@@ -2,7 +2,9 @@ package com.winnerx0.ameri.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.winnerx0.ameri.dto.request.MealRequest;
 import com.winnerx0.ameri.dto.request.NutritionRequest;
+import com.winnerx0.ameri.dto.response.MealResponse;
 import com.winnerx0.ameri.service.MealService;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
@@ -29,5 +31,11 @@ public class MealController {
     public ResponseEntity<JsonNode> createRecipe(@Valid @ModelAttribute NutritionRequest nutritionRequest) throws JsonProcessingException {
 
         return ResponseEntity.ok(mealService.createRecipe(nutritionRequest));
+    }
+
+    @PostMapping(value = "/log-meal")
+    public ResponseEntity<MealResponse> createRecipe(@Valid @RequestBody MealRequest mealRequest) {
+
+        return ResponseEntity.ok(new MealResponse(mealService.logMeal(mealRequest)));
     }
 }

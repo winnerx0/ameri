@@ -4,9 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winnerx0.ameri.dto.ImageDTO;
+import com.winnerx0.ameri.dto.request.MealRequest;
 import com.winnerx0.ameri.dto.request.NutritionRequest;
+import com.winnerx0.ameri.dto.response.MealResponse;
 import com.winnerx0.ameri.exception.GeminiException;
+import com.winnerx0.ameri.model.Meal;
 import com.winnerx0.ameri.model.User;
+import com.winnerx0.ameri.repository.MealRepository;
 import com.winnerx0.ameri.repository.UserRepository;
 import com.winnerx0.ameri.service.ImageService;
 import com.winnerx0.ameri.service.MealService;
@@ -18,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,12 +33,15 @@ public class MealServiceImpl implements MealService {
 
     private final ImageService imageService;
 
+    private final MealRepository mealRepository;
+
     @Value("${gemini.api-key}")
     private String geminiApiKey;
 
-    public MealServiceImpl(RestTemplate restTemplate, ImageService imageService) {
+    public MealServiceImpl(RestTemplate restTemplate, ImageService imageService, MealRepository mealRepository) {
         this.restTemplate = restTemplate;
         this.imageService = imageService;
+        this.mealRepository = mealRepository;
     }
 
     @Override
@@ -47,8 +56,6 @@ public class MealServiceImpl implements MealService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("X-goog-api-key", geminiApiKey);
-
-            log.info("base64 {}", Base64.getEncoder().encodeToString(imageDTO.getImageBytes()));
 
             Map<String, Object> body = Map.of("contents", List.of(
                     Map.of("parts", List.of(
@@ -121,8 +128,6 @@ public class MealServiceImpl implements MealService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-goog-api-key", geminiApiKey);
-
-        log.info("base64 {}", Base64.getEncoder().encodeToString(imageDTO.getImageBytes()));
 
         Map<String, Object> body = Map.of("contents", List.of(
                 Map.of("parts", List.of(
@@ -211,4 +216,31 @@ public class MealServiceImpl implements MealService {
                         .asText()
                         .replaceAll("```json", "").replaceAll("```", ""), JsonNode.class);
     }
+
+    @Override
+    public String logMeal(MealRequest mealRequest) {
+        Meal meal = new Meal();
+
+        log.info("request {}", mealRequest.toString());
+        meal.setMealType(mealRequest.getMealType());
+        meal.setLoggedAt(mealRequest.getLoggedAt());
+        meal.setItems(mealRequest.getItems().stream().map(item -> {
+           Meal.MealItem mealItem = new Meal.MealItem();
+           mealItem.setFoodName(item.getFoodName());
+           mealItem.setQuantityInGrams(item.getQuantityInGrams());
+           Meal.Macros macros = new Meal.Macros();
+
+           macros.setCalories(item.getMacros().getCalories());
+           macros.setProtein(item.getMacros().getProtein());
+           macros.setFat(item.getMacros().getFat());
+           macros.setCarbs(item.getMacros().getCarbs());
+           mealItem.setMacros(macros);
+           return mealItem;
+        }).collect(Collectors.toList()));
+
+        mealRepository.save(meal);
+
+        return "Meal logged successfully";
+    }
+
 }

@@ -19,7 +19,7 @@ public class CustomAuthEntryPoint implements AuthenticationEntryPoint {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        ErrorResponse errorResponse = new ErrorResponse("You are not authorized to access this resource");
+        ErrorResponse errorResponse = new ErrorResponse("Please log in");
         response.addHeader("Content-Type", "application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         objectMapper.writeValue(response.getWriter(), errorResponse);

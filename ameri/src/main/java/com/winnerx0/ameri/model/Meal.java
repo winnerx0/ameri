@@ -1,19 +1,13 @@
 package com.winnerx0.ameri.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
+import com.winnerx0.ameri.enums.MealType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.*;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "meals")
@@ -27,10 +21,38 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private MealType mealType;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private JsonNode metadata;
+    @ElementCollection
+    @CollectionTable(name = "meal_items", joinColumns = @JoinColumn(name = "meal_id"))
+    private List<MealItem> items =  new ArrayList<>();
+
+    private LocalDateTime loggedAt = LocalDateTime.now();
+
+    @Data
+    @Embeddable
+    public static class MealItem {
+
+        private String foodName;
+
+        private String quantityInGrams;
+
+        private Macros macros;
+    }
+
+    @Data
+    @Embeddable
+    public static class Macros {
+
+        private int calories;
+
+        private int carbs;
+
+        private int protein;
+
+        private int fat;
+    }
 
 }
+
