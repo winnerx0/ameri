@@ -32,6 +32,11 @@ public class MealRequest {
 
     private LocalDateTime loggedAt = LocalDateTime.now();
 
+    /* TODO
+    Add option to put photo of meal
+    Add the photo url
+    */
+
     @Data
     public static class MealItem {
 
