@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.winnerx0.ameri.enums.MealType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
@@ -29,6 +30,11 @@ public class Meal {
     private List<MealItem> items =  new ArrayList<>();
 
     private LocalDateTime loggedAt = LocalDateTime.now();
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Data
     @Embeddable

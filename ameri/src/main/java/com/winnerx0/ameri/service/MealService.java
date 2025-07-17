@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.winnerx0.ameri.dto.request.MealRequest;
 import com.winnerx0.ameri.dto.request.NutritionRequest;
 import com.winnerx0.ameri.dto.response.MealResponse;
+import com.winnerx0.ameri.model.Meal;
+import org.springframework.data.domain.Page;
 
 public interface MealService {
 
@@ -13,4 +15,6 @@ public interface MealService {
     JsonNode createRecipe(NutritionRequest request) throws JsonProcessingException;
 
     String logMeal(MealRequest mealRequest);
+
+    Page<Meal> getMeals(int pageNo, int pageSize);
 }

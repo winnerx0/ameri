@@ -16,8 +16,12 @@ import com.winnerx0.ameri.service.ImageService;
 import com.winnerx0.ameri.service.MealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -219,11 +223,14 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public String logMeal(MealRequest mealRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Meal meal = new Meal();
 
         log.info("request {}", mealRequest.toString());
         meal.setMealType(mealRequest.getMealType());
         meal.setLoggedAt(mealRequest.getLoggedAt());
+        meal.setUser(user);
         meal.setItems(mealRequest.getItems().stream().map(item -> {
            Meal.MealItem mealItem = new Meal.MealItem();
            mealItem.setFoodName(item.getFoodName());
@@ -243,4 +250,11 @@ public class MealServiceImpl implements MealService {
         return "Meal logged successfully";
     }
 
+    public Page<Meal> getMeals(int pageNo, int pageSize){
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return mealRepository.findByUser(user.getId(), pageable);
+    }
 }
