@@ -18,6 +18,9 @@ spring:
                     google:
                         client-id: ${GOOGLE_CLIENT_ID}
                         client-secret: ${GOOGLE_CLIENT_SECRET}
+    servlet:
+        multipart:
+            max-file-size: 2MB
 
 logging:
     level:
@@ -45,5 +48,4 @@ email:
         debug: true
         user: ${GMAIL_USER}
         password: ${GMAIL_PASSWORD}
-
 
