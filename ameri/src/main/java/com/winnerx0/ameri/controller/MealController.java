@@ -3,7 +3,7 @@ package com.winnerx0.ameri.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.winnerx0.ameri.dto.request.MealRequest;
-import com.winnerx0.ameri.dto.request.NutritionRequest;
+import com.winnerx0.ameri.dto.request.NutrientRequest;
 import com.winnerx0.ameri.dto.response.MealResponse;
 import com.winnerx0.ameri.model.Meal;
 import com.winnerx0.ameri.service.MealService;
@@ -25,13 +25,13 @@ public class MealController {
     }
 
     @PostMapping(value = "/get-meal-metadata", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<JsonNode> getMealMetadata(@Valid @ModelAttribute NutritionRequest nutritionRequest) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> getMealMetadata(@Valid @ModelAttribute NutrientRequest nutritionRequest) throws JsonProcessingException {
 
         return ResponseEntity.ok(mealService.getMealMetadata(nutritionRequest));
     }
 
     @PostMapping(value = "/create-meal-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<JsonNode> createRecipe(@Valid @ModelAttribute NutritionRequest nutritionRequest) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> createRecipe(@Valid @ModelAttribute NutrientRequest nutritionRequest) throws JsonProcessingException {
 
         return ResponseEntity.ok(mealService.createRecipe(nutritionRequest));
     }
@@ -42,8 +42,14 @@ public class MealController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new MealResponse(mealService.logMeal(mealRequest)));
     }
 
-    @GetMapping("/get-meals")
+    @GetMapping("/get-meal-logs")
     public ResponseEntity<Page<Meal>> getMeals(@RequestParam(value = "page", required = false, defaultValue = "0") int page, @RequestParam(value = "size", required = false, defaultValue = "10") int size){
         return ResponseEntity.ok(mealService.getMeals(page, size));
     }
+
+    @DeleteMapping("/log-meal/{id}")
+    public ResponseEntity<MealResponse> deleteMeal(@PathVariable("id") String id){
+        return ResponseEntity.ok(new MealResponse(mealService.deleteMeal(id)));
+    }
+
 }

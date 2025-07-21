@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setHealthConditions(user.getHealthConditions());
         userDTO.setUsername(user.getName());
         userDTO.setDateOfBirth(user.getDateOfBirth());
-        return new UserResponse<>(userDTO, null);
+        return new UserResponse<>(userDTO, "User retrieved successfully");
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.winnerx0.ameri.service.impl;
 import com.cloudinary.utils.ObjectUtils;
 import com.winnerx0.ameri.config.CloudinaryConfig;
 import com.winnerx0.ameri.dto.ImageDTO;
-import com.winnerx0.ameri.dto.request.NutritionRequest;
+import com.winnerx0.ameri.dto.request.NutrientRequest;
 import com.winnerx0.ameri.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public ImageDTO getImageData(NutritionRequest request) {
+    public ImageDTO getImageData(NutrientRequest request) {
       try {
           File file = File.createTempFile("meal-", request.getFile().getOriginalFilename());
 

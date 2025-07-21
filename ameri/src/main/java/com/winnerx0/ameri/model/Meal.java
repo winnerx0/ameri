@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Meal {
     @CollectionTable(name = "meal_items", joinColumns = @JoinColumn(name = "meal_id"))
     private List<MealItem> items =  new ArrayList<>();
 
-    private LocalDateTime loggedAt = LocalDateTime.now();
+    private LocalDate loggedAt = LocalDate.now();
 
     @JsonIgnore
     @ManyToOne

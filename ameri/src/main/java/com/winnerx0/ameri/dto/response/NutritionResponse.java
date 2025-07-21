@@ -1,53 +1,34 @@
 package com.winnerx0.ameri.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class NutritionResponse {
 
-    private String status;
-    private String meal_type;
-    private String cuisine;
-    private List<String> items;
-    private String portion_size;
-    private String calories;
-    private Macronutrients macronutrients;
-    private String water_content;
-    private Vitamins vitamins;
-    private Minerals minerals;
-    private String confidence;
+    private LocalDate date;
 
-    @Data
-    public static class Macronutrients {
-        private String carbohydrates;
-        private String protein;
-        private String fat;
+    private int totalCalories;
 
-    }
+    private int totalProtein;
 
-    @Data
-    public static class Vitamins {
-        private String a;
-        private String b_complex;
-        private String c;
-        private String d;
-        private String e;
-        private String k;
+    private int totalCarbs;
 
-    }
+    private int totalFat;
 
-    @Data
-    public static class Minerals {
-        private String iron;
-        private String calcium;
-        private String magnesium;
-        private String potassium;
-        private String zinc;
+    private int caloricGoal;
 
-    }
+    private int proteinGoal;
+
+    private int carbsGoals;
+
+    private int fatGoal;
+
+
 }

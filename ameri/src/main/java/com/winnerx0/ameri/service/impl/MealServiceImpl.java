@@ -5,15 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winnerx0.ameri.dto.ImageDTO;
 import com.winnerx0.ameri.dto.request.MealRequest;
-import com.winnerx0.ameri.dto.request.NutritionRequest;
-import com.winnerx0.ameri.dto.response.MealResponse;
+import com.winnerx0.ameri.dto.request.NutrientRequest;
 import com.winnerx0.ameri.exception.GeminiException;
 import com.winnerx0.ameri.model.Meal;
 import com.winnerx0.ameri.model.User;
 import com.winnerx0.ameri.repository.MealRepository;
-import com.winnerx0.ameri.repository.UserRepository;
 import com.winnerx0.ameri.service.ImageService;
 import com.winnerx0.ameri.service.MealService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,12 +20,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,7 +46,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public JsonNode getMealMetadata(NutritionRequest request) throws JsonProcessingException {
+    public JsonNode getMealMetadata(NutrientRequest request) throws JsonProcessingException {
 //
 //        if(!Objects.equals(request.getFile().getContentType(), "image/**")){
 //            throw new IllegalArgumentException("Only images allowed");
@@ -121,7 +118,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public JsonNode createRecipe(NutritionRequest request) throws JsonProcessingException {
+    public JsonNode createRecipe(NutrientRequest request) throws JsonProcessingException {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -256,5 +253,14 @@ public class MealServiceImpl implements MealService {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
         return mealRepository.findByUser(user.getId(), pageable);
+    }
+
+    @Override
+    public String deleteMeal(String mealId) {
+
+        Meal meal = mealRepository.findById(mealId).orElseThrow(() -> new EntityNotFoundException("Meal not found"));
+        mealRepository.delete(meal);
+
+        return "Meal deleted successfully";
     }
 }
