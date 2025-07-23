@@ -3,6 +3,7 @@ package com.winnerx0.ameri.config;
 import java.util.List;
 import java.util.Map;
 
+import com.winnerx0.ameri.utils.RateLimitingFilter;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,12 +34,14 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
     private final OauthConfig oauthConfig;
+    private final RateLimitingFilter rateLimitingFilter;
 
-    public SecurityConfig(JwtFilter jwtFilter, AccessDeniedHandler accessDeniedHandler, AuthenticationEntryPoint authenticationEntryPoint, OauthConfig oauthConfig) {
+    public SecurityConfig(JwtFilter jwtFilter, AccessDeniedHandler accessDeniedHandler, AuthenticationEntryPoint authenticationEntryPoint, OauthConfig oauthConfig, RateLimitingFilter rateLimitingFilter) {
         this.jwtFilter = jwtFilter;
         this.accessDeniedHandler = accessDeniedHandler;
         this.authEntryPoint = authenticationEntryPoint;
         this.oauthConfig = oauthConfig;
+        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     @Bean
@@ -61,6 +64,7 @@ public class SecurityConfig {
                         authenticationEntryPoint(authEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
                 )
+//                .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

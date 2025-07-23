@@ -20,4 +20,13 @@ public interface MealRepository extends JpaRepository<Meal, String> {
 
     @Query("SELECT m FROM Meal m WHERE m.user = :user AND m.loggedAt = :date")
     List<Meal> findAllByUserAndDate(@Param("user") User user, @Param("date") LocalDate date);
+
+    @Query("""
+            SELECT m FROM Meal m WHERE m.user = :user
+            AND ( CAST(:startDate AS java.time.LocalDate) IS NULL
+            OR m.loggedAt >= :startDate )
+            AND ( CAST(:endDate AS java.time.LocalDate) IS NULL
+            OR m.loggedAt <= :endDate )
+            ORDER BY m.loggedAt DESC""")
+    List<Meal> findAllByUserAndStartDateAndEndDate(@Param("user") User user, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

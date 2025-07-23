@@ -7,18 +7,20 @@ import com.winnerx0.ameri.model.User;
 import com.winnerx0.ameri.repository.MealRepository;
 import com.winnerx0.ameri.service.NutritionService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class NutritionServiceImpl implements NutritionService {
 
-    private static final Logger log = LoggerFactory.getLogger(NutritionServiceImpl.class);
     private final MealRepository mealRepository;
 
     public NutritionServiceImpl(MealRepository mealRepository){
@@ -50,5 +52,36 @@ public class NutritionServiceImpl implements NutritionService {
         });
 
         return nutritionResponse;
+    }
+
+    @Override
+    public List<NutritionResponse> getNutritionHistory(LocalDate startDate, LocalDate endDate) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.info("start date {}, end date {}", startDate, endDate);
+
+        List<Meal> meals = mealRepository.findAllByUserAndStartDateAndEndDate(user, startDate, endDate);
+
+        if(meals.isEmpty()){
+            throw new EntityNotFoundException("No meal logged");
+        }
+
+        List<NutritionResponse> nutritionResponses = new ArrayList<>();
+
+        meals.forEach(meal -> {
+            NutritionResponse nutritionResponse = new NutritionResponse();
+            meal.getItems().forEach(mealItem -> {
+                nutritionResponse.setTotalCalories(nutritionResponse.getTotalCalories() + mealItem.getMacros().getCalories());
+                nutritionResponse.setTotalProtein(nutritionResponse.getTotalProtein() + mealItem.getMacros().getProtein());
+                nutritionResponse.setTotalFat(nutritionResponse.getTotalFat() + mealItem.getMacros().getFat());
+                nutritionResponse.setTotalCarbs(nutritionResponse.getTotalCarbs() + mealItem.getMacros().getCarbs());
+                // TODO: Add macro goals
+            });
+            nutritionResponse.setDate(meal.getLoggedAt());
+            nutritionResponses.add(nutritionResponse);
+        });
+
+        return nutritionResponses;
     }
 }

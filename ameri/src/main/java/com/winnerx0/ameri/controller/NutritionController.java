@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/nutrition")
@@ -19,7 +20,12 @@ public class NutritionController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<NutritionResponse> summary(@RequestParam("data")LocalDate date){
+    public ResponseEntity<NutritionResponse> summary(@RequestParam("date") LocalDate date){
         return ResponseEntity.ok(nutritionService.getNutritionSummary(date));
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<NutritionResponse>> history(@RequestParam(value = "startdate", required = false) LocalDate startDate, @RequestParam(value = "enddate", required = false) LocalDate endDate){
+        return ResponseEntity.ok(nutritionService.getNutritionHistory(startDate, endDate));
     }
 }
