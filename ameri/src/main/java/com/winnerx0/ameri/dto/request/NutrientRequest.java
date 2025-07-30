@@ -13,6 +13,5 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class NutrientRequest {
 
-    @NotNull(message = "Image required")
     private MultipartFile file;
 }

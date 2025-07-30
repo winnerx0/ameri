@@ -2,6 +2,7 @@ package com.winnerx0.ameri.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.winnerx0.ameri.enums.Gender;
+import com.winnerx0.ameri.enums.Goal;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -49,6 +50,9 @@ public class User implements UserDetails {
     @Column(columnDefinition = "jsonb")
     private JsonNode healthConditions;
 
+    @Enumerated(EnumType.STRING)
+    private Goal goal;
+
 //    @Column(nullable = false)
     private int weight;
 
@@ -64,7 +68,7 @@ public class User implements UserDetails {
     private List<Meal> meals;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "refresh_token_id")
+    @JoinColumn(name = "refresh_token_id", unique = true)
     private RefreshToken refreshToken;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

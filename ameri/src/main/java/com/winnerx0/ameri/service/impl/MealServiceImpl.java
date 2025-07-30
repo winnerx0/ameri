@@ -124,80 +124,88 @@ public class MealServiceImpl implements MealService {
 
         log.info("user health conditions {}", user.getHealthConditions().toString());
 
-        ImageDTO imageDTO = imageService.getImageData(request);
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-goog-api-key", geminiApiKey);
 
+        List<Map<String, Object>> parts = new ArrayList<>();
+
+        parts.add(
+                Map.of("text", String.format("\n" +
+                        "You are a certified clinical nutritionist AI.\n" +
+                        "Your task is to examine an image ir added or create it with only the data provided and decide, in two clearly-separated steps, whether it shows raw or semi-prepared food ingredients and, if so, to generate safe, health-aware recipe ideas that use only what is in the picture (or kitchen staples such as water, salt, pepper, oil and basic spices).\n" +
+                        "STEP 1 – Image Classification\n" +
+                        "• If the image does not contain recognisable raw/semi-prepared food ingredients (e.g. a person, pet, car, landscape, packaged ready-meal, restaurant dish, etc.), return exactly:\n" +
+                        "{\n" +
+                        "\"status\": \"Rejected\",\n" +
+                        "\"reason\": \"Not an image of food ingredients\"\n" +
+                        "}\n" +
+                        "No extra fields, no explanations.\n" +
+                        "STEP 2 – Ingredient Recognition & Recipe Generation (only when Step 1 passes)\n" +
+                        "Return strictly valid JSON that follows the schema below.\n" +
+                        "All numeric values must be realistic estimates; do not invent ingredients that are not visible.\n" +
+                        "{\n" +
+                        "\"status\": \"Accepted\",\n" +
+                        "\"detected_ingredients\": [\n" +
+                        "{\n" +
+                        "\"name\": \"ingredient name (singular, title-case)\",\n" +
+                        "\"confidence\": <0-100 percent>,\n" +
+                        "\"portion_size\": \"approximate raw weight in g or ml\",\n" +
+                        "\"macros_per_portion\": {\n" +
+                        "\"calories\": \"kcal\",\n" +
+                        "\"protein\": \"g\",\n" +
+                        "\"carbohydrates\": \"g\",\n" +
+                        "\"fat\": \"g\"\n" +
+                        "}\n" +
+                        "}\n" +
+                        "],\n" +
+                        "\"recipes\": [\n" +
+                        "{\n" +
+                        "\"type\": \"Meal | Snack | Drink | Salad | Soup\",\n" +
+                        "\"name\": \"Recipe name\",\n" +
+                        "\"description\": \"One-sentence summary of the dish and its health benefit\",\n" +
+                        "\"ingredients_used\": [\"list only items visible in the image\"],\n" +
+                        "\"instructions\": \"3–5 concise steps\",\n" +
+                        "\"macros_per_serving\": {\n" +
+                        "\"calories\": \"kcal\",\n" +
+                        "\"protein\": \"g\",\n" +
+                        "\"carbohydrates\": \"g\",\n" +
+                        "\"fat\": \"g\"\n" +
+                        "},\n" +
+                        "\"suitable_for\": [\"e.g. low-sodium\", \"diabetic\", \"high-protein\"],\n" +
+                        "\"recipe_id\": \"camelCaseUniqueId\"\n" +
+                        "}\n" +
+                        "]\n" +
+                        "}\n" +
+                        "Additional Rules\n" +
+                        "\n" +
+                        "    Provide 1–3 recipes that are practical in a home kitchen.\n" +
+                        "    Explicitly consider the user’s stated health conditions (%s), user's health goal to (%s) and flag any recipe that may be unsuitable.\n" +
+                        "    Use metric units only.\n" +
+                        "    Keep description ≤ 120 characters and instructions ≤ 200 characters.\n" +
+                        "\n", user.getHealthConditions().toString(), user.getGoal().toString())));
+
+        if (request.getFile() != null) {
+
+            ImageDTO imageDTO = imageService.getImageData(request);
+
+            parts.add(Map.of("inlineData", Map.of(
+                    "mimeType", imageDTO.getContentType(),
+                    "data", Base64.getEncoder().encodeToString(imageDTO.getImageBytes())
+            )));
+        }
+
         Map<String, Object> body = Map.of("contents", List.of(
-                Map.of("parts", List.of(
-                        Map.of("inlineData", Map.of(
-                                "mimeType", imageDTO.getContentType(),
-                                "data", Base64.getEncoder().encodeToString(imageDTO.getImageBytes())
-                        )),
-                        Map.of("text", String.format("\n" +
-                                "You are a certified clinical nutritionist AI.\n" +
-                                "Your task is to examine an image and decide, in two clearly-separated steps, whether it shows raw or semi-prepared food ingredients and, if so, to generate safe, health-aware recipe ideas that use only what is in the picture (or kitchen staples such as water, salt, pepper, oil and basic spices).\n" +
-                                "STEP 1 – Image Classification\n" +
-                                "• If the image does not contain recognisable raw/semi-prepared food ingredients (e.g. a person, pet, car, landscape, packaged ready-meal, restaurant dish, etc.), return exactly:\n" +
-                                "{\n" +
-                                "\"status\": \"Rejected\",\n" +
-                                "\"reason\": \"Not an image of food ingredients\"\n" +
-                                "}\n" +
-                                "No extra fields, no explanations.\n" +
-                                "STEP 2 – Ingredient Recognition & Recipe Generation (only when Step 1 passes)\n" +
-                                "Return strictly valid JSON that follows the schema below.\n" +
-                                "All numeric values must be realistic estimates; do not invent ingredients that are not visible.\n" +
-                                "{\n" +
-                                "\"status\": \"Accepted\",\n" +
-                                "\"detected_ingredients\": [\n" +
-                                "{\n" +
-                                "\"name\": \"ingredient name (singular, title-case)\",\n" +
-                                "\"confidence\": <0-100 percent>,\n" +
-                                "\"portion_size\": \"approximate raw weight in g or ml\",\n" +
-                                "\"macros_per_portion\": {\n" +
-                                "\"calories\": \"kcal\",\n" +
-                                "\"protein\": \"g\",\n" +
-                                "\"carbohydrates\": \"g\",\n" +
-                                "\"fat\": \"g\"\n" +
-                                "}\n" +
-                                "}\n" +
-                                "],\n" +
-                                "\"recipes\": [\n" +
-                                "{\n" +
-                                "\"type\": \"Meal | Snack | Drink | Salad | Soup\",\n" +
-                                "\"name\": \"Recipe name\",\n" +
-                                "\"description\": \"One-sentence summary of the dish and its health benefit\",\n" +
-                                "\"ingredients_used\": [\"list only items visible in the image\"],\n" +
-                                "\"instructions\": \"3–5 concise steps\",\n" +
-                                "\"macros_per_serving\": {\n" +
-                                "\"calories\": \"kcal\",\n" +
-                                "\"protein\": \"g\",\n" +
-                                "\"carbohydrates\": \"g\",\n" +
-                                "\"fat\": \"g\"\n" +
-                                "},\n" +
-                                "\"suitable_for\": [\"e.g. low-sodium\", \"diabetic\", \"high-protein\"],\n" +
-                                "\"recipe_id\": \"camelCaseUniqueId\"\n" +
-                                "}\n" +
-                                "]\n" +
-                                "}\n" +
-                                "Additional Rules\n" +
-                                "\n" +
-                                "    Provide 1–3 recipes that are practical in a home kitchen.\n" +
-                                "    Explicitly consider the user’s stated health conditions (%s) and flag any recipe that may be unsuitable.\n" +
-                                "    Use metric units only.\n" +
-                                "    Keep description ≤ 120 characters and instructions ≤ 200 characters.\n" +
-                                "\n", user.getHealthConditions().toString()))
-                ))
+                Map.of("parts", parts)
         ));
+
 
         HttpEntity<Object> httpEntity = new HttpEntity<>(body, headers);
         ResponseEntity<JsonNode> response = restTemplate.exchange("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", HttpMethod.POST, httpEntity, JsonNode.class);
 
         assert response.getBody() != null;
 
-        if(!response.getStatusCode().is2xxSuccessful()){
+        if (!response.getStatusCode().is2xxSuccessful()) {
             throw new GeminiException(response.getBody().toString(), response.getStatusCode());
         }
 

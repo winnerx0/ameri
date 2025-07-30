@@ -24,7 +24,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Ameri Server")
-                        .description("Local Server")
+                        .description("Ameri backendServer")
                         .version("1.0"))
                 .servers(List.of(new Server().url("http://localhost:8080").description("Local Server")))
                 .security(List.of(new SecurityRequirement().addList("bearerAuth")))

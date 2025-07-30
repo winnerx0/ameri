@@ -31,7 +31,7 @@ public class MealController {
     }
 
     @PostMapping(value = "/create-meal-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<JsonNode> createRecipe(@Valid @ModelAttribute NutrientRequest nutritionRequest) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> createRecipe(@ModelAttribute NutrientRequest nutritionRequest) throws JsonProcessingException {
 
         return ResponseEntity.ok(mealService.createRecipe(nutritionRequest));
     }

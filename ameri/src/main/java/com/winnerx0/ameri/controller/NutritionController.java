@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/nutrition")
+@RequestMapping("/api/v1/nutrition")
 public class NutritionController {
 
     private final NutritionService nutritionService;

@@ -2,6 +2,7 @@ package com.winnerx0.ameri.dto.request;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.winnerx0.ameri.enums.Gender;
+import com.winnerx0.ameri.enums.Goal;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,4 +44,7 @@ public class RegisterRequest {
     @NotNull(message = "Height required")
     @Min(value = 1, message = "Invalid height")
     private int height;
+
+    @NotNull(message = "Goal required")
+    private Goal goal;
 }

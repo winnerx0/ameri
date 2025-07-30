@@ -79,16 +79,8 @@ public class AuthServiceImpl implements AuthService {
         user.setEnabled(false);
         user.setHealthConditions(registerRequest.getHealthConditions());
         user.setRole("ROLE_USER");
+        user.setGoal(registerRequest.getGoal());
         User savedUser = userRepository.save(user);
-
-        String accessToken = jwtUtils.generateAccessToken(savedUser.getEmail());
-        String refreshToken = jwtUtils.generateRefreshToken(savedUser.getId());
-
-        RefreshToken rt = new RefreshToken();
-        rt.setToken(refreshToken);
-        rt.setExpirationDate(LocalDate.now().plusDays(7));
-
-        user.setRefreshToken(rt);
 
         userRepository.save(user);
 

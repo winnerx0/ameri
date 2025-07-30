@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setHealthConditions(user.getHealthConditions());
         userDTO.setUsername(user.getName());
         userDTO.setDateOfBirth(user.getDateOfBirth());
+        userDTO.setGoal(user.getGoal());
         return new UserResponse<>(userDTO, "User retrieved successfully");
     }
 
@@ -46,12 +48,13 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        user.setName(updateUserRequest.getUsername());
-        user.setGender(updateUserRequest.getGender());
-        user.setHealthConditions(updateUserRequest.getHealthConditions());
-        user.setWeight(updateUserRequest.getWeight());
-        user.setHeight(updateUserRequest.getHeight());
-        user.setDateOfBirth(updateUserRequest.getDateOfBirth());
+        user.setName(Optional.ofNullable(updateUserRequest.getUsername()).orElse(user.getUsername()));
+        user.setGender(Optional.ofNullable(updateUserRequest.getGender()).orElse(user.getGender()));
+        user.setHealthConditions(Optional.ofNullable(updateUserRequest.getHealthConditions()).orElse(user.getHealthConditions()));
+        user.setWeight(Optional.ofNullable(updateUserRequest.getWeight()).orElse(user.getWeight()));
+        user.setHeight(Optional.ofNullable(updateUserRequest.getHeight()).orElse(user.getHeight()));
+        user.setDateOfBirth(Optional.ofNullable(updateUserRequest.getDateOfBirth()).orElse(user.getDateOfBirth()));
+        user.setGoal(Optional.ofNullable(updateUserRequest.getGoal()).orElse(user.getGoal()));
         userRepository.save(user);
         return new UserResponse<>(null, "Updated Successfully");
     }

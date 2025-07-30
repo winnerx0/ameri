@@ -1,21 +1,17 @@
-package com.winnerx0.ameri.service;
+package com.winnerx0.ameri.service.impl;
 
-import com.winnerx0.ameri.dto.UserDTO;
-import com.winnerx0.ameri.dto.request.UpdateUserRequest;
-import com.winnerx0.ameri.model.User;
 import com.winnerx0.ameri.repository.UserRepository;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
