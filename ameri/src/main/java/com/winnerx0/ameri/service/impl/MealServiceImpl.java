@@ -91,7 +91,7 @@ public class MealServiceImpl implements MealService {
                                     "- Provide best-effort estimates; do not guess cuisine or items you cannot identify.  \n" +
                                     "- Output must be valid JSON with no trailing commas or comments.")
                     ))
-            ));
+            ),"generationConfig", Map.of("temperature", 1.75));
 
             HttpEntity<Object> httpEntity = new HttpEntity<>(body, headers);
             ResponseEntity<JsonNode> response = restTemplate.exchange("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", HttpMethod.POST, httpEntity, JsonNode.class);
@@ -196,8 +196,8 @@ public class MealServiceImpl implements MealService {
         }
 
         Map<String, Object> body = Map.of("contents", List.of(
-                Map.of("parts", parts)
-        ));
+                Map.of("parts", parts)),
+                "generationConfig", Map.of("temperature", 1.75));
 
 
         HttpEntity<Object> httpEntity = new HttpEntity<>(body, headers);
