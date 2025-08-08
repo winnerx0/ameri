@@ -1,0 +1,51 @@
+export enum Gender {
+  MALE,
+  FEMALE,
+}
+
+export type UserMetadata = {
+  dob: Date;
+  heathConditons: Record<string, string>;
+  weight: number;
+  height: number;
+  goal: Goal;
+};
+
+export enum Goal {
+  LOSE_WEIGHT = "Lost Weight",
+  GAIN_WEIGHT = "Gain Weight",
+  GAIN_MUSCLE = "Gain Muscle",
+  STAY_HEALTHY = "Stay Healthy",
+}
+
+export type LoginRequest = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type LoginResponse = {
+  message: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type RegisterRequest = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+export type RegisterResponse = {
+  message: string;
+};
+
+export type UserData = {
+  dateOfBirth: Date;
+  weight: number;
+  height: number;
+  gender: Gender;
+  username: string;
+  goal: Goal;
+  heathConditons: Record<string, string>;
+};

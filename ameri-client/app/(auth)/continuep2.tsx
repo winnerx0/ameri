@@ -6,50 +6,53 @@ import {
   StyleSheet,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { Label } from "@react-navigation/elements";
-import Dropdown from "react-native-input-select";
 import { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Gender } from "@/types";
+import { Goal, UserMetadata } from "@/types";
 
-export default function ContinueScreen() {
-  const [form, setForm] = useState({
-    gender: "",
+export default function ContinueP2Screen() {
+  const [form, setForm] = useState<UserMetadata>({
+    dob: new Date(),
+    goal: Goal.STAY_HEALTHY,
+    weight: 0,
+    height: 0,
+    heathConditons: {},
+    
   });
 
-  const genders = [{ name: "Male" }, { name: "Female" }] as Gender[];
+  const goals = Object.values(Goal).filter(key => typeof key === "string")
 
   return (
     <SafeAreaProvider>
       <SafeAreaView className="dark bg-background text-foreground h-screen items-center justify-center gap-4">
         <SelectDropdown
         
-          data={genders}
-          onSelect={(selectedItem: Gender, index: number) => {
+          data={goals}
+          onSelect={(selectedItem: string, index: number) => {
             console.log(form);
-            setForm((prev) => ({...prev, gender: selectedItem.name}))
+            setForm((prev) => ({...prev, goal: Object.values(Goal)[index]}))
           }}
-          renderButton={(selectedItem: Gender, isOpened) => {
+          renderButton={(selectedItem: string, isOpened) => {
             return (
               <View className="bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between">
                 <Text className="text-foreground">
-                  {(selectedItem && selectedItem.name) || "Select your gender"}
+                  {(selectedItem) || "Select your gender"}
                 </Text>
                 <Icon
                   name={isOpened ? "chevron-up" : "chevron-down"}
-                  className="text-white"
                 />
               </View>
             );
           }}
-          renderItem={(item: Gender, index, isSelected) => {
+          renderItem={(item: string, index, isSelected) => {
             return (
               <View
                 className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center"
               >
-                <Text className="text-white ">{item.name}</Text>
+                <Text className="text-white ">{item}</Text>
               </View>
             );
           }}
@@ -73,8 +76,8 @@ export default function ContinueScreen() {
             className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
           />
         </View>
-        <TouchableOpacity className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center" onPress={() => router.push("/(auth)/continuep2")}>
-          <Text className="text-white">Continue</Text>
+        <TouchableOpacity className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center">
+          <Text className="text-white">Login</Text>
         </TouchableOpacity>
         <Text className="text-foreground mt-4">
           Don&apos;t have an account ?{" "}

@@ -1,17 +1,8 @@
-import { Image } from "expo-image";
-import { Platform, StyleSheet, View } from "react-native";
-
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { Text } from "@react-navigation/elements";
-import { router, Slot, Tabs } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect } from "react";
-
+import { Slot } from "expo-router";
+import "../../global.css";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function AuthLayout() {
-
-
-  return <Slot />;
+  return (
+      <Slot />
+  );
 }

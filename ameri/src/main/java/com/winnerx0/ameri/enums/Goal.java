@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum Goal {
     LOSE_WEIGHT("Lose weight"),
     GAIN_WEIGHT("Gain weight"),
-    GAIN_MUSCLE("Gain muscle");
+    GAIN_MUSCLE("Gain muscle"),
+    STAY_HEALTHY("Stay Healthy");
 
     private final String goal;
 

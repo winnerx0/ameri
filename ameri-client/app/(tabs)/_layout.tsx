@@ -1,52 +1,61 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Tabs } from "expo-router";
+import React from "react";
+import { Platform } from "react-native";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { HapticTab } from "@/components/HapticTab";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import "../../global.css"
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-     console.log("token")
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        tabBarActiveTintColor: colorScheme === "dark" ? "#60a5fa" : "#3b82f6", 
+        tabBarInactiveTintColor: colorScheme === "dark" ? "#6b7280" : "#9ca3af",
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+            position: "absolute",
+            backgroundColor:
+              colorScheme === "dark" ? "hsl(222.2 84% 4.9%)" : "#ffffff",
+            borderTopColor: colorScheme === "dark" ? "#374151" : "#e5e7eb",
           },
-          default: {},
+          default: {
+            backgroundColor:
+              colorScheme === "dark" ? "hsl(222.2 84% 4.9%)" : "#ffffff",
+            borderTopColor: colorScheme === "dark" ? "#374151" : "#e5e7eb",
+          },
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <Icon size={28} name="home" color={color} />,
+          title: "Home",
+          tabBarIcon: ({ color }) => (
+            <Icon size={28} name="home" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="capture"
         options={{
-          title: 'Capture',
-          tabBarIcon: ({ color }) => <Icon size={28} name="camera" color={color} />,
+          title: "Capture",
+          tabBarIcon: ({ color }) => (
+            <Icon size={28} name="camera" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <Icon size={28} name="face-man-profile" color={color} />,
+          title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <Icon size={28} name="face-man-profile" color={color} />
+          ),
         }}
       />
     </Tabs>

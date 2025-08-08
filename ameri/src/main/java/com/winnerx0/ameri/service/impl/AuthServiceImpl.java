@@ -80,7 +80,6 @@ public class AuthServiceImpl implements AuthService {
         user.setHealthConditions(registerRequest.getHealthConditions());
         user.setRole("ROLE_USER");
         user.setGoal(registerRequest.getGoal());
-        User savedUser = userRepository.save(user);
 
         userRepository.save(user);
 
