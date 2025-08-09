@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-export const BACKEND_URL = "https://1527c01e26f5.ngrok-free.app/api/v1";
+export const BACKEND_URL = "https://edc57d6ef857.ngrok-free.app/api/v1";
 
 export const api = axios.create({
   baseURL: BACKEND_URL,
@@ -11,8 +11,12 @@ export const api = axios.create({
 });
 
 api.interceptors.response.use(undefined, async (error) => {
-  const token = await AsyncStorage.getItem("refreshToken");
+  const token = await AsyncStorage.getItem("accessToken");
+
+
+  console.log("this is the error", error.response.status)
   if (error.response.status === 401) {
+    console.log(await AsyncStorage.getItem("refreshToken"));
     const res = await axios.post(
       BACKEND_URL + "/auth/refresh-token",
       {
@@ -20,13 +24,14 @@ api.interceptors.response.use(undefined, async (error) => {
       },
       {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }
     );
 
-    if (res.status === 401) {
+    console.log("status", res.status)
+
+    if (res.status !== 200) {
       await AsyncStorage.removeItem("accessToken");
       await AsyncStorage.removeItem("refreshToken");
     }

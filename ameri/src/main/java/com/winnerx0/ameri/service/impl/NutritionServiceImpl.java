@@ -34,11 +34,13 @@ public class NutritionServiceImpl implements NutritionService {
 
         List<Meal> meals = mealRepository.findAllByUserAndDate(user, date);
 
+        NutritionResponse nutritionResponse = new NutritionResponse();
+
         if(meals.isEmpty()){
-            throw new EntityNotFoundException("No meal logged");
+            nutritionResponse.setDate(LocalDate.now());
+            return nutritionResponse;
         }
 
-        NutritionResponse nutritionResponse = new NutritionResponse();
         nutritionResponse.setDate(date);
         meals.forEach(meal -> {
             meal.getItems().forEach(mealItem -> {

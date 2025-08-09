@@ -3,6 +3,7 @@ package com.winnerx0.ameri.controller;
 import com.winnerx0.ameri.dto.response.NutritionResponse;
 import com.winnerx0.ameri.repository.MealRepository;
 import com.winnerx0.ameri.service.NutritionService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class NutritionController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<NutritionResponse> summary(@RequestParam("date") LocalDate date){
+    public ResponseEntity<NutritionResponse> summary(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         return ResponseEntity.ok(nutritionService.getNutritionSummary(date));
     }
 

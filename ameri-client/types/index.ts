@@ -49,3 +49,11 @@ export type UserData = {
   goal: Goal;
   heathConditons: Record<string, string>;
 };
+
+export type NutritionSummary = {
+  date: Date;
+  totalFat: number;
+  totalProtein: number;
+  totalCalories: number;
+  totalCarbs: number
+};
