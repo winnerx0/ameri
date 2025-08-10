@@ -26,7 +26,7 @@ public class Meal {
     @Enumerated(EnumType.STRING)
     private MealType mealType;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "meal_items", joinColumns = @JoinColumn(name = "meal_id"))
     private List<MealItem> items =  new ArrayList<>();
 

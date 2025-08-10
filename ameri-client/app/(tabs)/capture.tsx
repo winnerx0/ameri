@@ -5,11 +5,10 @@ import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabTwoScreen() {
-
   const colorScheme = useColorScheme();
 
   const [permission, requestPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null)
+  const cameraRef = useRef<CameraView>(null);
 
   if (!permission) {
     return (
@@ -38,18 +37,30 @@ export default function TabTwoScreen() {
         >
           We need your permission to show the camera
         </Text>
-        <Button onPress={requestPermission} title="Grant Permission" />
+        <TouchableOpacity
+          onPress={requestPermission}
+          className="bg-primary h-10 rounded-md w-48 flex items-center justify-center"
+        >
+          <Text
+            className={clsx(
+              colorScheme === "dark" && "dark",
+              "text-foreground font-bold"
+            )}
+          >
+            Grant Permission
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
-  const takePictue = async() => {
-    if(cameraRef.current){
-        const photo = await cameraRef.current.takePictureAsync();
+  const takePictue = async () => {
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync();
 
-        console.log(photo.uri)
+      console.log(photo.uri);
     }
-  }
+  };
   return (
     <CameraView
       autofocus="on"

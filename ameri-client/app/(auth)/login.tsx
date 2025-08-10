@@ -53,7 +53,6 @@ export default function LoginScreen() {
     }
   };
   return (
-    <SafeAreaProvider>
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
@@ -152,6 +151,5 @@ export default function LoginScreen() {
           </Link>
         </Text>
       </SafeAreaView>
-    </SafeAreaProvider>
   );
 }

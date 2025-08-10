@@ -57,3 +57,35 @@ export type NutritionSummary = {
   totalCalories: number;
   totalCarbs: number
 };
+
+export enum MealType {
+  BREAKFAST = "BREAKFAST",
+  LUNCH = "LUNCH",
+  DINNER = "DINNER",
+  SNACK = "SNACK",
+}
+
+export interface Macros {
+  calories: number;
+  carbs: number;
+  protein: number;
+  fat: number;
+}
+
+export interface MealItem {
+  foodName: string;
+  quantityInGrams: string;
+  macros: Macros;
+}
+
+export interface Meal {
+  id: string;
+  mealType: MealType;
+  items: MealItem[];
+  loggedAt: string;
+  user?: User;
+}
+
+export interface User {
+  id: string;
+}
