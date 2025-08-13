@@ -34,6 +34,7 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.10",
     "expo-web-browser": "~14.2.0",
+    "js-base64": "^3.7.8",
     "lodash": "^4.17.21",
     "nativewind": "^4.1.23",
     "react": "19.0.0",

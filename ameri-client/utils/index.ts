@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://9f084cc5459c.ngrok-free.app/api/v1";
+export const BACKEND_URL = "https://886022c1ef88.ngrok-free.app/api/v1";
 
 export const api = axios.create({
   baseURL: BACKEND_URL,
@@ -10,44 +11,46 @@ export const api = axios.create({
   },
 });
 
-api.interceptors.response.use(undefined, async (error) => {
-  const token = await AsyncStorage.getItem("accessToken");
-
-
-  console.log("this is the error", error.response.status)
-  if (error.response.status === 401) {
-    console.log("refresh token", await AsyncStorage.getItem("refreshToken"));
-    const res = await axios.post(
-      BACKEND_URL + "/auth/refresh-token",
-      {
-        refreshToken: await AsyncStorage.getItem("refreshToken"),
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log("status", res.status)
-
-    if (res.status !== 200) {
-      await AsyncStorage.removeItem("accessToken");
-      await AsyncStorage.removeItem("refreshToken");
-    }
-    const newAccessToken = res.data?.accessToken;
-    if (newAccessToken) {
-      await AsyncStorage.setItem("accessToken", newAccessToken);
-      error.config.headers.Authorization = `Bearer ${newAccessToken}`;
-      return api(error.config);
-    }
-  }
-});
-
 api.interceptors.request.use(async (config) => {
-  const token = await AsyncStorage.getItem("accessToken");
+  let token = await AsyncStorage.getItem("accessToken");
+
   if (token) {
+    const base64Url = token.split(".")[1];
+    const json = decode(base64Url.replace(/-/g, "+").replace(/_/g, "/"));
+    const payload = JSON.parse(json);
+    const expTime = payload.exp * 1000;
+    const refreshTime = expTime - 120 * 1000; 
+
+  
+    if (Date.now() >= refreshTime) {
+      console.log("Access token is near expiry, refreshing...");
+      const refreshToken = await AsyncStorage.getItem("refreshToken");
+
+      try {
+        const res = await axios.post(
+          `${BACKEND_URL}/auth/refresh-token`,
+          { refreshToken },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        if (res.status === 200 && res.data?.accessToken) {
+          token = res.data.accessToken;
+          await AsyncStorage.setItem("accessToken", token!);
+          console.log("Token refreshed successfully");
+        } else {
+          console.warn("Refresh token failed, clearing storage");
+          await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
+        }
+      } catch (err) {
+        console.error("Error refreshing token", err);
+        await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
+      }
+    } else {
+      console.log("token still valid")
+    }
+
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });

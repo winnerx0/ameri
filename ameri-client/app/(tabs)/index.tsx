@@ -3,8 +3,14 @@ import { Meal, NutritionSummary, UserData } from "@/types";
 import { api, BACKEND_URL } from "@/utils";
 import { AxiosError } from "axios";
 import { clsx } from "clsx";
-import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useCallback, useState } from "react";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -16,7 +22,13 @@ export default function HomeScreen() {
   const [show, setShow] = useState<boolean>(false);
   const [date, setDate] = useState<Date | null>(null);
 
-  const { data: userData } = useQuery({
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const {
+    data: userData,
+    refetch: refetchUserData,
+    isRefetching: isUserDataRefetching,
+  } = useQuery({
     queryKey: ["fetchuserdata"],
     queryFn: async () => {
       try {
@@ -36,7 +48,12 @@ export default function HomeScreen() {
     },
   });
 
-  const { data: summary, isLoading: isSummaryLoading } = useQuery({
+  const {
+    data: summary,
+    isLoading: isSummaryLoading,
+    refetch: refetchSummary,
+    isRefetching: isSummaryRefetching,
+  } = useQuery({
     queryKey: ["fetchsummary", date],
     queryFn: async () => {
       try {
@@ -66,7 +83,12 @@ export default function HomeScreen() {
     },
   });
 
-  const { data: meals, isLoading: isMealLoading } = useQuery({
+  const {
+    data: meals,
+    isLoading: isMealLoading,
+    refetch: refetchMeals,
+    isRefetching: isMealsRefetching,
+  } = useQuery({
     queryKey: ["fetchmeals"],
     queryFn: async () => {
       try {
@@ -89,6 +111,13 @@ export default function HomeScreen() {
       }
     },
   });
+  const onRefetch = useCallback(async () => {
+    setRefreshing(true);
+    await refetchUserData();
+    await refetchMeals();
+    await refetchSummary();
+    setRefreshing(false);
+  }, [refetchMeals, refetchSummary, refetchUserData]);
 
   console.log(summary);
   return (
@@ -105,6 +134,9 @@ export default function HomeScreen() {
             gap: 16,
           }}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefetch} />
+          }
         >
           <Text
             className={clsx(
@@ -112,7 +144,7 @@ export default function HomeScreen() {
               "text-[15px] font-light self-start mt-12"
             )}
           >
-            {new Date().getUTCHours() >= 12 &&  new Date().getUTCHours() < 16
+            {new Date().getUTCHours() >= 12 && new Date().getUTCHours() < 16
               ? "Good Afternoon"
               : new Date().getUTCHours() >= 16 && new Date().getUTCHours() <= 23
               ? "Good Evening"
@@ -255,7 +287,10 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity className="flex-1 bg-primary h-10 rounded-md flex-row gap-2 justify-center items-center px-2" onPress={() => router.push("/log-meals")}>
+            <TouchableOpacity
+              className="flex-1 bg-primary h-10 rounded-md flex-row gap-2 justify-center items-center px-2"
+              onPress={() => router.push("/log-meals")}
+            >
               <Icon name="book" color="white" />
               <Text className="text-white text-sm font-bold">Log Meal</Text>
             </TouchableOpacity>

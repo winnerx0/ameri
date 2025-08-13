@@ -12,46 +12,47 @@ import { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Goal, UserMetadata } from "@/types";
+import { clsx } from "clsx";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function ContinueP2Screen() {
+  const colorScheme = useColorScheme();
   const [form, setForm] = useState<UserMetadata>({
     dob: new Date(),
     goal: Goal.STAY_HEALTHY,
     weight: 0,
     height: 0,
     heathConditons: {},
-    
   });
 
-  const goals = Object.values(Goal).filter(key => typeof key === "string")
+  const goals = Object.values(Goal).filter((key) => typeof key === "string");
 
   return (
     <SafeAreaProvider>
       <SafeAreaView className="dark bg-background text-foreground h-screen items-center justify-center gap-4">
         <SelectDropdown
-        
           data={goals}
           onSelect={(selectedItem: string, index: number) => {
             console.log(form);
-            setForm((prev) => ({...prev, goal: Object.values(Goal)[index]}))
+            setForm((prev) => ({ ...prev, goal: Object.values(Goal)[index] }));
           }}
           renderButton={(selectedItem: string, isOpened) => {
             return (
               <View className="bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between">
                 <Text className="text-foreground">
-                  {(selectedItem) || "Select your gender"}
+                  {selectedItem || "Select your gender"}
                 </Text>
                 <Icon
                   name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={clsx(colorScheme === "dark" ? "white" : "black")}
+                  size={20}
                 />
               </View>
             );
           }}
           renderItem={(item: string, index, isSelected) => {
             return (
-              <View
-                className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center"
-              >
+              <View className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center">
                 <Text className="text-white ">{item}</Text>
               </View>
             );
