@@ -9,6 +9,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
 
@@ -111,9 +112,9 @@ export default function HomeScreen() {
               "text-[15px] font-light self-start mt-12"
             )}
           >
-            {new Date().getHours() >= 12
+            {new Date().getUTCHours() >= 12 &&  new Date().getUTCHours() < 16
               ? "Good Afternoon"
-              : new Date().getHours() >= 16
+              : new Date().getUTCHours() >= 16 && new Date().getUTCHours() <= 23
               ? "Good Evening"
               : "Good Morning"}
             .
@@ -254,7 +255,7 @@ export default function HomeScreen() {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity className="flex-1 bg-primary h-10 rounded-md flex-row gap-2 justify-center items-center px-2">
+            <TouchableOpacity className="flex-1 bg-primary h-10 rounded-md flex-row gap-2 justify-center items-center px-2" onPress={() => router.push("/log-meals")}>
               <Icon name="book" color="white" />
               <Text className="text-white text-sm font-bold">Log Meal</Text>
             </TouchableOpacity>

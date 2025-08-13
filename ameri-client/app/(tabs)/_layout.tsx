@@ -14,7 +14,7 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarActiveTintColor: colorScheme === "dark" ? "#60a5fa" : "#3b82f6", 
+        tabBarActiveTintColor: colorScheme === "dark" ? "#60a5fa" : "#3b82f6",
         tabBarInactiveTintColor: colorScheme === "dark" ? "#6b7280" : "#9ca3af",
         tabBarStyle: Platform.select({
           ios: {
@@ -57,6 +57,14 @@ export default function TabLayout() {
             <Icon size={28} name="face-man-profile" color={color} />
           ),
         }}
+      />
+      <Tabs.Screen
+        name="log-meals"
+        options={{
+          title: "LogMeals",
+          href: null,
+        }}
+        
       />
     </Tabs>
   );
