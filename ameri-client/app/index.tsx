@@ -2,8 +2,12 @@ import { useEffect } from "react";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text, View } from "react-native";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import {clsx} from "clsx";
 
 export default function Index() {
+
+  const colorScheme = useColorScheme()
   useEffect(() => {
     async function checkAuth() {
       const token = await AsyncStorage.getItem("accessToken");
@@ -17,5 +21,5 @@ export default function Index() {
     checkAuth();
   }, []);
 
-  return <View className="dark "><Text>Loading</Text></View>;
+  return <View className={clsx(colorScheme === "dark" && "dark", "bg-background text-foreground flex items-center justify-center h-screen")}><Text>Loading</Text></View>;
 }

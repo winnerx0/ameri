@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/me")
-//    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponse<?>> updateUserDetails(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UpdateUserRequest updateUserRequest){
 
         return ResponseEntity.ok(userService.updateUserDetails(userDetails.getUsername(), updateUserRequest));

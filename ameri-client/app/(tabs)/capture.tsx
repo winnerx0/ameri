@@ -59,8 +59,30 @@ export default function TabTwoScreen() {
       const photo = await cameraRef.current.takePictureAsync();
 
       console.log(photo.uri);
+
+      const randomString = Math.random().toString(36).substring(2, 10);
+      const file = base64ToFile(photo.base64!, randomString +".jpeg");
+      console.log("file", file);
     }
   };
+
+  function base64ToFile(base64: string, filename: string) {
+    // Split into [meta, data]
+    const [meta, data] = base64.split(",");
+    const mime = meta.match(/:(.*?);/)![1]; 
+
+    // Decode Base64 to binary
+    const binary = atob(data);
+    const arrayBuffer = new ArrayBuffer(binary.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < binary.length; i++) {
+      uint8Array[i] = binary.charCodeAt(i);
+    }
+
+    return new File([uint8Array], filename, { type: mime });
+  }
+
   return (
     <CameraView
       autofocus="on"
