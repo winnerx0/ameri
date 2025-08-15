@@ -87,192 +87,196 @@ const LogMeals = () => {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "bg-background h-screen flex flex-col px-4 items-center relative w-full"
+          "bg-background h-screen"
         )}
       >
-        {/* back button */}
-        <TouchableOpacity
-          className="text-foreground flex flex-row items-center mt-10 self-start"
-          onPress={() => router.back()}
-        >
-          <Icon
-            name="chevron-left"
-            size={30}
-            color={colorScheme === "dark" ? "white" : "black"}
-          />
-          <Text className="text-foreground text-sm ml-1">Go Back</Text>
-        </TouchableOpacity>
+        <View className="w-full flex items-center relative px-2 h-full">
+          {/* back button */}
+          <TouchableOpacity
+            className="text-foreground flex flex-row items-center mt-10 self-start"
+            onPress={() => router.back()}
+          >
+            <Icon
+              name="chevron-left"
+              size={30}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <Text className="text-foreground text-sm ml-1">Go Back</Text>
+          </TouchableOpacity>
 
-        {/* heading */}
-        <Text className="font-bold text-foreground text-2xl self-start mt-6 mb-4">
-          Log Your Daily Meals
-        </Text>
-
-        {/* meal type dropdown – unchanged */}
-        <SelectDropdown
-          data={mealTypes}
-          onSelect={(_, i) =>
-            setMeal((p) => ({ ...p, mealType: mealTypes[i] }))
-          }
-          renderButton={(selectedItem, isOpened) => (
-            <View className="bg-background w-full h-14 border border-border rounded-2xl flex flex-row items-center px-4 justify-between mb-4">
-              <Text className="text-foreground">
-                {selectedItem || "Select the meal type"}
-              </Text>
-              <Icon
-                name={isOpened ? "chevron-up" : "chevron-down"}
-                color={colorScheme === "dark" ? "white" : "black"}
-                size={20}
-              />
-            </View>
-          )}
-          renderItem={(item) => (
-            <View className="py-4 px-3 flex-1 items-center">
-              <Text className="text-white">{item}</Text>
-            </View>
-          )}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-          disableAutoScroll
-        />
-
-        {/* list of foods */}
-        <FlatList
-          className="w-full"
-          data={meal.items}
-          keyExtractor={(_, i) => String(i)}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View className="h-4" />}
-          renderItem={({ item, index }) => (
-            <View className="border border-border rounded-2xl p-3 mb-4 w-full">
-              {/* row 1: food name */}
-              <TextInput
-                placeholder="Enter meal name"
-                style={{
-                  color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                }}
-                placeholderTextColor={
-                  colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                }
-                className="border border-border rounded-2xl px-3 h-12 mb-2"
-                value={item.foodName}
-                onChangeText={(v) => updateItem(index, "foodName", v)}
-              />
-
-              {/* row 2: quantity */}
-              <TextInput
-                placeholder="Quantity in grams"
-                keyboardType="numeric"
-                style={{
-                  color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                }}
-                placeholderTextColor={
-                  colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                }
-                className="border border-border rounded-2xl px-3 h-12 mb-2"
-                value={String(item.quantityInGrams)}
-                onChangeText={(v) => updateItem(index, "quantityInGrams", v)}
-              />
-
-              {/* macros – 2x2 grid */}
-              <View className="flex-row justify-between gap-2">
-                <TextInput
-                  placeholder="Calories"
-                  keyboardType="numeric"
-                  style={{
-                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                  }}
-                  placeholderTextColor={
-                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                  }
-                  className="border border-border rounded-2xl px-3 h-12 flex-1"
-                  // value={String(item.macros.calories)}
-                  onChangeText={(v) =>
-                    updateMacro(index, "calories", parseInt(v) || 0)
-                  }
-                />
-                <TextInput
-                  placeholder="Fat"
-                  keyboardType="numeric"
-                  style={{
-                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                  }}
-                  placeholderTextColor={
-                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                  }
-                  className="border border-border rounded-2xl px-3 h-12 flex-1"
-                  // value={String(item.macros.fat)}
-                  onChangeText={(v) =>
-                    updateMacro(index, "fat", parseInt(v) || 0)
-                  }
-                />
-              </View>
-
-              <View className="flex-row justify-between gap-2 mt-2">
-                <TextInput
-                  placeholder="Carbs"
-                  keyboardType="numeric"
-                  style={{
-                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                  }}
-                  placeholderTextColor={
-                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                  }
-                  className="border border-border rounded-2xl px-3 h-12 flex-1"
-                  // value={String(item.macros.carbs)}
-                  onChangeText={(v) =>
-                    updateMacro(index, "carbs", parseInt(v) || 0)
-                  }
-                />
-                <TextInput
-                  placeholder="Protein"
-                  keyboardType="numeric"
-                  style={{
-                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                  }}
-                  placeholderTextColor={
-                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                  }
-                  className="border border-border rounded-2xl px-3 h-12 flex-1"
-                  // value={String(item.macros.protein)}
-                  onChangeText={(v) =>
-                    updateMacro(index, "protein", parseInt(v) || 0)
-                  }
-                />
-              </View>
-
-              {/* remove button */}
-              {meal.items.length > 1 && (
-                <TouchableOpacity
-                  className="mt-2 self-end"
-                  onPress={() => removeFood(index)}
-                >
-                  <Icon name="delete" size={24} color="red" />
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
-          ListHeaderComponent={
-            <TouchableOpacity
-              className="bg-primary rounded-2xl h-14 items-center justify-center mb-12 w-full max-w-[400px] self-center"
-              onPress={addFood}
-            >
-              <Text className="text-white font-semibold">Add another food</Text>
-            </TouchableOpacity>
-          }
-          contentContainerStyle={{ paddingBottom: 140 }}
-        />
-
-        {/* Save button – pinned to bottom */}
-        <TouchableOpacity
-          className="bg-primary w-full max-w-[400px] absolute bottom-24 rounded-2xl items-center justify-center h-14 disabled:opacity-50"
-          disabled={isPending}
-          onPress={() => handleLoggingMeal(meal)}
-        >
-          <Text className="text-white font-semibold">
-            {isPending ? "Saving…" : "Save Meal"}
+          {/* heading */}
+          <Text className="font-bold text-foreground text-2xl self-start mt-6 mb-4">
+            Log Your Daily Meals
           </Text>
-        </TouchableOpacity>
+
+          {/* meal type dropdown – unchanged */}
+          <SelectDropdown
+            data={mealTypes}
+            onSelect={(_, i) =>
+              setMeal((p) => ({ ...p, mealType: mealTypes[i] }))
+            }
+            renderButton={(selectedItem, isOpened) => (
+              <View className="bg-background w-full h-14 border border-border rounded-2xl flex flex-row items-center px-4 justify-between mb-4">
+                <Text className="text-foreground">
+                  {selectedItem || "Select the meal type"}
+                </Text>
+                <Icon
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                  size={20}
+                />
+              </View>
+            )}
+            renderItem={(item) => (
+              <View className="py-4 px-3 flex-1 items-center">
+                <Text className="text-white">{item}</Text>
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+            disableAutoScroll
+          />
+
+          {/* list of foods */}
+          <FlatList
+            className="w-full px-2"
+            data={meal.items}
+            keyExtractor={(_, i) => String(i)}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View className="h-4" />}
+            renderItem={({ item, index }) => (
+              <View className="border border-border rounded-2xl p-3 mb-4 w-full">
+                {/* row 1: food name */}
+                <TextInput
+                  placeholder="Enter meal name"
+                  style={{
+                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                  }}
+                  placeholderTextColor={
+                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
+                  }
+                  className="border border-border rounded-2xl px-3 h-12 mb-2"
+                  value={item.foodName}
+                  onChangeText={(v) => updateItem(index, "foodName", v)}
+                />
+
+                {/* row 2: quantity */}
+                <TextInput
+                  placeholder="Quantity in grams"
+                  keyboardType="numeric"
+                  style={{
+                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                  }}
+                  placeholderTextColor={
+                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
+                  }
+                  className="border border-border rounded-2xl px-3 h-12 mb-2"
+                  value={String(item.quantityInGrams)}
+                  onChangeText={(v) => updateItem(index, "quantityInGrams", v)}
+                />
+
+                {/* macros – 2x2 grid */}
+                <View className="flex-row justify-between gap-2">
+                  <TextInput
+                    placeholder="Calories"
+                    keyboardType="numeric"
+                    style={{
+                      color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                    }}
+                    placeholderTextColor={
+                      colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
+                    }
+                    className="border border-border rounded-2xl px-3 h-12 flex-1"
+                    // value={String(item.macros.calories)}
+                    onChangeText={(v) =>
+                      updateMacro(index, "calories", parseInt(v) || 0)
+                    }
+                  />
+                  <TextInput
+                    placeholder="Fat"
+                    keyboardType="numeric"
+                    style={{
+                      color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                    }}
+                    placeholderTextColor={
+                      colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
+                    }
+                    className="border border-border rounded-2xl px-3 h-12 flex-1"
+                    // value={String(item.macros.fat)}
+                    onChangeText={(v) =>
+                      updateMacro(index, "fat", parseInt(v) || 0)
+                    }
+                  />
+                </View>
+
+                <View className="flex-row justify-between gap-2 mt-2">
+                  <TextInput
+                    placeholder="Carbs"
+                    keyboardType="numeric"
+                    style={{
+                      color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                    }}
+                    placeholderTextColor={
+                      colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
+                    }
+                    className="border border-border rounded-2xl px-3 h-12 flex-1"
+                    // value={String(item.macros.carbs)}
+                    onChangeText={(v) =>
+                      updateMacro(index, "carbs", parseInt(v) || 0)
+                    }
+                  />
+                  <TextInput
+                    placeholder="Protein"
+                    keyboardType="numeric"
+                    style={{
+                      color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                    }}
+                    placeholderTextColor={
+                      colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
+                    }
+                    className="border border-border rounded-2xl px-3 h-12 flex-1"
+                    // value={String(item.macros.protein)}
+                    onChangeText={(v) =>
+                      updateMacro(index, "protein", parseInt(v) || 0)
+                    }
+                  />
+                </View>
+
+                {/* remove button */}
+                {meal.items.length > 1 && (
+                  <TouchableOpacity
+                    className="mt-2 self-end"
+                    onPress={() => removeFood(index)}
+                  >
+                    <Icon name="delete" size={24} color="red" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+            ListHeaderComponent={
+              <TouchableOpacity
+                className="bg-primary rounded-2xl h-14 items-center justify-center mb-12 w-full self-center"
+                onPress={addFood}
+              >
+                <Text className="text-white font-semibold">
+                  Add another food
+                </Text>
+              </TouchableOpacity>
+            }
+            contentContainerStyle={{ paddingBottom: 140 }}
+          />
+
+          {/* Save button – pinned to bottom */}
+          <TouchableOpacity
+            className="bg-primary w-full max-w-[300px] absolute bottom-10 rounded-2xl items-center justify-center h-14 disabled:opacity-50"
+            disabled={isPending}
+            onPress={() => handleLoggingMeal(meal)}
+          >
+            <Text className="text-white font-semibold">
+              {isPending ? "Saving…" : "Save Meal"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
