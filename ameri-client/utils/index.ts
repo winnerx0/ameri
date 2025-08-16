@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://a9ae9af929e2.ngrok-free.app/api/v1";
+export const BACKEND_URL = "https://b1aad1685765.ngrok-free.app/api/v1";
 
 export const api = axios.create({
   baseURL: BACKEND_URL,
@@ -19,9 +19,8 @@ api.interceptors.request.use(async (config) => {
     const json = decode(base64Url.replace(/-/g, "+").replace(/_/g, "/"));
     const payload = JSON.parse(json);
     const expTime = payload.exp * 1000;
-    const refreshTime = expTime - 120 * 1000; 
+    const refreshTime = expTime - 5 * 60 * 1000; 
 
-  
     if (Date.now() >= refreshTime) {
       console.log("Access token is near expiry, refreshing...");
       const refreshToken = await AsyncStorage.getItem("refreshToken");
@@ -47,6 +46,7 @@ api.interceptors.request.use(async (config) => {
       }
     } else {
       console.log("token still valid")
+      console.log("refresh token ", await AsyncStorage.getItem("refreshToken"));
     }
 
     config.headers.Authorization = `Bearer ${token}`;

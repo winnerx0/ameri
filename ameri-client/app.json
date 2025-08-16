@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "ameri-client",
-    "slug": "ameri-client",
+    "name": "Ameri",
+    "slug": "Ameri",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "americlient",
+    "scheme": "ameri",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -37,7 +37,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow Ameri to access your camera"
+          "cameraPermission":"Allow $(PRODUCT_NAME) to access your camera"
         }
       ]
     ],

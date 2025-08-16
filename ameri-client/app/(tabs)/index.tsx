@@ -44,7 +44,7 @@ export default function HomeScreen() {
         }
         return res.data.data as UserData;
       } catch (error) {
-        if (error instanceof AxiosError) console.error(error.response?.data);
+        if (error instanceof AxiosError) console.error("error", error.response?.data);
         console.error("error", error);
       }
     },
@@ -598,6 +598,15 @@ export default function HomeScreen() {
                     </View>
                   </View>
                 ))}
+                <Text
+                  className={clsx(
+                    colorScheme === "dark" && "dark",
+                    "text-muted-foreground self-center"
+                  )} 
+                  onPress={() => router.push("/meal-logs")}
+                >
+                 View More
+                </Text>
               </View>
             )}
           </View>

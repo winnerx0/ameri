@@ -1,13 +1,32 @@
-import { Tabs } from "expo-router";
-import React from "react";
-import { Platform } from "react-native";
+import { router, Tabs } from "expo-router";
+import React, { useEffect } from "react";
+import { Platform, Text, View } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import "../../global.css"
+import "../../global.css";
+import { useAuth } from "@/components/context/AuthContext";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+  const { token, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!token) {
+        router.replace("/login");
+      }
+    }
+  }, [token, loading]);
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <Tabs
@@ -64,7 +83,6 @@ export default function TabLayout() {
           title: "LogMeals",
           href: null,
         }}
-        
       />
     </Tabs>
   );

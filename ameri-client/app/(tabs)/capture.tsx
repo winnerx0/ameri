@@ -1,4 +1,4 @@
-import { Button, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRef } from "react";
 import { clsx } from "clsx";
@@ -14,7 +14,7 @@ export default function TabTwoScreen() {
     return (
       <View
         className={clsx(
-          colorScheme === "dark" ? "dark" : "",
+          colorScheme === "dark" && "dark",
           "bg-background h-screen"
         )}
       />
@@ -25,7 +25,7 @@ export default function TabTwoScreen() {
     return (
       <View
         className={clsx(
-          colorScheme === "dark" ? "dark" : "",
+          colorScheme === "dark" &&"dark",
           "bg-background items-center justify-center gap-4 h-screen"
         )}
       >
