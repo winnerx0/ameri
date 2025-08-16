@@ -1,7 +1,6 @@
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
-import { Label } from "@react-navigation/elements";
 import { useState } from "react";
 import { LoginRequest, LoginResponse } from "@/types";
 import axios, { AxiosError } from "axios";
@@ -63,13 +62,13 @@ export default function LoginScreen() {
         Manage your health the right way
       </Text>
       <View className="flex items-start gap-2">
-        <Label
+        <Text
           style={{
             color: colorScheme === "dark" ? "#ffffff" : "#000000",
           }}
         >
           Email
-        </Label>
+        </Text>
         <TextInput
           placeholder="samuelmadison@gmail.com"
           keyboardType="email-address"
@@ -82,13 +81,13 @@ export default function LoginScreen() {
         />
       </View>
       <View className="flex items-start gap-2">
-        <Label
+        <Text
           style={{
             color: colorScheme === "dark" ? "#ffffff" : "#000000",
           }}
         >
           Password
-        </Label>
+        </Text>
         <TextInput
           placeholder="samuel123@"
           keyboardType="visible-password"
@@ -103,13 +102,13 @@ export default function LoginScreen() {
         />
       </View>
       <View className="flex items-start gap-2">
-        <Label
+        <Text
           style={{
             color: colorScheme === "dark" ? "#ffffff" : "#000000",
           }}
         >
           Confirm Password
-        </Label>
+        </Text>
         <TextInput
           placeholder="samuel123@"
           keyboardType="visible-password"

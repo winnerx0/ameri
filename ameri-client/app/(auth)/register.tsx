@@ -6,7 +6,6 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
-import { Label } from "@react-navigation/elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import {clsx} from "clsx";
@@ -66,13 +65,13 @@ export default function RegisterScreen() {
           Manage your health the right way
         </Text>
         <View className="flex items-start gap-2">
-          <Label
+          <Text
             style={{
               color: colorScheme === "dark" ? "#ffffff" : "#000000",
             }}
           >
             Username
-          </Label>
+          </Text>
           <TextInput
             placeholder="samuel"
             style={{
@@ -88,13 +87,13 @@ export default function RegisterScreen() {
           />
         </View>
         <View className="flex items-start gap-2">
-          <Label
+          <Text
             style={{
               color: colorScheme === "dark" ? "#ffffff" : "#000000",
             }}
           >
             Email
-          </Label>
+          </Text>
           <TextInput
             placeholder="samuelmadison@gmail.com"
             keyboardType="email-address"
@@ -109,13 +108,13 @@ export default function RegisterScreen() {
           />
         </View>
         <View className="flex items-start gap-2">
-          <Label
+          <Text
             style={{
               color: colorScheme === "dark" ? "#ffffff" : "#000000",
             }}
           >
             Password
-          </Label>
+          </Text>
           <TextInput
             placeholder="samuel123@"
             keyboardType="visible-password"

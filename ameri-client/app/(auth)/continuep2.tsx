@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { Label } from "@react-navigation/elements";
 import { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -62,7 +61,7 @@ export default function ContinueP2Screen() {
           disableAutoScroll
         />
         <View className="flex items-start gap-2">
-          <Label className="text-foreground">Password</Label>
+          <Text className="text-foreground">Password</Text>
           <TextInput
             placeholder="Secure1234@"
             keyboardType="visible-password"
@@ -70,7 +69,7 @@ export default function ContinueP2Screen() {
           />
         </View>
         <View className="flex items-start gap-2">
-          <Label className="text-foreground">Confirm Password</Label>
+          <Text className="text-foreground">Confirm Password</Text>
           <TextInput
             placeholder="Secure1234@"
             keyboardType="visible-password"

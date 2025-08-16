@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
-import { Label } from "@react-navigation/elements";
 import Dropdown from "react-native-input-select";
 import { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
@@ -58,7 +57,7 @@ export default function ContinueScreen() {
           disableAutoScroll
         />
         <View className="flex items-start gap-2">
-          <Label className="text-foreground">Password</Label>
+          <Text className="text-foreground">Password</Text>
           <TextInput
             placeholder="Secure1234@"
             keyboardType="visible-password"
@@ -66,7 +65,7 @@ export default function ContinueScreen() {
           />
         </View>
         <View className="flex items-start gap-2">
-          <Label className="text-foreground">Confirm Password</Label>
+          <Text className="text-foreground">Confirm Password</Text>
           <TextInput
             placeholder="Secure1234@"
             keyboardType="visible-password"
