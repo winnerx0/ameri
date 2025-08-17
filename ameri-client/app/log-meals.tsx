@@ -11,12 +11,12 @@ import React, { useState } from "react";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { clsx } from "clsx";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import SelectDropdown from "react-native-select-dropdown";
 import { Macros, Meal, MealType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { api, BACKEND_URL } from "@/utils";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 /* 2. Helper for an empty food item */
 const emptyFood = () => ({
@@ -87,7 +87,7 @@ const LogMeals = () => {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "bg-background h-screen"
+          "bg-background h-full"
         )}
       >
         <View className="w-full flex items-center relative px-2 h-full">
@@ -96,7 +96,7 @@ const LogMeals = () => {
             className="text-foreground flex flex-row items-center mt-10 self-start"
             onPress={() => router.back()}
           >
-            <Icon
+            <MaterialCommunityIcons
               name="chevron-left"
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
@@ -120,7 +120,7 @@ const LogMeals = () => {
                 <Text className="text-foreground">
                   {selectedItem || "Select the meal type"}
                 </Text>
-                <Icon
+                <MaterialCommunityIcons
                   name={isOpened ? "chevron-up" : "chevron-down"}
                   color={colorScheme === "dark" ? "white" : "black"}
                   size={20}
@@ -248,7 +248,7 @@ const LogMeals = () => {
                     className="mt-2 self-end"
                     onPress={() => removeFood(index)}
                   >
-                    <Icon name="delete" size={24} color="red" />
+                    <MaterialCommunityIcons name="delete" size={24} color="red" />
                   </TouchableOpacity>
                 )}
               </View>
