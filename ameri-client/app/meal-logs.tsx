@@ -11,7 +11,7 @@ const MealLogsScreen = () => {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "bg-background h-screen"
+          "bg-background h-full"
         )}
       ></SafeAreaView>
     </SafeAreaProvider>
