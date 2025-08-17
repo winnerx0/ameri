@@ -67,9 +67,10 @@ public class User implements UserDetails {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Meal> meals;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "refresh_token_id", unique = true)
-    private RefreshToken refreshToken;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<RefreshToken> refreshToken;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "otp_id", referencedColumnName = "id", unique = true)

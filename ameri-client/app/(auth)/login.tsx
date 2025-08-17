@@ -1,11 +1,10 @@
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { LoginRequest, LoginResponse } from "@/types";
 import axios, { AxiosError } from "axios";
 import { BACKEND_URL } from "@/utils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAuth } from "@/components/context/AuthContext";
@@ -51,12 +50,7 @@ export default function LoginScreen() {
     }
   };
   return (
-    <SafeAreaView
-      className={clsx(
-        colorScheme === "dark" ? "dark" : "",
-        "bg-background h-screen items-center justify-center gap-4"
-      )}
-    >
+    <>
       <Text className="text-3xl font-bold text-foreground">Ameri</Text>
       <Text className="italic text-foreground">
         Manage your health the right way
@@ -139,6 +133,6 @@ export default function LoginScreen() {
           Register
         </Link>
       </Text>
-    </SafeAreaView>
+    </>
   );
 }

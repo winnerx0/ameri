@@ -3,27 +3,38 @@ import React, { useEffect } from "react";
 import { Platform, Text, View } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import "../../global.css";
 import { useAuth } from "@/components/context/AuthContext";
+import { clsx } from "clsx";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   const { token, loading } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
-      if (!token) {
-        router.replace("/login");
-      }
+    if (!loading && !token) {
+      router.replace("/login");
     }
   }, [token, loading]);
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <Text>Loading...</Text>
+      <View
+        className={clsx(
+          colorScheme === "dark" ? "dark" : "",
+          "bg-background h-screen flex-col flex items-center justify-center"
+        )}
+      >
+        <Text
+          className={clsx(
+            colorScheme === "dark" && "dark",
+            "text-foreground text-3xl font-bold"
+          )}
+        >
+          Loading...
+        </Text>
       </View>
     );
   }
@@ -55,7 +66,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} name="home" color={color} />
+            <MaterialCommunityIcons size={28} name="home" color={color} />
           ),
         }}
       />
@@ -64,7 +75,7 @@ export default function TabLayout() {
         options={{
           title: "Capture",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} name="camera" color={color} />
+            <MaterialCommunityIcons size={28} name="camera" color={color} />
           ),
         }}
       />
@@ -73,7 +84,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <Icon size={28} name="face-man-profile" color={color} />
+            <MaterialCommunityIcons size={28} name="face-man-profile" color={color} />
           ),
         }}
       />

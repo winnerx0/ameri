@@ -13,10 +13,10 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -147,7 +147,7 @@ export default function HomeScreen() {
             <Text
               className={clsx(
                 colorScheme === "dark" ? "dark text-zinc-400" : "text-zinc-600",
-                "text-[15px] font-light"
+                "text-[15px] font-light mb-4 mt-6"
               )}
             >
               {new Date().getUTCHours() <= 0 && new Date().getUTCHours() < 11
@@ -179,7 +179,7 @@ export default function HomeScreen() {
               "bg-primary h-10 flex flex-row gap-2 justify-center items-center self-start px-3 mb-6"
             )}
           >
-            <Icon name="calendar" size={16} color="white" />
+            <MaterialCommunityIcons name="calendar" size={16} color="white" />
             <Text
               className={clsx(
                 colorScheme === "dark" && "dark",
@@ -188,7 +188,7 @@ export default function HomeScreen() {
             >
               {date?.toDateString() ?? "Today"}
             </Text>
-            <Icon name="chevron-down" size={16} color="white" />
+            <MaterialCommunityIcons name="chevron-down" size={16} color="white" />
           </TouchableOpacity>
 
           {show && (
@@ -484,7 +484,7 @@ export default function HomeScreen() {
                 "flex-1 bg-primary h-12 flex-row gap-2 justify-center items-center"
               )}
             >
-              <Icon name="bowl" color="white" size={20} />
+              <MaterialCommunityIcons name="bowl" color="white" size={20} />
               <Text className="text-white text-sm font-semibold">
                 Generate Meal
               </Text>
@@ -500,7 +500,7 @@ export default function HomeScreen() {
               )}
               onPress={() => router.push("/log-meals")}
             >
-              <Icon name="book" color="white" size={20} />
+              <MaterialCommunityIcons name="book" color="white" size={20} />
               <Text className="text-white text-sm font-semibold">Log Meal</Text>
             </TouchableOpacity>
           </View>
@@ -523,7 +523,7 @@ export default function HomeScreen() {
                   "border border-border bg-secondary rounded-xl py-8 items-center justify-center"
                 )}
               >
-                <Icon
+                <MaterialCommunityIcons
                   name="food-off"
                   size={32}
                   color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}
@@ -565,7 +565,7 @@ export default function HomeScreen() {
                           alignItems: "center",
                         }}
                       >
-                        <Icon
+                        <MaterialCommunityIcons
                           name="food"
                           size={20}
                           color={colorScheme === "dark" ? "#A0AEC0" : "#64748B"}
@@ -590,7 +590,7 @@ export default function HomeScreen() {
                           {meal.items.length !== 1 ? "s" : ""}
                         </Text>
                       </View>
-                      <Icon
+                      <MaterialCommunityIcons
                         name="chevron-right"
                         size={16}
                         color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}

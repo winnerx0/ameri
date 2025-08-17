@@ -1,9 +1,12 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, Platform } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRef } from "react";
 import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
-
+import { api, BACKEND_URL } from "@/utils";
+import FormData from "form-data";
+import { MealRecepie } from "@/types";
+import { router } from "expo-router";
 export default function TabTwoScreen() {
   const colorScheme = useColorScheme();
 
@@ -25,7 +28,7 @@ export default function TabTwoScreen() {
     return (
       <View
         className={clsx(
-          colorScheme === "dark" &&"dark",
+          colorScheme === "dark" && "dark",
           "bg-background items-center justify-center gap-4 h-screen"
         )}
       >
@@ -54,34 +57,70 @@ export default function TabTwoScreen() {
     );
   }
 
+  async function uriToFile(uri: string, filename: string) {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+  }
+
   const takePictue = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
 
-      console.log(photo.uri);
+      console.log("url", photo.uri);
 
-      const randomString = Math.random().toString(36).substring(2, 10);
-      const file = base64ToFile(photo.base64!, randomString +".jpeg");
-      console.log("file", file);
+      let file;
+
+      // for web
+
+      if (Platform.OS === "web") {
+        file = await uriToFile(photo.uri, "image.png");
+      } else if (Platform.OS === "android" || Platform.OS === "ios") {
+        file = {
+          uri: photo.uri,
+          name: "image.png",
+          type: "image/png",
+        };
+      }
+
+      console.log("this is the file", file);
+
+      const formData = new FormData();
+
+      formData.append("file", file);
+
+      try {
+        const res = await api.post(
+          BACKEND_URL + "/meal/get-meal-metadata",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (res.status !== 200) {
+          throw new Error(res.data);
+        }
+
+        const data: MealRecepie = res.data;
+
+        // if (data.status === "Rejected") {
+        //   console.log(res.data);
+        // } else {
+          router.push({
+            pathname: "/meal-data",
+            params: {
+              data: JSON.stringify(data),
+            },
+          });
+        // }
+      } catch (error) {
+        console.error("error ", error);
+      }
     }
   };
-
-  function base64ToFile(base64: string, filename: string) {
-    // Split into [meta, data]
-    const [meta, data] = base64.split(",");
-    const mime = meta.match(/:(.*?);/)![1]; 
-
-    // Decode Base64 to binary
-    const binary = atob(data);
-    const arrayBuffer = new ArrayBuffer(binary.length);
-    const uint8Array = new Uint8Array(arrayBuffer);
-
-    for (let i = 0; i < binary.length; i++) {
-      uint8Array[i] = binary.charCodeAt(i);
-    }
-
-    return new File([uint8Array], filename, { type: mime });
-  }
 
   return (
     <CameraView

@@ -7,18 +7,18 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
-import Dropdown from "react-native-input-select";
 import { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Gender } from "@/types";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ContinueScreen() {
   const [form, setForm] = useState({
     gender: "",
   });
 
-  const genders = [{ name: "Male" }, { name: "Female" }] as Gender[];
+  const genders = Object.keys(Gender)
 
   return (
     <SafeAreaProvider>
@@ -28,15 +28,15 @@ export default function ContinueScreen() {
           data={genders}
           onSelect={(selectedItem: Gender, index: number) => {
             console.log(form);
-            setForm((prev) => ({...prev, gender: selectedItem.name}))
+            setForm((prev) => ({...prev, gender: selectedItem}))
           }}
           renderButton={(selectedItem: Gender, isOpened) => {
             return (
               <View className="bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between">
                 <Text className="text-foreground">
-                  {(selectedItem && selectedItem.name) || "Select your gender"}
+                  {selectedItem  || "Select your gender"}
                 </Text>
-                <Icon
+                <MaterialCommunityIcons
                   name={isOpened ? "chevron-up" : "chevron-down"}
                   className="text-white"
                 />
@@ -48,7 +48,7 @@ export default function ContinueScreen() {
               <View
                 className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center"
               >
-                <Text className="text-white ">{item.name}</Text>
+                <Text className="text-white ">{item}</Text>
               </View>
             );
           }}

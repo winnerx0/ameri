@@ -21,15 +21,15 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="log-meals" options={{ headerShown: false }} />
           <Stack.Screen name="meal-logs" options={{ headerShown: false }} />
+          <Stack.Screen name="meal-data" options={{ headerShown: false, animation: "slide_from_bottom" }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+        <StatusBar style="auto" />
       </AuthProvider>
-      <StatusBar style="auto" />
     </QueryClientProvider>
   );
 }

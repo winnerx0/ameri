@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "refresh_token")
@@ -24,9 +25,14 @@ public class RefreshToken {
     private String token;
 
     @Column(nullable = false)
-    private LocalDate expirationDate;
+    private LocalDateTime expirationDate;
 
-    @OneToOne(mappedBy = "refreshToken")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    private Boolean isBlacklisted = false;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 }

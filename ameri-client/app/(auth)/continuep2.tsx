@@ -9,9 +9,8 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Goal, UserMetadata } from "@/types";
-import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function ContinueP2Screen() {
@@ -41,9 +40,9 @@ export default function ContinueP2Screen() {
                 <Text className="text-foreground">
                   {selectedItem || "Select your gender"}
                 </Text>
-                <Icon
+                <MaterialCommunityIcons
                   name={isOpened ? "chevron-up" : "chevron-down"}
-                  color={clsx(colorScheme === "dark" ? "white" : "black")}
+                  color={colorScheme === "dark" ? "white" : "black"}
                   size={20}
                 />
               </View>

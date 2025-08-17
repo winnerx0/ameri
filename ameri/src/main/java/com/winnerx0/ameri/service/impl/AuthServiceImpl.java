@@ -1,7 +1,9 @@
 package com.winnerx0.ameri.service.impl;
 
+import java.sql.Ref;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
@@ -98,6 +100,16 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+        List<RefreshToken> oldTokens = refreshTokenRepository.findByUser(user);
+
+        // black list all the previous tokens;
+        if(oldTokens != null && !oldTokens.isEmpty()){
+            oldTokens.forEach(token -> {
+                token.setIsBlacklisted(true);
+                refreshTokenRepository.save(token);
+            });
+        }
+
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
         authenticationProvider.authenticate(authentication);
 
@@ -110,28 +122,37 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken token = new RefreshToken();
         token.setToken(refreshToken);
         token.setUser(user);
-        token.setExpirationDate(LocalDate.now().plusDays(7));
+        token.setExpirationDate(LocalDateTime.now().plusDays(7));
 
-        user.setRefreshToken(token);
-
-        userRepository.save(user);
+        refreshTokenRepository.save(token);
 
         return new AuthResponse<>("Login Successful", accessToken, refreshToken);
     }
 
     @Override
+    @Transactional
     public TokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
 
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenRequest.getRefreshToken()).orElseThrow(() -> new IllegalArgumentException("Invalid Refresh Token"));
+        RefreshToken old = refreshTokenRepository.findByTokenAndIsNotBlacklisted(refreshTokenRequest.getRefreshToken()).orElseThrow(() -> new IllegalArgumentException("Invalid Refresh Token"));
 
-        User user = refreshToken.getUser();
+        User user = old.getUser();
 
-        if(refreshToken.getExpirationDate().isBefore(LocalDate.now())){
-            refreshTokenRepository.delete(refreshToken);
+        if(old.getExpirationDate().isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("Refresh token has expired");
         }
+        old.setIsBlacklisted(true);
+        refreshTokenRepository.save(old);
         String accessToken = jwtUtils.generateAccessToken(user.getEmail());
+        String newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
 
-        return new TokenResponse(accessToken, refreshTokenRequest.getRefreshToken());
+        RefreshToken newToken = new RefreshToken();
+        newToken.setToken(newRefreshToken);
+        newToken.setExpirationDate(LocalDateTime.now().plusDays(7));
+        newToken.setUser(user);
+
+        refreshTokenRepository.save(newToken);
+
+
+        return new TokenResponse(accessToken, newRefreshToken);
     }
 }

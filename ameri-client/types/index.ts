@@ -55,7 +55,7 @@ export type NutritionSummary = {
   totalFat: number;
   totalProtein: number;
   totalCalories: number;
-  totalCarbs: number
+  totalCarbs: number;
 };
 
 export enum MealType {
@@ -90,3 +90,38 @@ export interface User {
   id: string;
 }
 
+export type MealRecepie =
+  | {
+      status: "Accepted";
+      meal_type: string;
+      cuisine: string;
+      items: string[];
+      portion_size: string;
+      calories: string;
+      macronutrients: {
+        carbohydrates: string;
+        protein: string;
+        fat: string;
+      };
+      water_content: string;
+      vitamins: {
+        a: string;
+        b_complex: string;
+        c: string;
+        d: string;
+        e: string;
+        k: string;
+      };
+      minerals: {
+        iron: string;
+        calcium: string;
+        magnesium: string;
+        potassium: string;
+        zinc: string;
+      };
+      confidence: string;
+    }
+  | {
+      status: "Rejected";
+      reason: string;
+    };

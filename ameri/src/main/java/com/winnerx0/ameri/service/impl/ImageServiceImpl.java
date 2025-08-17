@@ -24,24 +24,19 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDTO getImageData(NutrientRequest request) {
       try {
-          File file = File.createTempFile("meal-", request.getFile().getOriginalFilename());
-
-          byte[] imageBytes = request.getFile().getBytes();
 
           String contentType = request.getFile().getContentType();
 
-          request.getFile().transferTo(file);
-
-          log.info("image {}", file.getAbsoluteFile());
+          log.info("content type {}", contentType);
 
           cloudinaryConfig.cloudinary()
                   .uploader()
-                  .upload(file, ObjectUtils.asMap(
+                  .upload(request.getFile().getBytes(), ObjectUtils.asMap(
                           "overwrite", false,
                           "use_filename", true)
                   );
           ImageDTO imageDTO = new ImageDTO();
-          imageDTO.setImageBytes(imageBytes);
+          imageDTO.setImageBytes(request.getFile().getBytes());
           imageDTO.setContentType(contentType);
           return imageDTO;
       } catch (IOException e) {
