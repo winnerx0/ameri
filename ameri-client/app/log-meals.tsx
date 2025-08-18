@@ -87,13 +87,13 @@ const LogMeals = () => {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "bg-background h-full"
+          "bg-background h-full w-full"
         )}
       >
         <View className="w-full flex items-center relative px-2 h-full">
           {/* back button */}
           <TouchableOpacity
-            className="text-foreground flex flex-row items-center mt-10 self-start"
+            className="text-foreground flex flex-row items-center mt-2 self-start"
             onPress={() => router.back()}
           >
             <MaterialCommunityIcons
@@ -101,7 +101,7 @@ const LogMeals = () => {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-foreground text-sm ml-1">Go Back</Text>
+            <Text className="text-foreground text-sm ml-1">Back</Text>
           </TouchableOpacity>
 
           {/* heading */}
@@ -139,7 +139,7 @@ const LogMeals = () => {
 
           {/* list of foods */}
           <FlatList
-            className="w-full px-2"
+            className="w-full"
             data={meal.items}
             keyExtractor={(_, i) => String(i)}
             showsVerticalScrollIndicator={false}
@@ -268,7 +268,7 @@ const LogMeals = () => {
 
           {/* Save button – pinned to bottom */}
           <TouchableOpacity
-            className="bg-primary w-full max-w-[300px] absolute bottom-10 rounded-2xl items-center justify-center h-14 disabled:opacity-50"
+            className="bg-primary w-full max-w-lg absolute bottom-10 rounded-2xl items-center justify-center h-14 disabled:opacity-50"
             disabled={isPending}
             onPress={() => handleLoggingMeal(meal)}
           >

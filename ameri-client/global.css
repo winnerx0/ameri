@@ -5,7 +5,7 @@
 @layer base {
   :root {
     /* Light theme with improved hierarchy */
-    --background: 210 20% 98%;          /* Lighter than card - very light blue-gray */
+    --background: 214, 100%, 97%;         /* Lighter than card - very light blue-gray */
     --foreground: 222.2 84% 4.9%;       /* Dark text - keeping original */
     --card: 0 0% 100%;                  /* Pure white cards */
     --card-foreground: 222.2 84% 4.9%;

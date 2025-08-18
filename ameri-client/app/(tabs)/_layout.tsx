@@ -5,39 +5,10 @@ import { Platform, Text, View } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import "../../global.css";
-import { useAuth } from "@/components/context/AuthContext";
 import { clsx } from "clsx";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
-  const { token, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !token) {
-      router.replace("/login");
-    }
-  }, [token, loading]);
-
-  if (loading) {
-    return (
-      <View
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background h-screen flex-col flex items-center justify-center"
-        )}
-      >
-        <Text
-          className={clsx(
-            colorScheme === "dark" && "dark",
-            "text-foreground text-3xl font-bold"
-          )}
-        >
-          Loading...
-        </Text>
-      </View>
-    );
-  }
 
   return (
     <Tabs
@@ -50,12 +21,16 @@ export default function TabLayout() {
           ios: {
             position: "absolute",
             backgroundColor:
-              colorScheme === "dark" ? "hsl(222.2 84% 4.9%)" : "#ffffff",
+              colorScheme === "dark"
+                ? "hsl(222.2 84% 4.9%)"
+                : "hsl(214, 100%, 97%)",
             borderTopColor: colorScheme === "dark" ? "#374151" : "#e5e7eb",
           },
           default: {
             backgroundColor:
-              colorScheme === "dark" ? "hsl(222.2 84% 4.9%)" : "#ffffff",
+              colorScheme === "dark"
+                ? "hsl(222.2 84% 4.9%)"
+                : "hsl(214, 100%, 97%)",
             borderTopColor: colorScheme === "dark" ? "#374151" : "#e5e7eb",
           },
         }),
@@ -84,7 +59,11 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons size={28} name="face-man-profile" color={color} />
+            <MaterialCommunityIcons
+              size={28}
+              name="face-man-profile"
+              color={color}
+            />
           ),
         }}
       />
