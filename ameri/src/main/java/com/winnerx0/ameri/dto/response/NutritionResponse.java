@@ -14,21 +14,21 @@ public class NutritionResponse {
 
     private LocalDate date;
 
-    private int totalCalories;
+    private double totalCalories;
 
-    private int totalProtein;
+    private double totalProtein;
 
-    private int totalCarbs;
+    private double totalCarbs;
 
-    private int totalFat;
+    private double totalFat;
 
-    private int caloricGoal;
+    private double caloricGoal;
 
-    private int proteinGoal;
+    private double proteinGoal;
 
-    private int carbsGoals;
+    private double carbsGoals;
 
-    private int fatGoal;
+    private double fatGoal;
 
 
 }

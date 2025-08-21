@@ -56,16 +56,16 @@ public class MealRequest {
     public static class Macros {
 
         @NotNull(message = "Calories required")
-        private Integer calories;
+        private Double calories;
 
         @NotNull(message = "Carbs required")
-        private Integer carbs;
+        private Double carbs;
 
         @NotNull(message = "Protein required")
-        private Integer protein;
+        private Double protein;
 
         @NotNull(message = "Fat required")
-        private Integer fat;
+        private Double fat;
     }
 
 }

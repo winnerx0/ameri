@@ -7,10 +7,8 @@ import axios, { AxiosError } from "axios";
 import { BACKEND_URL } from "@/utils";
 import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useAuth } from "@/components/context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function LoginScreen() {
-  const { login } = useAuth();
-
   const colorScheme = useColorScheme();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -38,7 +36,10 @@ export default function LoginScreen() {
 
       const response: LoginResponse = await res.data;
       console.log(response);
-      await login(response.accessToken, response.refreshToken);
+      await AsyncStorage.multiSet([
+        ["accessToken", response.accessToken],
+        ["refreshToken", response.refreshToken],
+      ]);
       router.push("/(tabs)");
     } catch (e) {
       if (e instanceof AxiosError) {

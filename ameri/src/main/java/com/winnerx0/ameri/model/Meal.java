@@ -52,13 +52,13 @@ public class Meal {
     @Embeddable
     public static class Macros {
 
-        private int calories;
+        private double calories;
 
-        private int carbs;
+        private double carbs;
 
-        private int protein;
+        private double protein;
 
-        private int fat;
+        private double fat;
     }
 
 }

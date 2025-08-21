@@ -75,8 +75,8 @@ export default function TabTwoScreen() {
   return (
     <CameraView
       autofocus="on"
-      ref={cameraRef}
       pictureSize="1920x1080"
+      ref={cameraRef}
       className={clsx(
         colorScheme === "dark" && "dark",
         "bg-background h-full flex-1",
@@ -87,7 +87,7 @@ export default function TabTwoScreen() {
           onPress={takePictue}
           className={clsx(
             colorScheme === "dark" && "dark",
-            "bg-background size-[80px] rounded-full border border-border",
+            "bg-background size-[80px] rounded-full border-8 border-border",
           )}
         ></TouchableOpacity>
       </View>
