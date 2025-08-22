@@ -13,6 +13,7 @@ import com.winnerx0.ameri.repository.MealRepository;
 import com.winnerx0.ameri.service.ImageService;
 import com.winnerx0.ameri.service.MealService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Validated
 public class MealServiceImpl implements MealService {
 
     private final RestTemplate restTemplate;
@@ -67,7 +70,7 @@ public class MealServiceImpl implements MealService {
                             Map.of("text", "You are a registered-dietitian AI.  \n" +
                                     "Your only task is to examine the image and return exactly one JSON object—no extra text.\n" +
                                     "\n" +
-                                    "1. Determine if the image shows a prepared, edible meal or food item.  \n" +
+                                    "1. Determine if the image shows a prepared, edible meal or food item or fruits or vegetable.  \n" +
                                     "   - If NO → return  \n" +
                                     "     {\"status\":\"Rejected\",\"reason\":\"Not a meal or food image\"}  \n" +
                                     "\n" +
@@ -77,7 +80,7 @@ public class MealServiceImpl implements MealService {
                                     "  \"meal_type\":\"Breakfast|Lunch|Dinner|Snack\",\n" +
                                     "  \"cuisine\":\"<single cuisine name, e.g. Nigerian>\",\n" +
                                     "  \"items\":[\"<food item 1>\",\"<food item 2>\",...],\n" +
-                                    "  \"portion_size\":\"<weight or volume>\",\n" +
+                                    "  \"portion_size\":\"<weight in grams>\",\n" +
                                     "  \"calories\":\"<estimated kcal>\",\n" +
                                     "  \"macronutrients\":{\"carbohydrates\":\"g\",\"protein\":\"g\",\"fat\":\"g\"},\n" +
                                     "  \"water_content\":\"%\",\n" +
@@ -87,7 +90,7 @@ public class MealServiceImpl implements MealService {
                                     "}\n" +
                                     "\n" +
                                     "Guidelines  \n" +
-                                    "- Reject non-food, raw ingredients only, or unclear images.  \n" +
+                                    "- Reject non-food or unclear images.  \n" +
                                     "- Provide best-effort estimates; do not guess cuisine or items you cannot identify.  \n" +
                                     "- Output must be valid JSON with no trailing commas or comments.")
                     ))
@@ -227,7 +230,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public String logMeal(MealRequest mealRequest) {
+    public String logMeal(@Validated MealRequest mealRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Meal meal = new Meal();

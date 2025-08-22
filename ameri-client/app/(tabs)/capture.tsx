@@ -73,24 +73,27 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <CameraView
-      autofocus="on"
-      pictureSize="1920x1080"
-      ref={cameraRef}
+    <View
       className={clsx(
         colorScheme === "dark" && "dark",
-        "bg-background h-full flex-1",
+        "bg-background h-full flex flex-col gap-8 justify-center px-8 relative"
       )}
     >
-      <View className="h-screen flex items-center justify-center mt-[300px]">
-        <TouchableOpacity
-          onPress={takePictue}
-          className={clsx(
-            colorScheme === "dark" && "dark",
-            "bg-background size-[80px] rounded-full border-8 border-border",
-          )}
-        ></TouchableOpacity>
-      </View>
-    </CameraView>
+      <CameraView
+        autofocus="on"
+        //  ratio="4:3"
+        ref={cameraRef}
+        className="border-4 border-border"
+      >
+        <View className="m-auto size-[350px]  flex items-center justify-center self-center justify-self-center"></View>
+      </CameraView>
+      <TouchableOpacity
+        onPress={takePictue}
+        className={clsx(
+          colorScheme === "dark" && "dark",
+          "bg-foreground size-[80px] rounded-full border-8 border-border self-center absolute bottom-28"
+        )}
+      ></TouchableOpacity>
+    </View>
   );
 }

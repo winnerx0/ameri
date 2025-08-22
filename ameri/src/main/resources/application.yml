@@ -20,7 +20,7 @@ spring:
                         client-secret: ${GOOGLE_CLIENT_SECRET}
     servlet:
         multipart:
-            max-file-size: 2MB
+            max-file-size: 5MB
 
 logging:
     level:

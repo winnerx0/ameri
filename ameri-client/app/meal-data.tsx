@@ -81,7 +81,7 @@ const MealData = () => {
       let meal;
       if (data?.status === "Accepted") {
         meal = {
-          mealType: data.meal_type,
+          mealType: data.meal_type.toUpperCase(),
           items: [
             {
               foodName: data.cuisine,
@@ -97,7 +97,7 @@ const MealData = () => {
         };
       }
       const res = await api.post(BACKEND_URL + "/meal/log-meal", meal);
-      if (res.status === 201) {
+      if (res.status !== 201) {
         throw new Error(res.data);
       }
     },
