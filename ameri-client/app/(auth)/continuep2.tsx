@@ -5,16 +5,24 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
-import { useState } from "react";
+import { Link, router } from "expo-router";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { Goal, RegisterResponse, TagInputProps, UserMetadata } from "@/types";
+import { BACKEND_URL } from "@/utils";
+import axios from "axios";
 import SelectDropdown from "react-native-select-dropdown";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Goal, UserMetadata } from "@/types";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useState } from "react";
+import { useRegisterStore } from "@/utils/store";
+import { clsx } from "clsx";
+import TagInput from "@/components/tag-input";
 
 export default function ContinueP2Screen() {
   const colorScheme = useColorScheme();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [healthConditions, setHealthConditions] = useState<string[]>([]);
   const [form, setForm] = useState<UserMetadata>({
     dob: new Date(),
     goal: Goal.STAY_HEALTHY,
@@ -23,69 +31,126 @@ export default function ContinueP2Screen() {
     heathConditons: {},
   });
 
+  const { registerData, updateField } = useRegisterStore();
+
   const goals = Object.values(Goal).filter((key) => typeof key === "string");
 
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView className="dark bg-background text-foreground h-screen items-center justify-center gap-4">
-        <SelectDropdown
-          data={goals}
-          onSelect={(selectedItem: string, index: number) => {
-            console.log(form);
-            setForm((prev) => ({ ...prev, goal: Object.values(Goal)[index] }));
-          }}
-          renderButton={(selectedItem: string, isOpened) => {
-            return (
-              <View className="bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between">
-                <Text className="text-foreground">
-                  {selectedItem || "Select your gender"}
-                </Text>
-                <MaterialCommunityIcons
-                  name={isOpened ? "chevron-up" : "chevron-down"}
-                  color={colorScheme === "dark" ? "white" : "black"}
-                  size={20}
-                />
-              </View>
-            );
-          }}
-          renderItem={(item: string, index, isSelected) => {
-            return (
-              <View className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center">
-                <Text className="text-white ">{item}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-          disableAutoScroll
+  const handleRegister = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.post(
+        BACKEND_URL + "/auth/register",
+        registerData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+        }
+      );
+
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      const response: RegisterResponse = await res.data;
+
+      console.log(response);
+      router.push("/(tabs)");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const HealthCondition = ({
+    tag,
+    onRemove,
+  }: {
+    tag: string;
+    onRemove: () => void;
+  }) => {
+    const colorScheme = useColorScheme();
+
+    return (
+      <View
+        className={clsx(
+          colorScheme === "dark" ? "dark" : "",
+          "bg-primary rounded-full px-3 py-2 flex-row items-center m-1"
+        )}
+      >
+        <View
+          className={clsx(
+            colorScheme === "dark" ? "dark" : "",
+            "w-2 h-2 rounded-full bg-destructive-foreground mr-2"
+          )}
         />
-        <View className="flex items-start gap-2">
-          <Text className="text-foreground">Password</Text>
-          <TextInput
-            placeholder="Secure1234@"
-            keyboardType="visible-password"
-            className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
-          />
-        </View>
-        <View className="flex items-start gap-2">
-          <Text className="text-foreground">Confirm Password</Text>
-          <TextInput
-            placeholder="Secure1234@"
-            keyboardType="visible-password"
-            className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
-          />
-        </View>
-        <TouchableOpacity className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center">
-          <Text className="text-white">Login</Text>
-        </TouchableOpacity>
-        <Text className="text-foreground mt-4">
-          Don&apos;t have an account ?{" "}
-          <Link href="/register" className="text-primary">
-            Register
-          </Link>
+        <Text
+          className={clsx(
+            colorScheme === "dark" ? "dark" : "",
+            "text-destructive-foreground text-sm font-medium mr-2"
+          )}
+        >
+          {tag}
         </Text>
-      </SafeAreaView>
-    </SafeAreaProvider>
+        <TouchableOpacity onPress={onRemove}>
+          <Text
+            className={clsx(
+              colorScheme === "dark" ? "dark" : "",
+              "text-destructive-foreground text-base font-bold"
+            )}
+          >
+            ×
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const HealthConditionInput = (props: Omit<TagInputProps, "tagComponent">) => (
+    <TagInput
+      {...props}
+      tagComponent={HealthCondition}
+      placeholder="Enter health conditions..."
+    />
+  );
+  return (
+    <View className="flex flex-col gap-6 items-center w-full">
+      <View className="flex items-start gap-2">
+        <Text className="text-foreground">Health Conditions</Text>
+        <HealthConditionInput
+          onTagsChange={(tags) => setHealthConditions(tags)}
+          initialTags={healthConditions}
+          maxTags={10}
+        />
+      </View>
+      <View className="flex items-start gap-2">
+        <Text className="text-foreground">Password</Text>
+        <TextInput
+          placeholder="Secure1234@"
+          keyboardType="visible-password"
+          className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
+        />
+      </View>
+      <View className="flex items-start gap-2">
+        <Text className="text-foreground">Confirm Password</Text>
+        <TextInput
+          placeholder="Secure1234@"
+          keyboardType="visible-password"
+          className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
+        />
+      </View>
+      <TouchableOpacity className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center">
+        <Text className="text-white">Login</Text>
+      </TouchableOpacity>
+      <Text className="text-foreground mt-4">
+        Don&apos;t have an account ?{" "}
+        <Link href="/register" className="text-primary">
+          Register
+        </Link>
+      </Text>
+    </View>
   );
 }
 

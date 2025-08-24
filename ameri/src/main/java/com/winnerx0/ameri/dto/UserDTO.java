@@ -33,4 +33,6 @@ public class UserDTO {
     private int height;
 
     private Goal goal;
+
+    private long loggedMeals = 0;
 }

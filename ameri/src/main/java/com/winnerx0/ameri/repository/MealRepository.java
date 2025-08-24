@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface MealRepository extends JpaRepository<Meal, String> {
 
-    @Query("SELECT u FROM Meal u WHERE u.user.id = :userId")
+    @Query("SELECT m FROM Meal m WHERE m.user.id = :userId")
     Page<Meal> findByUser(String userId, Pageable pageable);
 
     @Query("SELECT m FROM Meal m WHERE m.user = :user AND m.loggedAt = :date")
@@ -29,4 +29,7 @@ public interface MealRepository extends JpaRepository<Meal, String> {
             OR m.loggedAt <= :endDate )
             ORDER BY m.loggedAt DESC""")
     List<Meal> findAllByUserAndStartDateAndEndDate(@Param("user") User user, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT COUNT(m) FROM Meal m WHERE m.user.id = :userId")
+    long findNumberOfLoggedMeals(String userId);
 }

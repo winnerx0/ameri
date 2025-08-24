@@ -1,6 +1,6 @@
 export enum Gender {
-  MALE,
-  FEMALE,
+  MALE = "Male",
+  FEMALE = "Female",
 }
 
 export type UserMetadata = {
@@ -31,23 +31,23 @@ export type LoginResponse = {
 };
 
 export type RegisterRequest = {
-  username: string;
-  email: string;
   password: string;
-};
+} & Partial<UserData>;
 
 export type RegisterResponse = {
   message: string;
 };
 
 export type UserData = {
-  dateOfBirth: Date;
+  dateOfBirth: string;
   weight: number;
   height: number;
-  gender: Gender;
+  gender: Gender | null;
   username: string;
-  goal: Goal;
+  goal: Goal | null;
+  email: string;
   heathConditons: Record<string, string>;
+  loggedMeals: number;
 };
 
 export type NutritionSummary = {
@@ -125,3 +125,11 @@ export type MealRecepie =
       status: "Rejected";
       reason: string;
     };
+
+export interface TagInputProps {
+  placeholder?: string;
+  onTagsChange?: (tags: string[]) => void;
+  initialTags?: string[];
+  maxTags?: number;
+  tagComponent?: React.ComponentType<{ tag: string; onRemove: () => void }>;
+}

@@ -51,7 +51,7 @@ export default function LoginScreen() {
     }
   };
   return (
-    <>
+    <View className="flex flex-col gap-6 items-center">
       <Text className="text-3xl font-bold text-foreground">Ameri</Text>
       <Text className="italic text-foreground">
         Manage your health the right way
@@ -118,11 +118,7 @@ export default function LoginScreen() {
         />
       </View>
       <TouchableOpacity
-        className={clsx(
-          (isLoading || Object.values(data).some((v) => v.trim() === "")) &&
-            "disabled:opacity-40",
-          "mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
-        )}
+        className="disabled:opacity-40 mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
         onPress={handleLogin}
         disabled={isLoading || Object.values(data).some((v) => v.trim() === "")}
       >
@@ -134,6 +130,6 @@ export default function LoginScreen() {
           Register
         </Link>
       </Text>
-    </>
+    </View>
   );
 }

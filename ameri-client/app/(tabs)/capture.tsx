@@ -84,6 +84,10 @@ export default function TabTwoScreen() {
         //  ratio="4:3"
         ref={cameraRef}
         className="border-4 border-border"
+        style={{
+          borderRadius: 50,
+          overflow: "hidden",
+        }}
       >
         <View className="m-auto size-[350px]  flex items-center justify-center self-center justify-self-center"></View>
       </CameraView>

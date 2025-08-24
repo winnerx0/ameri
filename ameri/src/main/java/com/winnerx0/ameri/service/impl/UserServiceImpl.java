@@ -6,6 +6,7 @@ import com.winnerx0.ameri.dto.response.TokenResponse;
 import com.winnerx0.ameri.dto.response.UserResponse;
 import com.winnerx0.ameri.model.RefreshToken;
 import com.winnerx0.ameri.model.User;
+import com.winnerx0.ameri.repository.MealRepository;
 import com.winnerx0.ameri.repository.RefreshTokenRepository;
 import com.winnerx0.ameri.repository.UserRepository;
 import com.winnerx0.ameri.service.UserService;
@@ -22,14 +23,19 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final MealRepository mealRepository;
+
+    public UserServiceImpl(UserRepository userRepository, MealRepository mealRepository) {
         this.userRepository = userRepository;
+        this.mealRepository = mealRepository;
     }
 
     @Override
     public UserResponse<UserDTO> getCurrentUser(String email) {
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        long mealNumber = mealRepository.findNumberOfLoggedMeals(user.getId());
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(user.getEmail());
@@ -40,6 +46,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setUsername(user.getName());
         userDTO.setDateOfBirth(user.getDateOfBirth());
         userDTO.setGoal(user.getGoal());
+        userDTO.setLoggedMeals(mealNumber);
         return new UserResponse<>(userDTO, "User retrieved successfully");
     }
 
