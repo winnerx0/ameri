@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class User implements UserDetails {
 //    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private JsonNode healthConditions;
+//    @JdbcTypeCode(SqlTypes.JSON)
+//    @Column(columnDefinition = "jsonb")
+    private List<String> healthConditions = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Goal goal;

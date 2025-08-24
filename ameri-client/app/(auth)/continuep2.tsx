@@ -5,39 +5,32 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Goal, RegisterResponse, TagInputProps, UserMetadata } from "@/types";
+import {  RegisterResponse, Screen, TagInputProps } from "@/types";
 import { BACKEND_URL } from "@/utils";
 import axios from "axios";
-import SelectDropdown from "react-native-select-dropdown";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useRegisterStore } from "@/utils/store";
 import { clsx } from "clsx";
 import TagInput from "@/components/tag-input";
+import { useMutation } from "@tanstack/react-query";
 
-export default function ContinueP2Screen() {
+export default function ContinueP2({
+  setScreen,
+}: {
+  setScreen: Dispatch<SetStateAction<Screen>>;
+}) {
   const colorScheme = useColorScheme();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [healthConditions, setHealthConditions] = useState<string[]>([]);
-  const [form, setForm] = useState<UserMetadata>({
-    dob: new Date(),
-    goal: Goal.STAY_HEALTHY,
-    weight: 0,
-    height: 0,
-    heathConditons: {},
-  });
 
   const { registerData, updateField } = useRegisterStore();
 
-  const goals = Object.values(Goal).filter((key) => typeof key === "string");
-
-  const handleRegister = async () => {
-    setIsLoading(true);
-    try {
+  const { data, isPending, error } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: async () => {
       const res = await axios.post(
         BACKEND_URL + "/auth/register",
         registerData,
@@ -45,7 +38,6 @@ export default function ContinueP2Screen() {
           headers: {
             "Content-Type": "application/json",
           },
-          timeout: 10000,
         }
       );
 
@@ -54,15 +46,10 @@ export default function ContinueP2Screen() {
       }
 
       const response: RegisterResponse = await res.data;
-
-      console.log(response);
-      router.push("/(tabs)");
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return response;
+    },
+    onError: (e) => console.error(e),
+  });
 
   const HealthCondition = ({
     tag,
@@ -83,7 +70,7 @@ export default function ContinueP2Screen() {
         <View
           className={clsx(
             colorScheme === "dark" ? "dark" : "",
-            "w-2 h-2 rounded-full bg-destructive-foreground mr-2"
+            "w-2 h-2 rounded-full bg-destructive-foreground mr-2 flex flex-row items-center justify-center"
           )}
         />
         <Text
@@ -101,7 +88,11 @@ export default function ContinueP2Screen() {
               "text-destructive-foreground text-base font-bold"
             )}
           >
-            ×
+            <MaterialCommunityIcons
+              name={"close-circle"}
+              size={20}
+              color={"white"}
+            />
           </Text>
         </TouchableOpacity>
       </View>
@@ -120,74 +111,45 @@ export default function ContinueP2Screen() {
       <View className="flex items-start gap-2">
         <Text className="text-foreground">Health Conditions</Text>
         <HealthConditionInput
-          onTagsChange={(tags) => setHealthConditions(tags)}
+          onTagsChange={(tags) => {
+            setHealthConditions(tags);
+            updateField("heathConditons", tags);
+          }}
           initialTags={healthConditions}
-          maxTags={10}
+          maxTags={5}
         />
       </View>
       <View className="flex items-start gap-2">
-        <Text className="text-foreground">Password</Text>
+        <Text className="text-foreground">Weight</Text>
         <TextInput
-          placeholder="Secure1234@"
-          keyboardType="visible-password"
+          placeholder="Enter weight in kg"
+          keyboardType="number-pad"
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
+          onChangeText={(weight) => updateField("weight", parseFloat(weight))}
         />
       </View>
       <View className="flex items-start gap-2">
-        <Text className="text-foreground">Confirm Password</Text>
+        <Text className="text-foreground">Height</Text>
         <TextInput
-          placeholder="Secure1234@"
-          keyboardType="visible-password"
+          placeholder="Enter height in kg"
+          keyboardType="number-pad"
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
+          onChangeText={(height) => updateField("height", parseFloat(height))}
         />
       </View>
-      <TouchableOpacity className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center">
-        <Text className="text-white">Login</Text>
+      <TouchableOpacity
+        className="disabled:opacity-40 mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
+        disabled={isPending || Object.values(registerData).some((v) => !v)}
+      >
+        <Text className="text-white">Register</Text>
       </TouchableOpacity>
       <Text className="text-foreground mt-4">
         Don&apos;t have an account ?{" "}
-        <Link href="/register" className="text-primary">
-          Register
+        <Link href="/login" className="text-primary">
+          Login
         </Link>
       </Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  dropdownButtonTxtStyle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "200",
-    color: "#151E26",
-  },
-  dropdownButtonArrowStyle: {
-    fontSize: 28,
-  },
-  dropdownButtonIconStyle: {
-    fontSize: 28,
-    marginRight: 8,
-  },
-  dropdownMenuStyle: {
-    backgroundColor: "hsl(var(--background))",
-    borderRadius: 10,
-  },
-  dropdownItemStyle: {
-    width: "100%",
-    flexDirection: "row",
-    paddingHorizontal: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-  dropdownItemTxtStyle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#151E26",
-  },
-  dropdownItemIconStyle: {
-    fontSize: 28,
-    marginRight: 8,
-  },
-});

@@ -7,16 +7,20 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import SelectDropdown from "react-native-select-dropdown";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Gender, Goal } from "@/types";
+import { Gender, Goal, Screen } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useRegisterStore } from "@/utils/store";
 
-export default function ContinueScreen() {
+export default function ContinueScreen({
+  setScreen,
+}: {
+  setScreen: Dispatch<SetStateAction<Screen>>;
+}) {
   const colorScheme = useColorScheme();
   const [form, setForm] = useState({
     gender: "",
@@ -60,7 +64,12 @@ export default function ContinueScreen() {
           }}
           renderButton={(selectedItem: Goal, isOpened) => {
             return (
-              <View className="bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between">
+              <View
+                className={clsx(
+                  colorScheme === "dark" && "dark",
+                  "bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between"
+                )}
+              >
                 <Text className="text-foreground">
                   {selectedItem || "Select your gender"}
                 </Text>
@@ -73,7 +82,12 @@ export default function ContinueScreen() {
           }}
           renderItem={(item: Goal, index, isSelected) => {
             return (
-              <View className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center">
+              <View
+                className={clsx(
+                  colorScheme === "dark" && "dark",
+                  "bg-background w-[350px] h-14 divide-border divide-y-2 flex flex-col items-center p-2 justify-center hover:bg-secondary"
+                )}
+              >
                 <Text
                   className={clsx(
                     colorScheme === "dark" && "dark",
@@ -111,7 +125,12 @@ export default function ContinueScreen() {
           }}
           renderButton={(selectedItem: Goal, isOpened) => {
             return (
-              <View className="bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between">
+              <View
+                className={clsx(
+                  colorScheme === "dark" && "dark",
+                  "bg-background w-[350px] h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between"
+                )}
+              >
                 <Text className="text-foreground">
                   {selectedItem || "Select your goal"}
                 </Text>
@@ -125,7 +144,12 @@ export default function ContinueScreen() {
           renderItem={(item: Goal, index, isSelected) => {
             console.log(goals[index]);
             return (
-              <View className="text-white flex gap-2 py-4 bg-background p-2 flex-1 flex-row items-center justify-center">
+              <View
+                className={clsx(
+                  colorScheme === "dark" && "dark",
+                  "bg-background w-[350px] h-14 divide-border divide-y-2 flex flex-col items-center p-2 justify-center hover:bg-secondary"
+                )}
+              >
                 <Text
                   className={clsx(
                     colorScheme === "dark" && "dark",
@@ -144,7 +168,7 @@ export default function ContinueScreen() {
       </View>
       <TouchableOpacity
         className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
-        onPress={() => router.push("/(auth)/continuep2")}
+        onPress={() => setScreen("continueP2")}
       >
         <Text className="text-white">Continue</Text>
       </TouchableOpacity>

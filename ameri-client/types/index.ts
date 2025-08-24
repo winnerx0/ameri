@@ -46,7 +46,7 @@ export type UserData = {
   username: string;
   goal: Goal | null;
   email: string;
-  heathConditons: Record<string, string>;
+  heathConditons: string[];
   loggedMeals: number;
 };
 
@@ -133,3 +133,5 @@ export interface TagInputProps {
   maxTags?: number;
   tagComponent?: React.ComponentType<{ tag: string; onRemove: () => void }>;
 }
+
+export type Screen = "login" | "continue" | "continueP2";

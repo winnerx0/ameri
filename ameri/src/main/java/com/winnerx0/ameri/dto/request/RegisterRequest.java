@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -35,7 +36,7 @@ public class RegisterRequest {
     @Past(message = "Date of birth should be in the past")
     private LocalDate dateOfBirth;
 
-    private JsonNode healthConditions;
+    private List<String> healthConditions;
 
     @NotNull(message = "Weight required")
     @Min(value = 1, message = "Invalid weight")

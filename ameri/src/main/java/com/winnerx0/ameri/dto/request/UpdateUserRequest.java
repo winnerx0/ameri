@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class UpdateUserRequest {
 
     private LocalDate dateOfBirth;
 
-    private JsonNode healthConditions;
+    private List<String> healthConditions;
 
     private Integer weight;
 

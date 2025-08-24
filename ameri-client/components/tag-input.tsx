@@ -61,7 +61,7 @@ export default function TagInput({
       <View
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "h-full border border-border w-[350px] rounded-md p-2 bg-background"
+          "h-full border border-border w-[350px] rounded-2xl p-2 bg-background"
         )}
       >
         {/* Tags Container */}
@@ -90,6 +90,8 @@ export default function TagInput({
           multiline
           blurOnSubmit={false}
           returnKeyType="done"
+          className="outline-none"
+          maxLength={20}
         />
 
         {/* Tag count indicator */}
