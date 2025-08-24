@@ -13,11 +13,11 @@ const initialRegisterData: RegisterRequest = {
   email: "",
   password: "",
   gender: null,
-  heathConditons: [],
+  healthConditions: [],
   weight: 0,
   height: 0,
   goal: null,
-  dateOfBirth: new Date().toISOString(),
+  dateOfBirth: ""
 };
 
 export const useRegisterStore = create<RegisterStore>((set) => ({

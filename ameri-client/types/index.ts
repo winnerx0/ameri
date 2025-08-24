@@ -32,7 +32,7 @@ export type LoginResponse = {
 
 export type RegisterRequest = {
   password: string;
-} & Partial<UserData>;
+} & Pick<UserData, "email" | "username" | "dateOfBirth" | "weight" | "height" | "gender" | "goal" | "healthConditions">;
 
 export type RegisterResponse = {
   message: string;
@@ -46,7 +46,7 @@ export type UserData = {
   username: string;
   goal: Goal | null;
   email: string;
-  heathConditons: string[];
+  healthConditions: string[];
   loggedMeals: number;
 };
 
@@ -134,4 +134,7 @@ export interface TagInputProps {
   tagComponent?: React.ComponentType<{ tag: string; onRemove: () => void }>;
 }
 
-export type Screen = "login" | "continue" | "continueP2";
+export type Screen<T> = {
+  path: "login" | "continue" | "continueP2" | "otp";
+  data?: T
+};

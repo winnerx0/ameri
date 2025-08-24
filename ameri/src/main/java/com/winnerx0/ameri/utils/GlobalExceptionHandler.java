@@ -17,6 +17,7 @@ import com.winnerx0.ameri.dto.response.ErrorResponse;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.server.MethodNotAllowedException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,9 +36,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             BadCredentialsException.class,
             IllegalArgumentException.class,
-            IllegalStateException.class
+            IllegalStateException.class,
+            NoResourceFoundException.class
     })
-    public ResponseEntity<ErrorResponse> handleException(RuntimeException e) {
+    public ResponseEntity<ErrorResponse> handleExceptions(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 

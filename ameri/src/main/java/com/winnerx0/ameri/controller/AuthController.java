@@ -11,6 +11,7 @@ import com.winnerx0.ameri.service.EmailService;
 import com.winnerx0.ameri.service.OtpService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +42,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
-    @PostMapping("refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<TokenResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
     }
@@ -57,5 +58,15 @@ public class AuthController {
     public ResponseEntity<OtpResponse> verifyOTP(@Valid @RequestBody VerifyOTPRequest verifyOTPRequest){
         otpService.verifyOTP(verifyOTPRequest.getOtp(), verifyOTPRequest.getEmail());
         return ResponseEntity.ok(new OtpResponse("Account verified please proceed to login"));
+    }
+
+    @PostMapping("/verify-account")
+    public ResponseEntity<AuthResponse<String>> verifyAccount(@Valid @RequestBody VerifyAccountRequest verifyAccountRequest){
+        boolean accountExists = authService.verifyAccount(verifyAccountRequest);
+
+        if(accountExists){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponse<>("Account already exist!", null, null));
+        }
+        return ResponseEntity.ok(new AuthResponse<>("Account does not exist exists!", null, null));
     }
 }

@@ -5,11 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Link, router } from "expo-router";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Link } from "expo-router";
+import { Dispatch, SetStateAction } from "react";
 import SelectDropdown from "react-native-select-dropdown";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Gender, Goal, Screen } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
@@ -19,35 +17,40 @@ import { useRegisterStore } from "@/utils/store";
 export default function ContinueScreen({
   setScreen,
 }: {
-  setScreen: Dispatch<SetStateAction<Screen>>;
+  setScreen: Dispatch<SetStateAction<Screen<string>>>;
 }) {
   const colorScheme = useColorScheme();
-  const [form, setForm] = useState({
-    gender: "",
-    goal: "",
-  });
-
-  const [date, setDate] = useState("");
 
   const genders = Object.values(Gender);
   const goals = Object.values(Goal);
 
-  const { updateField } = useRegisterStore();
+  const { registerData, updateField } = useRegisterStore();
 
-  function insertAt(str: string, index: number, char: string) {
-    return str.slice(0, index) + char + str.slice(index);
-  }
+  function formatDateInput(str: string): string {
+    // remove non-digits
+    const cleaned = str.replace(/\D/g, "");
 
-  function formatDateString(date: string) {
-    const numbersOnly = date.replace(/\D/g, "");
-
-    if (numbersOnly.length >= 8) {
-      return insertAt(insertAt(numbersOnly, 4, "-"), 7, "-");
-    } else if (numbersOnly.length >= 4) {
-      return insertAt(numbersOnly, 4, "-");
+    if (cleaned.length <= 4) {
+      return cleaned; // typing year
+    } else if (cleaned.length <= 6) {
+      return `${cleaned.slice(0, 4)}-${cleaned.slice(4)}`; // typing year + month
+    } else {
+      return `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(
+        6,
+        8
+      )}`; // full YYYY-MM-DD
     }
-    return numbersOnly;
   }
+
+  const {
+    username,
+    password,
+    healthConditions,
+    height,
+    weight,
+    email,
+    ...cleanedData
+  } = registerData;
 
   return (
     <View className="flex flex-col gap-6 items-center">
@@ -56,11 +59,8 @@ export default function ContinueScreen({
         <SelectDropdown
           data={genders}
           onSelect={(selectedItem: Gender, index: number) => {
-            setForm((prev) => ({
-              ...prev,
-              gender: Object.keys(Gender)[index],
-            }));
-            updateField("gender", Object.values(Gender)[index]);
+            updateField("gender", Object.keys(Gender)[index]);
+            console.log("Selected gender:", Object.keys(Gender));
           }}
           renderButton={(selectedItem: Goal, isOpened) => {
             return (
@@ -71,7 +71,12 @@ export default function ContinueScreen({
                 )}
               >
                 <Text className="text-foreground">
-                  {selectedItem || "Select your gender"}
+                  {registerData.gender
+                    ? `${
+                        registerData.gender.charAt(0).toUpperCase() +
+                        registerData.gender.slice(1).toLowerCase()
+                      }`
+                    : "Select your gender"}
                 </Text>
                 <MaterialCommunityIcons
                   name={isOpened ? "chevron-up" : "chevron-down"}
@@ -109,10 +114,11 @@ export default function ContinueScreen({
         <TextInput
           placeholder="YYYY-MM-DD"
           keyboardType="number-pad"
-          value={formatDateString(date)}
+          value={formatDateInput(registerData.dateOfBirth)}
           maxLength={10}
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
-          onChangeText={(date) => setDate(date)}
+          onChangeText={(date) => updateField("dateOfBirth", date)}
+          returnKeyType="done"
         />
       </View>
       <View className="flex items-start gap-2">
@@ -120,8 +126,7 @@ export default function ContinueScreen({
         <SelectDropdown
           data={goals}
           onSelect={(selectedItem: Goal, index: number) => {
-            setForm((prev) => ({ ...prev, goal: Object.keys(Goal)[index] }));
-            updateField("goal", Object.values(Goal)[index]);
+            updateField("goal", Object.keys(Goal)[index]);
           }}
           renderButton={(selectedItem: Goal, isOpened) => {
             return (
@@ -132,7 +137,15 @@ export default function ContinueScreen({
                 )}
               >
                 <Text className="text-foreground">
-                  {selectedItem || "Select your goal"}
+                  {registerData.goal
+                    ? `${
+                        registerData.goal.charAt(0).toUpperCase() +
+                        registerData.goal
+                          .slice(1)
+                          .replace("_", " ")
+                          .toLowerCase()
+                      }`
+                    : "Select your goal"}
                 </Text>
                 <MaterialCommunityIcons
                   name={isOpened ? "chevron-up" : "chevron-down"}
@@ -167,8 +180,9 @@ export default function ContinueScreen({
         />
       </View>
       <TouchableOpacity
-        className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
-        onPress={() => setScreen("continueP2")}
+        className="mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center disabled:opacity-40"
+        disabled={Object.values(cleanedData).some((v) => !v)}
+        onPress={() => setScreen({ path: "continueP2" })}
       >
         <Text className="text-white">Continue</Text>
       </TouchableOpacity>

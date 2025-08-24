@@ -3,15 +3,14 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  StyleSheet,
 } from "react-native";
 import { Link } from "expo-router";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import {  RegisterResponse, Screen, TagInputProps } from "@/types";
+import { RegisterResponse, Screen, TagInputProps } from "@/types";
 import { BACKEND_URL } from "@/utils";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useRegisterStore } from "@/utils/store";
 import { clsx } from "clsx";
 import TagInput from "@/components/tag-input";
@@ -20,20 +19,20 @@ import { useMutation } from "@tanstack/react-query";
 export default function ContinueP2({
   setScreen,
 }: {
-  setScreen: Dispatch<SetStateAction<Screen>>;
+  setScreen: Dispatch<SetStateAction<Screen<string>>>;
 }) {
-  const colorScheme = useColorScheme();
-
-  const [healthConditions, setHealthConditions] = useState<string[]>([]);
-
+  // const colorScheme = useColorScheme();
   const { registerData, updateField } = useRegisterStore();
 
-  const { data, isPending, error } = useMutation({
+  const { isPending, mutate: handleRegisteration } = useMutation({
     mutationKey: ["register"],
     mutationFn: async () => {
       const res = await axios.post(
         BACKEND_URL + "/auth/register",
-        registerData,
+        {
+          ...registerData,
+          dateOfBirth: new Date(registerData.dateOfBirth),
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -41,13 +40,11 @@ export default function ContinueP2({
         }
       );
 
-      if (res.status !== 200) {
-        throw new Error(res.data);
-      }
-
       const response: RegisterResponse = await res.data;
       return response;
     },
+    onSuccess: () =>
+      setScreen({ path: "otp", data:  registerData.email }),
     onError: (e) => console.error(e),
   });
 
@@ -112,10 +109,9 @@ export default function ContinueP2({
         <Text className="text-foreground">Health Conditions</Text>
         <HealthConditionInput
           onTagsChange={(tags) => {
-            setHealthConditions(tags);
-            updateField("heathConditons", tags);
+            updateField("healthConditions", tags);
           }}
-          initialTags={healthConditions}
+          initialTags={registerData.healthConditions}
           maxTags={5}
         />
       </View>
@@ -124,32 +120,36 @@ export default function ContinueP2({
         <TextInput
           placeholder="Enter weight in kg"
           keyboardType="number-pad"
+          value={registerData.weight ? registerData.weight.toString() : ""}
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
           onChangeText={(weight) => updateField("weight", parseFloat(weight))}
+          returnKeyType="done"
         />
       </View>
       <View className="flex items-start gap-2">
         <Text className="text-foreground">Height</Text>
         <TextInput
-          placeholder="Enter height in kg"
+          placeholder="Enter height in cm"
           keyboardType="number-pad"
+          value={registerData.height ? registerData.height.toString() : ""}
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
           onChangeText={(height) => updateField("height", parseFloat(height))}
+          returnKeyType="done"
         />
       </View>
       <TouchableOpacity
         className="disabled:opacity-40 mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
         disabled={isPending || Object.values(registerData).some((v) => !v)}
+        onPress={() => handleRegisteration()}
       >
         <Text className="text-white">Register</Text>
       </TouchableOpacity>
       <Text className="text-foreground mt-4">
         Don&apos;t have an account ?{" "}
         <Link href="/login" className="text-primary">
-          Login
+          z Login
         </Link>
       </Text>
     </View>
   );
 }
-

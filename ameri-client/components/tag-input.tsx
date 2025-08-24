@@ -98,8 +98,8 @@ export default function TagInput({
         {tags.length > 0 && (
           <Text
             className={clsx(
-              colorScheme === "dark" ? "dark" : "",
-              "text-muted-foreground text-xs absolute bottom-1 right-2"
+              colorScheme === "dark" && "dark",
+              "text-foreground text-xs absolute bottom-1 right-2"
             )}
           >
             {tags.length}/{maxTags}

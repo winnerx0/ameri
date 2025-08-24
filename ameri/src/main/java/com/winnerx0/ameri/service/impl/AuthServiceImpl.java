@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
+import com.winnerx0.ameri.dto.request.VerifyAccountRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
 import com.winnerx0.ameri.model.Otp;
 import com.winnerx0.ameri.repository.OtpRepository;
@@ -154,5 +155,11 @@ public class AuthServiceImpl implements AuthService {
 
 
         return new TokenResponse(accessToken, newRefreshToken);
+    }
+
+    @Override
+    public boolean verifyAccount(VerifyAccountRequest verifyAccountRequest) {
+        return userRepository.existsByEmailOrName(verifyAccountRequest.getEmail(), verifyAccountRequest.getUsername());
+
     }
 }

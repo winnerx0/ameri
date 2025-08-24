@@ -1,13 +1,12 @@
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { LoginRequest, LoginResponse } from "@/types";
-import axios, { AxiosError } from "axios";
+import axios, { isAxiosError } from "axios";
 import { BACKEND_URL } from "@/utils";
-import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMutation } from "@tanstack/react-query";
 export default function LoginScreen() {
   const colorScheme = useColorScheme();
 
@@ -19,20 +18,16 @@ export default function LoginScreen() {
     confirmPassword: "",
   });
 
-  const handleLogin = async () => {
-    setIsLoading(true);
-    console.log(data);
-    try {
+  const { mutate: handleLogin, isPending } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: async () => {
+      setIsLoading(true);
+      console.log(data);
       const res = await axios.post(BACKEND_URL + "/auth/login", data, {
         headers: {
           "Content-Type": "application/json",
         },
-        timeout: 10000,
       });
-
-      if (res.status !== 200) {
-        throw new Error(res.data);
-      }
 
       const response: LoginResponse = await res.data;
       console.log(response);
@@ -41,15 +36,15 @@ export default function LoginScreen() {
         ["refreshToken", response.refreshToken],
       ]);
       router.push("/(tabs)");
-    } catch (e) {
-      if (e instanceof AxiosError) {
-        console.log(e);
+    },
+    onError: (e) => {
+      if (isAxiosError(e)) {
+        console.log(e.response?.data.message);
+      } else {
+        console.log(e.message);
       }
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+  });
   return (
     <View className="flex flex-col gap-6 items-center">
       <Text className="text-3xl font-bold text-foreground">Ameri</Text>
@@ -119,8 +114,8 @@ export default function LoginScreen() {
       </View>
       <TouchableOpacity
         className="disabled:opacity-40 mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
-        onPress={handleLogin}
-        disabled={isLoading || Object.values(data).some((v) => v.trim() === "")}
+        onPress={() => handleLogin()}
+        disabled={isPending || Object.values(data).some((v) => v.trim() === "")}
       >
         <Text className="text-white">{isLoading ? "Loading..." : "Login"}</Text>
       </TouchableOpacity>
