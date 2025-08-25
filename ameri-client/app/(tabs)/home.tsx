@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Loading from "@/components/Loading";
 
 export default function Home() {
   const colorScheme = useColorScheme();
@@ -126,7 +127,7 @@ export default function Home() {
     setRefreshing(false);
   }, [refetchMeals, refetchSummary, refetchUserData]);
 
-  console.log(summary);
+  console.log(new Date().getUTCHours());
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -136,15 +137,7 @@ export default function Home() {
         )}
       >
         {isUserDataLoading && isMealLoading && isSummaryLoading ? (
-          <View className="w-full h-full items-center justify-center flex">
-            <ActivityIndicator
-              size="large"
-              className={clsx(
-                colorScheme === "dark" && "dark",
-                "text-foreground"
-              )}
-            />
-          </View>
+          <Loading />
         ) : (
           <ScrollView
             contentContainerStyle={{

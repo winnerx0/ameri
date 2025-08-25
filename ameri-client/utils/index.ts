@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { router } from "expo-router";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://6fe0636ea6eb.ngrok-free.app/api/v1";
+export const BACKEND_URL = "http://localhost:8080/api/v1";
 
 // Create main API instance
 export const api = axios.create({
@@ -31,6 +32,7 @@ let lastFailedRefreshTime = 0;
 const clearAuthData = async () => {
   await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
   refreshAttempts = 0;
+  router.replace("/(auth)")
 };
 
 const isTokenExpired = (token: string): boolean => {
@@ -158,7 +160,7 @@ api.interceptors.response.use(
   async (error) => {
     // If we get 401, just clear auth data and reject
     // Don't try to refresh here to avoid infinite loops
-    if (error.response?.status === 401) {
+    if (error.response?.status >= 400) {
       console.warn("Received 401 error, clearing auth data");
       await clearAuthData();
       return Promise.reject(new Error("Authentication failed. Please login again."));

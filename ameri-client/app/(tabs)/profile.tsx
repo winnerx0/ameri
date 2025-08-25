@@ -15,6 +15,7 @@ import ProfileItem from "@/components/profile-item";
 import { useQuery } from "@tanstack/react-query";
 import api, { BACKEND_URL } from "@/utils";
 import { UserData } from "@/types";
+import Loading from "@/components/Loading";
 
 export default function Profile() {
   const colorScheme = useColorScheme();
@@ -40,16 +41,11 @@ export default function Profile() {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "bg-background flex-1",
+          "bg-background flex-1"
         )}
       >
         {isLoading ? (
-          <Text
-            className={clsx(
-              colorScheme === "dark" ? "dark" : "",
-              "text-primary-foreground text-2xl font-bold animate-spin size-16",
-            )}
-          ></Text>
+          <Loading />
         ) : (
           data && (
             <ScrollView
@@ -64,13 +60,13 @@ export default function Profile() {
                 <View
                   className={clsx(
                     colorScheme === "dark" ? "dark" : "",
-                    "w-24 h-24 rounded-full bg-primary items-center justify-center mb-4",
+                    "w-24 h-24 rounded-full bg-primary items-center justify-center mb-4"
                   )}
                 >
                   <Text
                     className={clsx(
                       colorScheme === "dark" ? "dark" : "",
-                      "text-primary-foreground text-2xl font-bold",
+                      "text-white text-2xl font-bold"
                     )}
                   >
                     {data.username.charAt(0).toUpperCase()}
@@ -79,7 +75,7 @@ export default function Profile() {
                 <Text
                   className={clsx(
                     colorScheme === "dark" ? "dark" : "",
-                    "text-foreground text-xl font-bold",
+                    "text-foreground text-xl font-bold"
                   )}
                 >
                   {data.username}
@@ -87,7 +83,7 @@ export default function Profile() {
                 <Text
                   className={clsx(
                     colorScheme === "dark" ? "dark" : "",
-                    "text-muted-foreground text-base",
+                    "text-muted-foreground text-base"
                   )}
                 >
                   {data.email}
@@ -99,13 +95,13 @@ export default function Profile() {
                 <View
                   className={clsx(
                     colorScheme === "dark" ? "dark" : "",
-                    "bg-card border border-border rounded-lg p-4 flex-1 mr-2 items-center",
+                    "bg-card border border-border rounded-lg p-4 flex-1 mr-2 items-center"
                   )}
                 >
                   <Text
                     className={clsx(
                       colorScheme === "dark" ? "dark" : "",
-                      "text-foreground text-2xl font-bold",
+                      "text-foreground text-2xl font-bold"
                     )}
                   >
                     {data.loggedMeals}
@@ -113,7 +109,7 @@ export default function Profile() {
                   <Text
                     className={clsx(
                       colorScheme === "dark" ? "dark" : "",
-                      "text-muted-foreground text-sm",
+                      "text-muted-foreground text-sm"
                     )}
                   >
                     Meals Logged
@@ -123,13 +119,13 @@ export default function Profile() {
                 <View
                   className={clsx(
                     colorScheme === "dark" ? "dark" : "",
-                    "bg-card border border-border rounded-lg p-4 flex-1 ml-2 items-center",
+                    "bg-card border border-border rounded-lg p-4 flex-1 ml-2 items-center"
                   )}
                 >
                   <Text
                     className={clsx(
                       colorScheme === "dark" ? "dark" : "",
-                      "text-foreground text-2xl font-bold",
+                      "text-foreground text-2xl font-bold"
                     )}
                   >
                     23
@@ -137,7 +133,7 @@ export default function Profile() {
                   <Text
                     className={clsx(
                       colorScheme === "dark" ? "dark" : "",
-                      "text-muted-foreground text-sm",
+                      "text-muted-foreground text-sm"
                     )}
                   >
                     Day Streak
@@ -158,26 +154,26 @@ export default function Profile() {
                   value="Vegetarian, Gluten-free"
                   onPress={() => console.log("Dietary pressed")}
                 />
-
+{/* 
                 <ProfileItem
                   title="Nutrition Goals"
                   value="2000 cal, 150g protein"
                   onPress={() => console.log("Goals pressed")}
-                />
+                /> */}
               </View>
 
               {/* Sign Out Button */}
               <TouchableOpacity
                 className={clsx(
                   colorScheme === "dark" ? "dark" : "",
-                  "bg-destructive rounded-lg p-4 mt-8 mb-16",
+                  "bg-destructive rounded-lg p-4 mt-8 mb-16"
                 )}
                 onPress={logout}
               >
                 <Text
                   className={clsx(
                     colorScheme === "dark" ? "dark" : "",
-                    "text-destructive-foreground font-semibold text-center text-base",
+                    "text-destructive-foreground font-semibold text-center text-base"
                   )}
                 >
                   Sign Out

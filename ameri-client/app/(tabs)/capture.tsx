@@ -87,6 +87,8 @@ export default function TabTwoScreen() {
         style={{
           borderRadius: 50,
           overflow: "hidden",
+          // borderColor: colorScheme === "dark" ? "white" : "black",
+          // borderWidth: 5,
         }}
       >
         <View className="m-auto size-[350px]  flex items-center justify-center self-center justify-self-center"></View>

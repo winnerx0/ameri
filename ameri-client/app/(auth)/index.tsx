@@ -6,12 +6,12 @@ import axios, { isAxiosError } from "axios";
 import { useRegisterStore, useScreen } from "@/utils/store";
 import { useState } from "react";
 import { Text, TouchableOpacity, View, TextInput } from "react-native";
-import ContinueScreen from "../../components/continue";
-import ContinueP2 from "../../components/continuep2";
+import ContinueScreen from "./continue";
+import ContinueP2 from "./continuep2";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
-import OTP from "../../components/otp";
-import LoginScreen from "../../components/login";
+import OTP from "./otp";
+import LoginScreen from "./login";
 
 export default function Index() {
   const colorScheme = useColorScheme();

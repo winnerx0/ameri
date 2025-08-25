@@ -116,7 +116,12 @@ const LogMeals = () => {
               setMeal((p) => ({ ...p, mealType: mealTypes[i] }))
             }
             renderButton={(selectedItem, isOpened) => (
-              <View className="bg-background w-full h-14 border border-border rounded-2xl flex flex-row items-center px-4 justify-between mb-4">
+              <View
+                className={clsx(
+                  colorScheme === "dark" && "dark",
+                  "bg-background w-full mb-4 h-14 border border-border rounded-2xl flex flex-row items-center p-2 justify-between"
+                )}
+              >
                 <Text className="text-foreground">
                   {selectedItem || "Select the meal type"}
                 </Text>
@@ -128,7 +133,12 @@ const LogMeals = () => {
               </View>
             )}
             renderItem={(item) => (
-              <View className="py-4 px-3 flex-1 items-center">
+              <View
+                className={clsx(
+                  colorScheme === "dark" && "dark",
+                  "bg-background w-full h-14 divide-border divide-y-2 flex flex-col items-center p-2 justify-center hover:bg-secondary"
+                )}
+              >
                 <Text className="text-white">{item}</Text>
               </View>
             )}
@@ -248,7 +258,11 @@ const LogMeals = () => {
                     className="mt-2 self-end"
                     onPress={() => removeFood(index)}
                   >
-                    <MaterialCommunityIcons name="delete" size={24} color="red" />
+                    <MaterialCommunityIcons
+                      name="delete"
+                      size={24}
+                      color="red"
+                    />
                   </TouchableOpacity>
                 )}
               </View>
@@ -269,7 +283,7 @@ const LogMeals = () => {
           {/* Save button – pinned to bottom */}
           <TouchableOpacity
             className="bg-primary w-full max-w-lg absolute bottom-10 rounded-2xl items-center justify-center h-14 disabled:opacity-50"
-            disabled={isPending}
+            disabled={isPending || Object.values(meal).some((v) => !v)}
             onPress={() => handleLoggingMeal(meal)}
           >
             <Text className="text-white font-semibold">

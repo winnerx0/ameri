@@ -10,32 +10,6 @@ import { useScreen } from "@/utils/store";
 export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient());
 
-  const { setScreen } = useScreen();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = await AsyncStorage.getItem("accessToken");
-
-        const currentScreen = await AsyncStorage.getItem("currentScreen");
-
-        if (currentScreen === "otp" && !token) {
-          setScreen({ path: "otp" });
-        } else if(currentScreen === "otp" && token){
-          setScreen({ path: "otp" });
-        }else if (!token) {
-          setScreen({ path: "login" });
-        } else if(token){
-         router.replace("/(tabs)/home")
-        }
-      } catch (error) {
-        console.log("Auth check error:", error);
-        // setScreen({ path: "login" });
-      }
-    };
-
-    checkAuth();
-  }, []);
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
