@@ -52,7 +52,7 @@ const MealData = () => {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-          }
+          },
         );
 
         if (res.status !== 200) {
@@ -102,7 +102,7 @@ const MealData = () => {
       }
     },
     onSuccess: () => {
-      router.replace("/")
+      router.replace("/(tabs)/home");
     },
     onError: (e) => {
       console.error(e.message);
@@ -120,7 +120,7 @@ const MealData = () => {
       className={clsx(
         colorScheme === "dark" && "dark",
         "bg-background",
-        "h-full flex items-center justify-center px-6"
+        "h-full flex items-center justify-center px-6",
       )}
     >
       <View className="items-center">
@@ -132,7 +132,7 @@ const MealData = () => {
         <Text
           className={clsx(
             "text-2xl font-bold mt-4",
-            colorScheme === "dark" ? "text-white" : "text-slate-800"
+            colorScheme === "dark" ? "text-white" : "text-slate-800",
           )}
         >
           Analyzing Your Meal
@@ -140,7 +140,7 @@ const MealData = () => {
         <Text
           className={clsx(
             "text-base mt-2 text-center",
-            colorScheme === "dark" ? "text-slate-300" : "text-slate-600"
+            colorScheme === "dark" ? "text-slate-300" : "text-slate-600",
           )}
         >
           Please wait while we process your image...
@@ -164,7 +164,7 @@ const MealData = () => {
         "rounded-xl p-4 mb-4 shadow-sm",
         colorScheme === "dark"
           ? "bg-slate-800 border border-slate-700"
-          : "bg-white border border-blue-100"
+          : "bg-white border border-blue-100",
       )}
     >
       <View className="flex-row items-center mb-3">
@@ -176,7 +176,7 @@ const MealData = () => {
         <Text
           className={clsx(
             "text-lg font-semibold ml-2",
-            colorScheme === "dark" ? "text-white" : "text-slate-800"
+            colorScheme === "dark" ? "text-white" : "text-slate-800",
           )}
         >
           {title}
@@ -192,7 +192,7 @@ const MealData = () => {
       <View
         className={clsx(
           "rounded-2xl p-8 items-center w-full max-w-sm",
-          colorScheme === "dark" ? "bg-red-700/20" : "bg-red-50"
+          colorScheme === "dark" ? "bg-red-700/20" : "bg-red-50",
         )}
       >
         <MaterialCommunityIcons
@@ -203,7 +203,7 @@ const MealData = () => {
         <Text
           className={clsx(
             "text-2xl font-bold mt-4 text-center",
-            colorScheme === "dark" ? "text-red-400" : "text-red-700"
+            colorScheme === "dark" ? "text-red-400" : "text-red-700",
           )}
         >
           {data?.status}
@@ -211,7 +211,7 @@ const MealData = () => {
         <Text
           className={clsx(
             "text-base mt-2 text-center",
-            colorScheme === "dark" ? "text-red-300" : "text-red-600"
+            colorScheme === "dark" ? "text-red-300" : "text-red-600",
           )}
         >
           {(data?.status === "Rejected" && data.reason) ||
@@ -227,7 +227,7 @@ const MealData = () => {
         <SafeAreaView
           className={clsx(
             colorScheme === "dark" && "dark",
-            "bg-background h-full"
+            "bg-background h-full",
           )}
         >
           <LoadingComponent />
@@ -241,7 +241,7 @@ const MealData = () => {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" && "dark",
-          "bg-background h-full"
+          "bg-background h-full",
         )}
       >
         {/* Header */}
@@ -258,7 +258,7 @@ const MealData = () => {
             <Text
               className={clsx(
                 "text-base font-medium ml-1",
-                colorScheme === "dark" ? "text-blue-400" : "text-blue-600"
+                colorScheme === "dark" ? "text-blue-400" : "text-blue-600",
               )}
             >
               Back
@@ -279,7 +279,7 @@ const MealData = () => {
                 "rounded-2xl p-6 mb-6 items-center shadow-lg",
                 colorScheme === "dark"
                   ? "bg-gradient-to-br from-blue-900 to-blue-800"
-                  : "bg-gradient-to-br from-blue-500 to-blue-600"
+                  : "bg-gradient-to-br from-blue-500 to-blue-600",
               )}
             >
               <MaterialCommunityIcons
@@ -290,7 +290,7 @@ const MealData = () => {
               <Text
                 className={clsx(
                   colorScheme === "dark" && "dark",
-                  "text-foreground text-2xl font-bold"
+                  "text-foreground text-2xl font-bold",
                 )}
               >
                 {data?.status}
@@ -298,7 +298,7 @@ const MealData = () => {
               <Text
                 className={clsx(
                   colorScheme === "dark" && "dark",
-                  "text-muted-foreground text-sm font-bold"
+                  "text-muted-foreground text-sm font-bold",
                 )}
               >
                 Confidence: {data?.confidence}
@@ -312,7 +312,7 @@ const MealData = () => {
                   "flex-1 rounded-xl p-4 items-center",
                   colorScheme === "dark"
                     ? "bg-slate-800 border border-slate-700"
-                    : "bg-white border border-blue-100"
+                    : "bg-white border border-blue-100",
                 )}
               >
                 <MaterialCommunityIcons
@@ -323,7 +323,7 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "font-semibold mt-2",
-                    colorScheme === "dark" ? "text-white" : "text-slate-800"
+                    colorScheme === "dark" ? "text-white" : "text-slate-800",
                   )}
                 >
                   {data?.meal_type}
@@ -331,7 +331,9 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-sm",
-                    colorScheme === "dark" ? "text-slate-400" : "text-slate-600"
+                    colorScheme === "dark"
+                      ? "text-slate-400"
+                      : "text-slate-600",
                   )}
                 >
                   Meal Type
@@ -343,7 +345,7 @@ const MealData = () => {
                   "flex-1 rounded-xl p-4 items-center",
                   colorScheme === "dark"
                     ? "bg-slate-800 border border-slate-700"
-                    : "bg-white border border-blue-100"
+                    : "bg-white border border-blue-100",
                 )}
               >
                 <MaterialCommunityIcons
@@ -354,7 +356,7 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "font-semibold mt-2",
-                    colorScheme === "dark" ? "text-white" : "text-slate-800"
+                    colorScheme === "dark" ? "text-white" : "text-slate-800",
                   )}
                 >
                   {data?.cuisine}
@@ -362,7 +364,9 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-sm",
-                    colorScheme === "dark" ? "text-slate-400" : "text-slate-600"
+                    colorScheme === "dark"
+                      ? "text-slate-400"
+                      : "text-slate-600",
                   )}
                 >
                   Cuisine
@@ -377,7 +381,7 @@ const MealData = () => {
                   <View
                     className={clsx(
                       "w-2 h-2 rounded-full mr-3",
-                      colorScheme === "dark" ? "bg-blue-400" : "bg-blue-500"
+                      colorScheme === "dark" ? "bg-blue-400" : "bg-blue-500",
                     )}
                   />
                   <Text
@@ -385,7 +389,7 @@ const MealData = () => {
                       "text-base flex-1",
                       colorScheme === "dark"
                         ? "text-slate-200"
-                        : "text-slate-700"
+                        : "text-slate-700",
                     )}
                   >
                     {item}
@@ -400,7 +404,9 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-base",
-                    colorScheme === "dark" ? "text-slate-300" : "text-slate-600"
+                    colorScheme === "dark"
+                      ? "text-slate-300"
+                      : "text-slate-600",
                   )}
                 >
                   Calories
@@ -408,7 +414,7 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-base font-semibold",
-                    colorScheme === "dark" ? "text-white" : "text-slate-800"
+                    colorScheme === "dark" ? "text-white" : "text-slate-800",
                   )}
                 >
                   {data?.calories}
@@ -418,7 +424,9 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-base",
-                    colorScheme === "dark" ? "text-slate-300" : "text-slate-600"
+                    colorScheme === "dark"
+                      ? "text-slate-300"
+                      : "text-slate-600",
                   )}
                 >
                   Portion Size
@@ -426,7 +434,7 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-base font-semibold",
-                    colorScheme === "dark" ? "text-white" : "text-slate-800"
+                    colorScheme === "dark" ? "text-white" : "text-slate-800",
                   )}
                 >
                   {data?.portion_size}
@@ -436,7 +444,9 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-base",
-                    colorScheme === "dark" ? "text-slate-300" : "text-slate-600"
+                    colorScheme === "dark"
+                      ? "text-slate-300"
+                      : "text-slate-600",
                   )}
                 >
                   Water Content
@@ -444,7 +454,7 @@ const MealData = () => {
                 <Text
                   className={clsx(
                     "text-base font-semibold",
-                    colorScheme === "dark" ? "text-white" : "text-slate-800"
+                    colorScheme === "dark" ? "text-white" : "text-slate-800",
                   )}
                 >
                   {data?.water_content}
@@ -466,7 +476,7 @@ const MealData = () => {
                           "text-base capitalize",
                           colorScheme === "dark"
                             ? "text-slate-300"
-                            : "text-slate-600"
+                            : "text-slate-600",
                         )}
                       >
                         {key}
@@ -476,7 +486,7 @@ const MealData = () => {
                           "px-3 py-1 rounded-full",
                           colorScheme === "dark"
                             ? "bg-blue-900/50"
-                            : "bg-blue-100"
+                            : "bg-blue-100",
                         )}
                       >
                         <Text
@@ -484,14 +494,14 @@ const MealData = () => {
                             "text-sm font-semibold",
                             colorScheme === "dark"
                               ? "text-blue-300"
-                              : "text-blue-800"
+                              : "text-blue-800",
                           )}
                         >
                           {value}
                         </Text>
                       </View>
                     </View>
-                  )
+                  ),
                 )}
               </View>
             </InfoCard>
@@ -504,7 +514,7 @@ const MealData = () => {
                     key={key}
                     className={clsx(
                       "px-3 py-2 rounded-lg flex-row items-center",
-                      colorScheme === "dark" ? "bg-slate-700" : "bg-blue-50"
+                      colorScheme === "dark" ? "bg-slate-700" : "bg-blue-50",
                     )}
                   >
                     <Text
@@ -512,7 +522,7 @@ const MealData = () => {
                         "text-sm font-semibold mr-1",
                         colorScheme === "dark"
                           ? "text-blue-300"
-                          : "text-blue-700"
+                          : "text-blue-700",
                       )}
                     >
                       {key.toUpperCase()}:
@@ -522,7 +532,7 @@ const MealData = () => {
                         "text-sm",
                         colorScheme === "dark"
                           ? "text-slate-300"
-                          : "text-slate-600"
+                          : "text-slate-600",
                       )}
                     >
                       {value}
@@ -540,7 +550,7 @@ const MealData = () => {
                     key={key}
                     className={clsx(
                       "px-3 py-2 rounded-lg flex-row items-center",
-                      colorScheme === "dark" ? "bg-slate-700" : "bg-blue-50"
+                      colorScheme === "dark" ? "bg-slate-700" : "bg-blue-50",
                     )}
                   >
                     <Text
@@ -548,7 +558,7 @@ const MealData = () => {
                         "text-sm font-semibold mr-1 capitalize",
                         colorScheme === "dark"
                           ? "text-blue-300"
-                          : "text-blue-700"
+                          : "text-blue-700",
                       )}
                     >
                       {key}:
@@ -558,7 +568,7 @@ const MealData = () => {
                         "text-sm",
                         colorScheme === "dark"
                           ? "text-slate-300"
-                          : "text-slate-600"
+                          : "text-slate-600",
                       )}
                     >
                       {value}

@@ -183,12 +183,12 @@ export default function ContinueScreen() {
       >
         <Text className="text-white">Continue</Text>
       </TouchableOpacity>
-      <Text className="text-foreground mt-4">
-        Don&apos;t have an account ?{" "}
-        <Link href="/register" className="text-primary">
-          Register
-        </Link>
-      </Text>
+      <TouchableOpacity onPress={() => setScreen({ path: "register" })}>
+        <Text className="text-foreground mt-4">
+          Don&apos;t have an account ?{" "}
+          <Text className="text-primary">Register</Text>
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

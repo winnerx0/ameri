@@ -140,12 +140,12 @@ export default function ContinueP2() {
       >
         <Text className="text-white">Register</Text>
       </TouchableOpacity>
-      <Text className="text-foreground mt-4">
-        Don&apos;t have an account ?{" "}
-        <Link href="/login" className="text-primary">
-          z Login
-        </Link>
-      </Text>
+      <TouchableOpacity onPress={() => setScreen({ path: "login" })}>
+        <Text className="text-foreground mt-4">
+          Already have an account ?{" "}
+          <Text className="text-primary">Login</Text>
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

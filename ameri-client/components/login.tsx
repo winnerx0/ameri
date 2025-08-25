@@ -46,7 +46,7 @@ export default function LoginScreen() {
         ["accessToken", response.accessToken],
         ["refreshToken", response.refreshToken],
       ]);
-      router.push("/(tabs)");
+      router.replace("/(tabs)/home");
     },
     onError: (e) => {
       if (isAxiosError(e)) {

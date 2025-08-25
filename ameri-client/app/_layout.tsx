@@ -24,7 +24,7 @@ export default function RootLayout() {
         } else if(currentScreen === "otp" && token){
           setScreen({ path: "otp" });
         }else if (!token) {
-          setScreen({ path: "register" });
+          setScreen({ path: "login" });
         } else if(token){
          router.replace("/(tabs)/home")
         }

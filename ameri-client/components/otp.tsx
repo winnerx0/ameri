@@ -11,8 +11,8 @@ import { LoginResponse } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OTP = () => {
-  
   const colorScheme = useColorScheme();
+
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [timer, setTimer] = useState<number>(120);
@@ -88,7 +88,7 @@ const OTP = () => {
         ["accessToken", response.accessToken],
         ["refreshToken", response.refreshToken],
       ]);
-      // await AsyncStorage.multiRemove(["email", "currentScreen"]);
+      await AsyncStorage.multiRemove(["email", "currentScreen"]);
       router.replace("/(tabs)/home");
     },
     onError: (e) => {
@@ -102,7 +102,7 @@ const OTP = () => {
   });
 
   const { isPending: isResendOtpLoading, mutate: handleSendOtp } = useMutation({
-    mutationKey: ["resend-verification-otp"],
+    mutationKey: ["send-verification-otp"],
     mutationFn: async (email: string) => {
       const res = await axios.post(
         BACKEND_URL + "/auth/send-verification-token",
@@ -173,7 +173,7 @@ const OTP = () => {
         {otp.map((digit, index) => (
           <TextInput
             key={index}
-            ref={(ref) => (inputRefs.current[index] = ref)}
+            ref={(ref) => { inputRefs.current[index] = ref; }}
             value={digit}
             onChangeText={(value) => handleOtpChange(value, index)}
             onKeyPress={(e) => handleKeyPress(e, index)}
@@ -213,7 +213,7 @@ const OTP = () => {
         ) : (
           <TouchableOpacity
             className="disabled:opacity-40"
-            onPress={() => handleSendOtp(email)}
+            onPress={() => email && handleSendOtp(email)}
             disabled={isResendOtpLoading}
           >
             <Text

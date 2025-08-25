@@ -72,9 +72,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<RefreshToken> refreshToken;
-
-    @OneToOne(mappedBy = "user", orphanRemoval = true)
-    private Otp otp;
+//
+//    @OneToOne(mappedBy = "user", orphanRemoval = true)
+//    private Otp otp;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

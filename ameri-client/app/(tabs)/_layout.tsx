@@ -37,7 +37,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
@@ -65,13 +65,6 @@ export default function TabLayout() {
               color={color}
             />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="log-meals"
-        options={{
-          title: "LogMeals",
-          href: null,
         }}
       />
     </Tabs>
