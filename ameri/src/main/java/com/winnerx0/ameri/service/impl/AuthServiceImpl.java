@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AuthResponse<UserDTO> register(RegisterRequest registerRequest) {
+    public AuthResponse register(RegisterRequest registerRequest) {
 
         Optional<User> existingUser = userRepository.findByEmail(registerRequest.getEmail());
 
@@ -90,12 +90,12 @@ public class AuthServiceImpl implements AuthService {
 
         log.info("user {}", user);
 
-        return new AuthResponse<>("Registration Successful, please check your email to verify your account", null, null);
+        return new AuthResponse("Registration Successful, please check your email to verify your account");
     }
 
     @Override
     @Transactional
-    public AuthResponse<UserDTO> login(LoginRequest loginRequest) {
+    public AuthResponse login(LoginRequest loginRequest) {
 
         log.info("user {}", loginRequest.getEmail());
 
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
 
         refreshTokenRepository.save(token);
 
-        return new AuthResponse<>("Login Successful", accessToken, refreshToken);
+        return new AuthResponse("Login Successful", accessToken, refreshToken);
     }
 
     @Override
@@ -160,6 +160,5 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean verifyAccount(VerifyAccountRequest verifyAccountRequest) {
         return userRepository.existsByEmailOrName(verifyAccountRequest.getEmail(), verifyAccountRequest.getUsername());
-
     }
 }

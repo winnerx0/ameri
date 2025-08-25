@@ -1,8 +1,10 @@
 package com.winnerx0.ameri.service;
 
+import com.winnerx0.ameri.dto.response.AuthResponse;
+
 public interface OtpService {
 
     Integer generateToken();
 
-    void verifyOTP(Integer otp, String email);
+    AuthResponse verifyOTP(Integer otp, String email);
 }

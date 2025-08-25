@@ -10,7 +10,7 @@ export default function AuthLayout() {
       <SafeAreaView
         className={clsx(
           colorScheme === "dark" ? "dark" : "",
-          "bg-background h-full items-center justify-center gap-4"
+          "bg-background h-full items-center justify-center gap-4 w-full"
         )}
       >
         <Slot />

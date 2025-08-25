@@ -2,12 +2,15 @@ package com.winnerx0.ameri.service.impl;
 
 import com.winnerx0.ameri.model.Otp;
 import com.winnerx0.ameri.model.User;
+import com.winnerx0.ameri.repository.OtpRepository;
 import com.winnerx0.ameri.repository.UserRepository;
 import com.winnerx0.ameri.service.EmailService;
 import com.winnerx0.ameri.service.OtpService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +33,13 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final OtpService otpService;
     private final UserRepository userRepository;
+    private final OtpRepository otpRepository;
 
-    public EmailServiceImpl(JavaMailSender javaMailSender,  OtpService otpService, UserRepository userRepository) {
+    public EmailServiceImpl(JavaMailSender javaMailSender,  OtpService otpService, UserRepository userRepository, OtpRepository otpRepository) {
         this.javaMailSender = javaMailSender;
         this.otpService = otpService;
         this.userRepository = userRepository;
+        this.otpRepository = otpRepository;
     }
 
     @Async
@@ -55,6 +60,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Transactional
     @Override
     public void sendVerificationToken(String email) {
 
@@ -62,22 +68,27 @@ public class EmailServiceImpl implements EmailService {
 
         log.info("enabled {}", user.isEnabled());
         if(user.isEnabled()){
-            throw new IllegalStateException("Account already verified");
+            throw new EntityExistsException("Account already verified");
         }
 
-        if(user.getOtp() != null && user.getOtp().getExpiresAt().isAfter(LocalDateTime.now().minusMinutes(5))) {
-            throw new IllegalStateException("Please wait 5 minutes before requesting for another OTP");
+        Otp otp = otpRepository.findByUser(user).orElseGet(() -> {
+
+            Otp newOtp = new Otp();
+            newOtp.setUser(user);
+            return newOtp;
+        });
+
+        if(otp.getExpiresAt() != null && otp.getExpiresAt().isAfter(LocalDateTime.now().minusMinutes(2))) {
+            throw new IllegalStateException("Please wait 2 minutes before requesting for another OTP");
         }
 
         Integer token = otpService.generateToken();
 
-        Otp otp = new Otp();
         otp.setOtp(token);
-        otp.setExpiresAt(LocalDateTime.now().plusMinutes(10));
 
-        user.setOtp(otp);
+        otp.setExpiresAt(LocalDateTime.now().plusMinutes(5));
 
-        userRepository.save(user);
+        otpRepository.save(otp);
 
         sendMail(email, "Verify your Ameri account", String.format("Thank you for signing up to Ameri please verify your account using the OTP %d", token));
 

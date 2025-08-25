@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Goal, RegisterRequest } from "@/types";
+import { Goal, RegisterRequest, Screen } from "@/types";
 
 interface RegisterStore {
   registerData: RegisterRequest;
@@ -34,4 +34,14 @@ export const useRegisterStore = create<RegisterStore>((set) => ({
     })),
 
   resetRegisterData: () => set({ registerData: initialRegisterData }),
+}));
+
+interface ScreenStore {
+  screen: Screen<string>;
+  setScreen: (screen: Screen<string>) => void;
+}
+
+export const useScreen = create<ScreenStore>((set) => ({
+  screen: { path: "login" },
+  setScreen: (screen) => set({ screen }),
 }));

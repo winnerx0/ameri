@@ -1,17 +1,16 @@
 package com.winnerx0.ameri.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
-public class AuthResponse<T> {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AuthResponse {
     
-    private String message;
+    private final String message;
 
     private String accessToken;
 

@@ -135,6 +135,6 @@ export interface TagInputProps {
 }
 
 export type Screen<T> = {
-  path: "login" | "continue" | "continueP2" | "otp";
+  path: "login" | "continue" | "continueP2" | "otp" | "login" | "register";
   data?: T
 };

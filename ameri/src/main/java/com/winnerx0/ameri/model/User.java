@@ -73,8 +73,7 @@ public class User implements UserDetails {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<RefreshToken> refreshToken;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "otp_id", referencedColumnName = "id", unique = true)
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
     private Otp otp;
 
     @Override

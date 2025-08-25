@@ -1,16 +1,17 @@
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Meal, NutritionSummary, UserData } from "@/types";
-import { api, BACKEND_URL } from "@/utils";
-import { AxiosError } from "axios";
-import { clsx } from "clsx";
-import { useCallback, useState } from "react";
 import {
   RefreshControl,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
+  useColorScheme
 } from "react-native";
+// import { useColorScheme } from "@/hooks/useColorScheme";
+import { Meal, NutritionSummary, UserData } from "@/types";
+import { api, BACKEND_URL } from "@/utils";
+import { AxiosError } from "axios";
+import { clsx } from "clsx";
+import { useCallback, useState } from "react";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useQuery } from "@tanstack/react-query";
@@ -18,7 +19,7 @@ import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function HomeScreen() {
+export default function Home() {
   const colorScheme = useColorScheme();
 
   const [show, setShow] = useState<boolean>(false);

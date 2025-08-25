@@ -6,19 +6,16 @@ import {
   StyleSheet,
 } from "react-native";
 import { Link } from "expo-router";
-import { Dispatch, SetStateAction } from "react";
 import SelectDropdown from "react-native-select-dropdown";
-import { Gender, Goal, Screen } from "@/types";
+import { Gender, Goal } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useRegisterStore } from "@/utils/store";
+import { useRegisterStore, useScreen } from "@/utils/store";
 
-export default function ContinueScreen({
-  setScreen,
-}: {
-  setScreen: Dispatch<SetStateAction<Screen<string>>>;
-}) {
+export default function ContinueScreen() {
+
+  const { setScreen } = useScreen();
   const colorScheme = useColorScheme();
 
   const genders = Object.values(Gender);

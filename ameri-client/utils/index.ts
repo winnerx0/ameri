@@ -1,9 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { router } from "expo-router";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://0e2eccd007a7.ngrok-free.app/api/v1";
+export const BACKEND_URL = "https://6fe0636ea6eb.ngrok-free.app/api/v1";
 
 // Create main API instance
 export const api = axios.create({
@@ -32,7 +31,6 @@ let lastFailedRefreshTime = 0;
 const clearAuthData = async () => {
   await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
   refreshAttempts = 0;
-  router.replace("/(auth)/login")
 };
 
 const isTokenExpired = (token: string): boolean => {

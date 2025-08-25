@@ -5,20 +5,32 @@ import "react-native-reanimated";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useScreen } from "@/utils/store";
 
 export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient());
+
+  const { setScreen } = useScreen();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const token = await AsyncStorage.getItem("accessToken");
-        if (!token) {
-          router.replace("/(auth)/login");
+
+        const currentScreen = await AsyncStorage.getItem("currentScreen");
+
+        if (currentScreen === "otp" && !token) {
+          setScreen({ path: "otp" });
+        } else if(currentScreen === "otp" && token){
+          setScreen({ path: "otp" });
+        }else if (!token) {
+          setScreen({ path: "register" });
+        } else if(token){
+         router.replace("/(tabs)/home")
         }
       } catch (error) {
         console.log("Auth check error:", error);
-        router.replace("/(auth)/login");
+        // setScreen({ path: "login" });
       }
     };
 

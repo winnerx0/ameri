@@ -1,4 +1,4 @@
-import { View, TextInput, Text, TouchableOpacity } from "react-native";
+import { View, TextInput, Text, TouchableOpacity, Button } from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { LoginRequest, LoginResponse } from "@/types";
@@ -7,10 +7,9 @@ import { BACKEND_URL } from "@/utils";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
+import { useScreen } from "@/utils/store";
 export default function LoginScreen() {
   const colorScheme = useColorScheme();
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [data, setData] = useState<LoginRequest>({
     email: "",
@@ -18,16 +17,28 @@ export default function LoginScreen() {
     confirmPassword: "",
   });
 
+  const { setScreen } = useScreen();
+
   const { mutate: handleLogin, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: async () => {
-      setIsLoading(true);
       console.log(data);
       const res = await axios.post(BACKEND_URL + "/auth/login", data, {
         headers: {
           "Content-Type": "application/json",
         },
+        validateStatus: (status) => status < 500,
       });
+      if (res.status === 403) {
+        setScreen({ path: "otp", data: data.email });
+        await AsyncStorage.multiSet([
+          ["currentScreen", "otp"],
+          ["email", data.email],
+        ]);
+        return;
+      }
+
+      console.log(res.status);
 
       const response: LoginResponse = await res.data;
       console.log(response);
@@ -117,14 +128,17 @@ export default function LoginScreen() {
         onPress={() => handleLogin()}
         disabled={isPending || Object.values(data).some((v) => v.trim() === "")}
       >
-        <Text className="text-white">{isLoading ? "Loading..." : "Login"}</Text>
+        <Text className="text-white">{isPending ? "Loading..." : "Login"}</Text>
       </TouchableOpacity>
-      <Text className="text-foreground mt-4">
-        Don&apos;t have an account ?{" "}
-        <Link href="/register" className="text-primary">
-          Register
-        </Link>
-      </Text>
+      <View className="mt-4 flex flex-row items-center">
+        <Text className="text-foreground"> Don&apos;t have an account ? </Text>
+        <TouchableOpacity
+          onPress={() => setScreen({ path: "register" })}
+          className=""
+        >
+          <Text className="text-primary">Register</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

@@ -25,6 +25,7 @@ public class Otp {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
 
-    @OneToOne(mappedBy = "otp")
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

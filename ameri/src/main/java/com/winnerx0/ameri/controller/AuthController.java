@@ -31,13 +31,13 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse<UserDTO>> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse<UserDTO>> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 
         return ResponseEntity.ok(authService.login(loginRequest));
     }
@@ -55,18 +55,18 @@ public class AuthController {
     }
 
     @PostMapping("/verify-token")
-    public ResponseEntity<OtpResponse> verifyOTP(@Valid @RequestBody VerifyOTPRequest verifyOTPRequest){
-        otpService.verifyOTP(verifyOTPRequest.getOtp(), verifyOTPRequest.getEmail());
-        return ResponseEntity.ok(new OtpResponse("Account verified please proceed to login"));
+    public ResponseEntity<AuthResponse> verifyOTP(@Valid @RequestBody VerifyOTPRequest verifyOTPRequest){
+        AuthResponse response = otpService.verifyOTP(verifyOTPRequest.getOtp(), verifyOTPRequest.getEmail());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/verify-account")
-    public ResponseEntity<AuthResponse<String>> verifyAccount(@Valid @RequestBody VerifyAccountRequest verifyAccountRequest){
+    public ResponseEntity<AuthResponse> verifyAccount(@Valid @RequestBody VerifyAccountRequest verifyAccountRequest){
         boolean accountExists = authService.verifyAccount(verifyAccountRequest);
 
         if(accountExists){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponse<>("Account already exist!", null, null));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new AuthResponse("Account already exist!"));
         }
-        return ResponseEntity.ok(new AuthResponse<>("Account does not exist exists!", null, null));
+        return ResponseEntity.ok(new AuthResponse("Account does not exist exists!"));
     }
 }

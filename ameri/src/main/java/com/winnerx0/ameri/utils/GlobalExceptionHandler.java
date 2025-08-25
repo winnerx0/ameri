@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<ErrorResponse> handleException(DisabledException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Please verify your account before you can login"));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Please verify your account before you can login"));
     }
 
     @ExceptionHandler(MessagingException.class)

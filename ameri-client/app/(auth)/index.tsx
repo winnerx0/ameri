@@ -3,22 +3,23 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { Screen } from "@/types";
 import { BACKEND_URL } from "@/utils";
 import axios, { isAxiosError } from "axios";
-import { useRegisterStore } from "@/utils/store";
+import { useRegisterStore, useScreen } from "@/utils/store";
 import { useState } from "react";
 import { Text, TouchableOpacity, View, TextInput } from "react-native";
-import ContinueScreen from "./continue";
-import ContinueP2 from "./continuep2";
+import ContinueScreen from "../../components/continue";
+import ContinueP2 from "../../components/continuep2";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
-import OTP from "./otp";
+import OTP from "../../components/otp";
+import LoginScreen from "../../components/login";
 
-export default function RegisterScreen() {
+export default function Index() {
   const colorScheme = useColorScheme();
 
   const { registerData, updateField } = useRegisterStore();
 
-  const [screen, setScreen] = useState<Screen<string>>({ path: "login" });
-  console.log(registerData);
+  const { screen, setScreen } = useScreen();
+  console.log(registerData, screen);
 
   const { mutate: handleVerifyAccount, isPending } = useMutation({
     mutationKey: ["verify-account"],
@@ -62,11 +63,9 @@ export default function RegisterScreen() {
         <TouchableOpacity
           className="text-foreground flex flex-row items-center mt-2 self-start"
           onPress={() =>
-            setScreen((prev) =>
-              prev.path === "continueP2"
+            setScreen(
+              screen.path === "continueP2"
                 ? { path: "continue" }
-                : prev.path === "continue"
-                ? { path: "login" }
                 : { path: "login" }
             )
           }
@@ -80,11 +79,13 @@ export default function RegisterScreen() {
         </TouchableOpacity>
       )}
       {screen.path === "continue" ? (
-        <ContinueScreen setScreen={setScreen} />
+        <ContinueScreen />
       ) : screen.path === "continueP2" ? (
-        <ContinueP2 screen={screen} setScreen={setScreen} />
+        <ContinueP2 />
       ) : screen.path === "otp" ? (
-        <OTP setScreen={setScreen} />
+        <OTP />
+      ) : screen.path === "login" ? (
+        <LoginScreen />
       ) : (
         <View className="flex flex-col gap-6 items-center">
           <Text className="text-3xl font-bold text-foreground">Ameri</Text>
@@ -151,13 +152,15 @@ export default function RegisterScreen() {
               {isPending ? "Loading..." : "Continue"}
             </Text>
           </TouchableOpacity>
-
-          <Text className="text-foreground mt-4">
-            Have an account ?{" "}
-            <Link href="/login" className="text-primary">
-              Login
-            </Link>
-          </Text>
+          <View className="mt-4 flex flex-row items-center">
+            <Text className="text-foreground"> Have an account ? </Text>
+            <TouchableOpacity
+              onPress={() => setScreen({ path: "login" })}
+              className=""
+            >
+              <Text className="text-primary">Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )}
       {/* <View></View> */}

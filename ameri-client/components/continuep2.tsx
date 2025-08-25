@@ -1,28 +1,21 @@
-import {
-  View,
-  TextInput,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { RegisterResponse, Screen, TagInputProps } from "@/types";
+import { RegisterResponse, TagInputProps } from "@/types";
 import { BACKEND_URL } from "@/utils";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Dispatch, SetStateAction } from "react";
-import { useRegisterStore } from "@/utils/store";
+import { useRegisterStore, useScreen } from "@/utils/store";
 import { clsx } from "clsx";
 import TagInput from "@/components/tag-input";
 import { useMutation } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function ContinueP2({
-  setScreen,
-}: {
-  setScreen: Dispatch<SetStateAction<Screen<string>>>;
-}) {
+export default function ContinueP2() {
   // const colorScheme = useColorScheme();
   const { registerData, updateField } = useRegisterStore();
+
+  const { setScreen } = useScreen();
 
   const { isPending, mutate: handleRegisteration } = useMutation({
     mutationKey: ["register"],
@@ -43,8 +36,11 @@ export default function ContinueP2({
       const response: RegisterResponse = await res.data;
       return response;
     },
-    onSuccess: () =>
-      setScreen({ path: "otp", data:  registerData.email }),
+    onSuccess: async () => {
+      setScreen({ path: "otp", data: registerData.email });
+      await AsyncStorage.setItem("currentScreen", "otp");
+    },
+
     onError: (e) => console.error(e),
   });
 

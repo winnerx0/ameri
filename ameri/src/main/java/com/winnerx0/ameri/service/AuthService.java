@@ -10,9 +10,9 @@ import com.winnerx0.ameri.dto.response.TokenResponse;
 
 public interface AuthService {
 
-    AuthResponse<UserDTO> register(RegisterRequest registerRequest);
+    AuthResponse register(RegisterRequest registerRequest);
 
-    AuthResponse<UserDTO> login(LoginRequest loginRequest);
+    AuthResponse login(LoginRequest loginRequest);
 
     TokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
