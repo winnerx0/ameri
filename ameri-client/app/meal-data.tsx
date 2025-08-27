@@ -84,7 +84,7 @@ const MealData = () => {
           mealType: data.meal_type.toUpperCase(),
           items: [
             {
-              foodName: data.cuisine,
+              foodName: data.items[0],
               quantityInGrams: data.portion_size,
               macros: {
                 carbs: parseFloat(data.macronutrients.carbohydrates),
