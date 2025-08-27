@@ -157,7 +157,7 @@ export default function Home() {
                   colorScheme === "dark"
                     ? "dark text-zinc-400"
                     : "text-zinc-600",
-                  "text-[15px] font-light mb-4 mt-6"
+                  "text-[16px] font-semibold tracking-wide mt-6"
                 )}
               >
                 {new Date().getUTCHours() <= 0 && new Date().getUTCHours() < 11
@@ -166,15 +166,7 @@ export default function Home() {
                     new Date().getUTCHours() <= 16
                   ? "Good Afternoon"
                   : "Good Evening"}
-                .
-              </Text>
-              <Text
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "text-foreground text-3xl font-bold"
-                )}
-              >
-                Hey {userData?.username}
+                , {userData?.username}
               </Text>
             </View>
 

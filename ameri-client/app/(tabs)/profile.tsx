@@ -154,7 +154,7 @@ export default function Profile() {
                   value="Vegetarian, Gluten-free"
                   onPress={() => console.log("Dietary pressed")}
                 />
-{/* 
+                {/* 
                 <ProfileItem
                   title="Nutrition Goals"
                   value="2000 cal, 150g protein"
@@ -165,8 +165,8 @@ export default function Profile() {
               {/* Sign Out Button */}
               <TouchableOpacity
                 className={clsx(
-                  colorScheme === "dark" ? "dark" : "",
-                  "bg-destructive rounded-lg p-4 mt-8 mb-16"
+                  colorScheme === "dark" && "dark",
+                  "bg-red-600 rounded-lg p-4 mt-8 mb-16"
                 )}
                 onPress={logout}
               >

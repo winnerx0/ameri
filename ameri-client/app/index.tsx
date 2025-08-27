@@ -22,7 +22,7 @@ const Index = () => {
         } else if (token) {
           router.replace("/(tabs)/home");
         } else {
-          setScreen({ path: "login" });
+         router.replace("/login");
         }
       } catch (error) {
         console.log("Auth check error:", error);

@@ -82,19 +82,12 @@ const MealLogsScreen = () => {
               <Text
                 className={clsx(
                   colorScheme === "dark" && "dark",
-                  "text-foreground font-bold text-3xl mb-4"
+                  "text-foreground font-semibold text-2xl mb-4 mt-6"
                 )}
               >
                 Meal Logs
               </Text>
-              <Text
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "text-foreground font-bold text-2xl mb-4"
-                )}
-              >
-                Previous Meals
-              </Text>
+             
             </View>
 
             <View className="flex flex-col h-full">
