@@ -3,14 +3,11 @@ import axios from "axios";
 import { router } from "expo-router";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://9ddedd81e672.ngrok-free.app/api/v1";
+export const BACKEND_URL = "https://2f1a86a58ce5.ngrok-free.app/api/v1";
 
 // Create main API instance
 export const api = axios.create({
   baseURL: BACKEND_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // Create separate instance for auth requests to avoid circular calls
@@ -30,9 +27,9 @@ const REFRESH_COOLDOWN = 60000; // 1 minute cooldown after max attempts
 let lastFailedRefreshTime = 0;
 
 const clearAuthData = async () => {
-  await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
+  // await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
   refreshAttempts = 0;
-  router.replace("/(auth)")
+  // router.replace("/(auth)")
 };
 
 const isTokenExpired = (token: string): boolean => {
@@ -88,11 +85,11 @@ const refreshAccessToken = async (): Promise<string> => {
       if (res.status === 200 && res.data.accessToken) {
         const newAccessToken = res.data.accessToken;
         const newRefreshToken = res.data.refreshToken;
+
+        console.log("access token ", newAccessToken, "refresh token ", newRefreshToken)
         
         await AsyncStorage.setItem("accessToken", newAccessToken);
-        if (newRefreshToken) {
-          await AsyncStorage.setItem("refreshToken", newRefreshToken);
-        }
+        await AsyncStorage.setItem("refreshToken", newRefreshToken);
         
         // Reset attempts on successful refresh
         refreshAttempts = 0;
@@ -160,7 +157,7 @@ api.interceptors.response.use(
   async (error) => {
     // If we get 401, just clear auth data and reject
     // Don't try to refresh here to avoid infinite loops
-    if (error.response?.status >= 400) {
+    if (error.response?.status === 401) {
       console.warn("Received 401 error, clearing auth data");
       await clearAuthData();
       return Promise.reject(new Error("Authentication failed. Please login again."));

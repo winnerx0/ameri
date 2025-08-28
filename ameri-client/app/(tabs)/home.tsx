@@ -503,6 +503,7 @@ export default function Home() {
                   colorScheme === "dark" && "dark",
                   "flex-1 bg-primary h-12 flex-row gap-2 justify-center items-center"
                 )}
+                onPress={() => router.push("/generate-meal")}
               >
                 <MaterialCommunityIcons name="bowl" color="white" size={20} />
                 <Text className="text-white text-sm font-semibold">

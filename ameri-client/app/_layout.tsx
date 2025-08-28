@@ -23,10 +23,12 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="log-meals" options={{ headerShown: false }} />
         <Stack.Screen name="meal-logs" options={{ headerShown: false }} />
+        <Stack.Screen name="generate-meal" options={{ headerShown: false, presentation: "modal" }} />
         <Stack.Screen
           name="meal-data"
           options={{ headerShown: false, animation: "slide_from_bottom" }}

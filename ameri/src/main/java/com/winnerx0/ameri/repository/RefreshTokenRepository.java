@@ -17,7 +17,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Stri
     List<RefreshToken> findByUser(User user);
 
     @Query("SELECT rt FROM RefreshToken rt WHERE rt.user = :user AND rt.isBlacklisted = false")
-    List<RefreshToken> findByUserAndNotIsBlacklisted(User user);
+    List<RefreshToken> findByUserAndIsNotBlacklisted(User user);
 
     Optional<RefreshToken> findByToken(String token);
 

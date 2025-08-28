@@ -55,16 +55,8 @@ const MealLogsScreen = () => {
           "bg-background w-full"
         )}
       >
-        {isMealLoading || isFetchingNextPage ? (
-          <Loading />
-        ) : (
-          <ScrollView
-            contentContainerStyle={{
-              paddingBottom: 100,
-            }}
-            showsVerticalScrollIndicator={false}
-            className="flex flex-col gap-6 w-full h-screen px-4"
-          >
+        <View className="h-screen flex flex-col">
+          <View className="flex flex-col gap-4 mb-4 pl-4">
             <View className="py-2 w-full">
               <TouchableOpacity
                 className="flex-row items-center"
@@ -75,126 +67,138 @@ const MealLogsScreen = () => {
                   size={30}
                   color={colorScheme === "dark" ? "white" : "black"}
                 />
-                <Text className="text-foreground text-sm ml-1">Back</Text>
+                <Text className="text-foreground text-sm">Back</Text>
               </TouchableOpacity>
             </View>
             <View>
               <Text
                 className={clsx(
                   colorScheme === "dark" && "dark",
-                  "text-foreground font-semibold text-2xl mb-4 mt-6"
+                  "text-foreground font-semibold text-3xl"
                 )}
               >
                 Meal Logs
               </Text>
-             
             </View>
-
-            <View className="flex flex-col h-full">
-              {meals &&
-              meals.pages.flatMap((page) => page!.content).length === 0 ? (
-                <View
-                  className={clsx(
-                    colorScheme === "dark" && "dark",
-                    "border border-border bg-secondary rounded-xl py-8 items-center justify-center"
-                  )}
-                >
-                  <MaterialCommunityIcons
-                    name="food-off"
-                    size={32}
-                    color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}
-                  />
-                  <Text
+          </View>
+          {isMealLoading || isFetchingNextPage ? (
+            <Loading />
+          ) : (
+            <ScrollView
+              contentContainerStyle={{
+                paddingBottom: 100,
+              }}
+              showsVerticalScrollIndicator={false}
+              className="flex flex-col gap-6 w-full h-full px-4"
+            >
+              <View className="flex flex-col h-full">
+                {meals &&
+                meals.pages.flatMap((page) => page!.content).length === 0 ? (
+                  <View
                     className={clsx(
                       colorScheme === "dark" && "dark",
-                      "text-muted-foreground mt-2"
+                      "border border-border bg-secondary rounded-xl py-8 items-center justify-center"
                     )}
                   >
-                    No Meals Logged
-                  </Text>
-                </View>
-              ) : (
-                <View style={{ gap: 12 }}>
-                  {meals!.pages
-                    .flatMap((page) => page!.content)
-                    .map((meal) => (
-                      <View
-                        key={meal.id}
-                        className={clsx(
-                          colorScheme === "dark" && "dark",
-                          "border border-border bg-secondary rounded-xl p-4"
-                        )}
-                      >
+                    <MaterialCommunityIcons
+                      name="food-off"
+                      size={32}
+                      color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}
+                    />
+                    <Text
+                      className={clsx(
+                        colorScheme === "dark" && "dark",
+                        "text-muted-foreground mt-2"
+                      )}
+                    >
+                      No Meals Logged
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{ gap: 12 }}>
+                    {meals!.pages
+                      .flatMap((page) => page!.content)
+                      .map((meal) => (
                         <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 12,
-                          }}
+                          key={meal.id}
+                          className={clsx(
+                            colorScheme === "dark" && "dark",
+                            "border border-border bg-secondary rounded-xl p-4"
+                          )}
                         >
                           <View
                             style={{
-                              width: 40,
-                              height: 40,
-                              backgroundColor:
-                                colorScheme === "dark" ? "#4A5568" : "#F1F5F9",
-                              borderRadius: 20,
-                              justifyContent: "center",
+                              flexDirection: "row",
                               alignItems: "center",
+                              gap: 12,
                             }}
                           >
+                            <View
+                              style={{
+                                width: 40,
+                                height: 40,
+                                backgroundColor:
+                                  colorScheme === "dark"
+                                    ? "#4A5568"
+                                    : "#F1F5F9",
+                                borderRadius: 20,
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <MaterialCommunityIcons
+                                name="food"
+                                size={20}
+                                color={
+                                  colorScheme === "dark" ? "#A0AEC0" : "#64748B"
+                                }
+                              />
+                            </View>
+                            <View style={{ flex: 1 }}>
+                              <Text
+                                className={clsx(
+                                  colorScheme === "dark" && "dark",
+                                  "text-foreground font-semibold"
+                                )}
+                              >
+                                {meal.mealType}
+                              </Text>
+                              <Text
+                                className={clsx(
+                                  colorScheme === "dark" && "dark",
+                                  "text-muted-foreground text-sm"
+                                )}
+                              >
+                                {meal.items.length} item
+                                {meal.items.length !== 1 ? "s" : ""}
+                              </Text>
+                            </View>
                             <MaterialCommunityIcons
-                              name="food"
-                              size={20}
+                              name="chevron-right"
+                              size={16}
                               color={
-                                colorScheme === "dark" ? "#A0AEC0" : "#64748B"
+                                colorScheme === "dark" ? "#64748B" : "#94A3B8"
                               }
                             />
                           </View>
-                          <View style={{ flex: 1 }}>
-                            <Text
-                              className={clsx(
-                                colorScheme === "dark" && "dark",
-                                "text-foreground font-semibold"
-                              )}
-                            >
-                              {meal.mealType}
-                            </Text>
-                            <Text
-                              className={clsx(
-                                colorScheme === "dark" && "dark",
-                                "text-muted-foreground text-sm"
-                              )}
-                            >
-                              {meal.items.length} item
-                              {meal.items.length !== 1 ? "s" : ""}
-                            </Text>
-                          </View>
-                          <MaterialCommunityIcons
-                            name="chevron-right"
-                            size={16}
-                            color={
-                              colorScheme === "dark" ? "#64748B" : "#94A3B8"
-                            }
-                          />
                         </View>
-                      </View>
-                    ))}
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" && "dark",
-                      "text-muted-foreground self-center",
-                      !hasNextPage && "hidden"
-                    )}
-                    onPress={() => fetchNextPage()}
-                  >
-                    View More
-                  </Text>
-                </View>
-              )}
-            </View>
-          </ScrollView>
-        )}
+                      ))}
+                    <Text
+                      className={clsx(
+                        colorScheme === "dark" && "dark",
+                        "text-muted-foreground self-center",
+                        !hasNextPage && "hidden"
+                      )}
+                      onPress={() => fetchNextPage()}
+                    >
+                      View More
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          )}
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );

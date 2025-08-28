@@ -125,7 +125,7 @@ public class MealServiceImpl implements MealService {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        log.info("user health conditions {}", user.getHealthConditions().toString());
+        log.info("user health conditions {}", user.getHealthConditions());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -186,7 +186,7 @@ public class MealServiceImpl implements MealService {
                         "    Explicitly consider the user’s stated health conditions (%s), user's health goal to (%s) and flag any recipe that may be unsuitable.\n" +
                         "    Use metric units only.\n" +
                         "    Keep description ≤ 120 characters and instructions ≤ 200 characters.\n" +
-                        "\n", user.getHealthConditions().toString(), user.getGoal().toString())));
+                        "\n", Optional.ofNullable(user.getHealthConditions()).orElse(List.of("")), user.getGoal().toString())));
 
         if (request.getFile() != null) {
 

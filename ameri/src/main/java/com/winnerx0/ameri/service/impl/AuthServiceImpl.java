@@ -101,14 +101,15 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        List<RefreshToken> oldTokens = refreshTokenRepository.findByUser(user);
+        List<RefreshToken> oldTokens = refreshTokenRepository.findByUserAndIsNotBlacklisted(user);
 
         // black list all the previous tokens;
         if(oldTokens != null && !oldTokens.isEmpty()){
             oldTokens.forEach(token -> {
                 token.setIsBlacklisted(true);
-                refreshTokenRepository.save(token);
             });
+
+            refreshTokenRepository.saveAll(oldTokens);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
@@ -142,16 +143,15 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Refresh token has expired");
         }
         old.setIsBlacklisted(true);
-        refreshTokenRepository.save(old);
         String accessToken = jwtUtils.generateAccessToken(user.getEmail());
         String newRefreshToken = jwtUtils.generateRefreshToken(user.getId());
 
         RefreshToken newToken = new RefreshToken();
         newToken.setToken(newRefreshToken);
-        newToken.setExpirationDate(LocalDateTime.now().plusDays(7));
+        newToken.setExpirationDate(LocalDateTime.now().plusDays(30));
         newToken.setUser(user);
 
-        refreshTokenRepository.save(newToken);
+        refreshTokenRepository.saveAll(List.of(newToken, old));
 
 
         return new TokenResponse(accessToken, newRefreshToken);
