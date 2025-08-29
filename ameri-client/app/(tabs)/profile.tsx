@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import api, { BACKEND_URL } from "@/utils";
 import { UserData } from "@/types";
 import Loading from "@/components/Loading";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function Profile() {
   const colorScheme = useColorScheme();
@@ -33,6 +34,29 @@ export default function Profile() {
       return res.data.data as UserData;
     },
   });
+
+  // Fetch dietary preferences for display
+  const { data: dietaryData } = useQuery({
+    queryKey: ["user-dietary-preferences"],
+    queryFn: async () => {
+      const res = await api.get(BACKEND_URL + "/user/dietary-preferences");
+      if (res.status !== 200) return { dietaryRestrictions: [] };
+      return res.data.data;
+    },
+  });
+
+  const formatDietaryRestrictions = () => {
+    if (
+      !dietaryData?.dietaryRestrictions ||
+      dietaryData.dietaryRestrictions.length === 0
+    ) {
+      return "Not set";
+    }
+    return (
+      dietaryData.dietaryRestrictions.slice(0, 2).join(", ") +
+      (dietaryData.dietaryRestrictions.length > 2 ? "..." : "")
+    );
+  };
 
   console.log(data);
 
@@ -145,20 +169,30 @@ export default function Profile() {
               <View className="gap-3">
                 <ProfileItem
                   title="Personal Information"
-                  value="Name, email, phone"
-                  onPress={() => console.log("Personal Info pressed")}
+                  value={`${data.username || "Name"}, ${data.email}`}
+                  onPress={() => router.push("/personal-info-edit")}
+                  // icon="account-edit"
                 />
 
                 <ProfileItem
                   title="Dietary Preferences"
-                  value="Vegetarian, Gluten-free"
-                  onPress={() => console.log("Dietary pressed")}
+                  value={formatDietaryRestrictions()}
+                  onPress={() => router.push("/dietary-preferences")}
+                  // icon="food"
                 />
-                {/* 
-                <ProfileItem
+
+                {/* <ProfileItem
                   title="Nutrition Goals"
-                  value="2000 cal, 150g protein"
-                  onPress={() => console.log("Goals pressed")}
+                  value="Set daily calorie and macro targets"
+                  onPress={() => router.push("/nutrition-goals")}
+                  // icon="target"
+                /> */}
+
+                {/* <ProfileItem
+                  title="App Settings"
+                  value="Notifications, theme, units"
+                  onPress={() => router.push("/app-settings")}
+                  icon="cog"
                 /> */}
               </View>
 

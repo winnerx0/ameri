@@ -28,11 +28,19 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="log-meals" options={{ headerShown: false }} />
         <Stack.Screen name="meal-logs" options={{ headerShown: false }} />
-        <Stack.Screen name="generate-meal" options={{ headerShown: false, presentation: "modal" }} />
+        <Stack.Screen
+          name="generate-meal"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
         <Stack.Screen
           name="meal-data"
           options={{ headerShown: false, animation: "slide_from_bottom" }}
         />
+        <Stack.Screen
+          name="personal-info-edit"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="dietary-preferences" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

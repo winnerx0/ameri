@@ -3,7 +3,7 @@ import axios from "axios";
 import { router } from "expo-router";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://2f1a86a58ce5.ngrok-free.app/api/v1";
+export const BACKEND_URL = "https://20aeeaea6bc8.ngrok-free.app/api/v1";
 
 // Create main API instance
 export const api = axios.create({

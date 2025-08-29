@@ -106,6 +106,7 @@ const LogMeals = () => {
         className="border border-border rounded-xl px-3 pl-10 h-12"
         value={value > 0 ? String(value) : ""}
         onChangeText={onChangeText}
+        returnKeyType="done"
       />
     </View>
   );
@@ -357,7 +358,7 @@ const LogMeals = () => {
         </ScrollView>
 
         {/* Save Button - Fixed at bottom */}
-        <View className="absolute bottom-0 left-0 right-0 bg-background border-t border-border/50 p-4">
+        <View className="sticky bottom-0 left-0 right-0 bg-background border-t border-border/50 p-4">
           <TouchableOpacity
             className={clsx(
               "bg-primary rounded-xl items-center justify-center h-14 shadow-lg",

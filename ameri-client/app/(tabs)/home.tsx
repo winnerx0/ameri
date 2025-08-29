@@ -501,7 +501,7 @@ export default function Home() {
                 }}
                 className={clsx(
                   colorScheme === "dark" && "dark",
-                  "flex-1 bg-primary h-12 flex-row gap-2 justify-center items-center"
+                  "flex-1 bg-primary h-12 flex-row gap-2 justify-center items-center rounded-2xl"
                 )}
                 onPress={() => router.push("/generate-meal")}
               >
@@ -517,7 +517,7 @@ export default function Home() {
                 }}
                 className={clsx(
                   colorScheme === "dark" && "dark",
-                  "flex-1 bg-primary h-12 rounded-lg flex-row gap-2 justify-center items-center"
+                  "flex-1 bg-primary h-12 rounded-2xl flex-row gap-2 justify-center items-center"
                 )}
                 onPress={() => router.push("/log-meals")}
               >
