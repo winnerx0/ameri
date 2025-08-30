@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { clsx } from "clsx";
 import { router } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -77,7 +76,6 @@ const GenerateMeal = () => {
         } as any);
       }
       const res = await api.post("/meal/create-meal-recipes", formData);
-      if (res.status !== 200) throw new Error(res.data);
       return res.data;
     },
     onSuccess: (data) => {

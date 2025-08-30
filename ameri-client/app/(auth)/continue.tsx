@@ -41,7 +41,7 @@ export default function ContinueScreen() {
   } = registerData;
 
   return (
-    <ThemedView className="flex flex-col gap-6 items-center">
+    <ThemedView className="flex flex-col gap-6 items-center justify-center h-full">
       {/* Gender */}
       <ThemedView className="flex items-start gap-2">
         <ThemedText>Gender</ThemedText>

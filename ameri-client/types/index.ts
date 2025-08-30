@@ -143,3 +143,13 @@ export type Screen<T> = {
   path: "login" | "continue" | "continueP2" | "otp" | "login" | "register";
   data?: T
 };
+
+export type AppColors = {
+  primary: string;
+  secondary?: string;
+  background: string;
+  text: string;
+  border: string;
+  card: string;
+  placeholder?: string
+};

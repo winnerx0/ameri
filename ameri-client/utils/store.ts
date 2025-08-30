@@ -6,7 +6,7 @@ interface RegisterStore {
   setRegisterData: (data: RegisterRequest) => void;
   updateField: (
     field: keyof RegisterRequest,
-    value: string | string[] | number | any,
+    value: any,
   ) => void;
   resetRegisterData: () => void;
 }

@@ -1,7 +1,14 @@
-import { View, TextInput, Text, TouchableOpacity, Button } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  Button,
+  KeyboardTypeOptions,
+} from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { LoginRequest, LoginResponse } from "@/types";
+import { AppColors, LoginRequest, LoginResponse } from "@/types";
 import axios, { isAxiosError } from "axios";
 import { BACKEND_URL } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -9,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTheme } from "@react-navigation/native";
 import { useScreen } from "@/utils/store";
 import { ThemedText } from "@/components/ThemedText";
+import Input from "@/components/text-input";
 export default function LoginScreen() {
   const { colors } = useTheme();
 
@@ -57,52 +65,45 @@ export default function LoginScreen() {
       }
     },
   });
+
+  console.log(data);
   return (
     <View className="flex flex-col gap-6 items-center h-full justify-center">
       <ThemedText className="text-3xl font-bold">Ameri</ThemedText>
       <ThemedText className="italic text-foreground">
         Manage your health the right way
       </ThemedText>
-      <View className="flex items-start gap-2">
-        <ThemedText>Email</ThemedText>
-        <TextInput
-          placeholder="samuelmadison@gmail.com"
-          keyboardType="email-address"
-          style={{
-            color: colors.text,
-          }}
-          className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px]"
-          onChangeText={(email) => setData((prev) => ({ ...prev, email }))}
-        />
-      </View>
-      <View className="flex items-start gap-2">
-        <ThemedText>Password</ThemedText>
-        <TextInput
-          placeholder="samuel123@"
-          keyboardType="visible-password"
-          style={{
-            color: colors.text,
-          }}
-          className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
-          onChangeText={(password) =>
-            setData((prev) => ({ ...prev, password }))
-          }
-        />
-      </View>
-      <View className="flex items-start gap-2">
-        <ThemedText>Confirm Password</ThemedText>
-        <TextInput
-          placeholder="samuel123@"
-          keyboardType="visible-password"
-          style={{
-            color: colors.text,
-          }}
-          className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
-          onChangeText={(confirmPassword) =>
-            setData((prev) => ({ ...prev, confirmPassword }))
-          }
-        />
-      </View>
+
+      <Input
+        type="login"
+        colors={colors}
+        value={data.email}
+        label="Email"
+        placeholder="samuelmadison@gmail.com"
+        keyboardType="email-address"
+        data={"email"}
+        setData={setData}
+      />
+      <Input
+        type="login"
+        colors={colors}
+           value={data.password}
+        label="Password"
+        placeholder="samuel123@"
+        keyboardType="visible-password"
+        data={"password"}
+        setData={setData}
+      />
+      <Input
+        type="login"
+        colors={colors}
+           value={data.confirmPassword}
+        label="Confirm Password"
+        placeholder="samuel123@"
+        keyboardType="visible-password"
+        data={"confirmPassword"}
+        setData={setData}
+      />
       <TouchableOpacity
         className="disabled:opacity-40 mt-8 bg-primary w-[350px] h-14 rounded-2xl items-center justify-center"
         onPress={() => handleLogin()}

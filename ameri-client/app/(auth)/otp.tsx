@@ -20,6 +20,7 @@ import { router } from "expo-router";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { View } from "react-native";
 
 const OTP = () => {
   const { colors } = useTheme();
@@ -135,85 +136,85 @@ const OTP = () => {
   const isOtpComplete = otp.every((d) => d !== "");
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView
-        style={{ backgroundColor: colors.background }}
-        className="flex-1 items-center gap-4 px-6 mt-8 h-full"
-      >
-        {/* Title */}
-        <ThemedText className="text-3xl font-bold mb-2">Verify OTP</ThemedText>
-        <ThemedText className="text-muted-foreground text-center mb-8">
-          Enter the 4-digit code sent to{"\n"}
-          {email}
-        </ThemedText>
+    <ThemedView className="items-center gap-4 px-6 mt-8 mt-">
+      {/* Title */}
+      <ThemedText className="text-3xl font-bold mb-2">
+        Verify OTP
+      </ThemedText>
+      <ThemedText className="text-muted-foreground text-center mb-8">
+        Enter the 4-digit code sent to{"\n"}
+        {email}
+      </ThemedText>
 
-        {/* OTP inputs */}
-        <ThemedView className="flex-row gap-4 mb-8">
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={(r) => (inputRefs.current[index] = r)}
-              value={digit}
-              onChangeText={(v) => handleOtpChange(v, index)}
-              onKeyPress={(e) => handleKeyPress(e, index)}
-              onFocus={() => setActiveIndex(index)}
-              maxLength={1}
-              keyboardType="numeric"
-              returnKeyType="done"
-              selectTextOnFocus
-              style={{
-                color: colors.text,
-                borderColor: digit
+      {/* OTP inputs */}
+      <ThemedView className="flex-row gap-4 mb-8">
+        {otp.map((digit, index) => (
+          <TextInput
+            key={index}
+            ref={(r) => (inputRefs.current[index] = r)}
+            value={digit}
+            onChangeText={(v) => handleOtpChange(v, index)}
+            onKeyPress={(e) => handleKeyPress(e, index)}
+            onFocus={() => setActiveIndex(index)}
+            maxLength={1}
+            keyboardType="numeric"
+            returnKeyType="done"
+            selectTextOnFocus
+            style={{
+              color: colors.text,
+              borderColor: digit
+                ? colors.primary
+                : activeIndex === index
                   ? colors.primary
-                  : activeIndex === index
-                    ? colors.primary
-                    : colors.border,
-              }}
-              className="w-12 h-14 border-2 rounded-lg text-center text-xl font-bold"
-            />
-          ))}
-        </ThemedView>
+                  : colors.border,
+            }}
+            className="w-12 h-14 border-2 rounded-lg text-center text-xl font-bold"
+          />
+        ))}
+      </ThemedView>
 
-        {/* Timer / Resend */}
-        <ThemedView className="mb-8">
-          {timer > 0 ? (
-            <ThemedText>Resend code in {formatTime(timer)}</ThemedText>
-          ) : (
-            <TouchableOpacity
-              onPress={() => email && handleSendOtp(email)}
-              disabled={isResendOtpLoading}
+      {/* Timer / Resend */}
+      <ThemedView className="mb-8">
+        {timer > 0 ? (
+          <ThemedText>Resend code in {formatTime(timer)}</ThemedText>
+        ) : (
+          <TouchableOpacity
+            onPress={() => email && handleSendOtp(email)}
+            disabled={isResendOtpLoading}
+          >
+            <Text
+              style={{ color: colors.primary }}
+              className="font-semibold"
             >
-              <Text style={{ color: colors.primary }} className="font-semibold">
-                Resend OTP
-              </Text>
-            </TouchableOpacity>
-          )}
-        </ThemedView>
+              Resend OTP
+            </Text>
+          </TouchableOpacity>
+        )}
+      </ThemedView>
 
-        {/* Verify */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.primary,
-            opacity: isOtpComplete && !isPending ? 1 : 0.4,
-          }}
-          disabled={!isOtpComplete || isPending}
-          onPress={() => handleVerifyOtp()}
-          className="h-14 rounded-lg items-center justify-center w-full"
-        >
-          <ThemedText style={{ color: colors.card }}>
-            {isPending ? "Verifying…" : "Verify OTP"}
-          </ThemedText>
-        </TouchableOpacity>
+      {/* Verify */}
+      <TouchableOpacity
+        style={{
+          backgroundColor: colors.primary,
+          opacity: isOtpComplete && !isPending ? 1 : 0.4,
+        }}
+        disabled={!isOtpComplete || isPending}
+        onPress={() => handleVerifyOtp()}
+        className="h-14 rounded-lg items-center justify-center w-full"
+      >
+        <ThemedText style={{ color: colors.card }}>
+          {isPending ? "Verifying…" : "Verify OTP"}
+        </ThemedText>
+      </TouchableOpacity>
 
-        {/* Back */}
-        <TouchableOpacity
-          onPress={() => setScreen({ path: "login" })}
-          className="mt-4"
-        >
-          <ThemedText style={{ color: colors.primary }}>Go Back</ThemedText>
-        </TouchableOpacity>
-      </SafeAreaView>
-    </SafeAreaProvider>
+      {/* Back */}
+      <TouchableOpacity
+        onPress={() => setScreen({ path: "login" })}
+        className="mt-4"
+      >
+        <ThemedText style={{ color: colors.primary }}>Go Back</ThemedText>
+      </TouchableOpacity>
+    </ThemedView>
   );
 };
 

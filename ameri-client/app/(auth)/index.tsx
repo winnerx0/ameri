@@ -4,7 +4,7 @@ import { BACKEND_URL } from "@/utils";
 import axios, { isAxiosError } from "axios";
 import { useRegisterStore, useScreen } from "@/utils/store";
 import { useState } from "react";
-import { TouchableOpacity, TextInput,Text } from "react-native";
+import { TouchableOpacity, TextInput, Text } from "react-native";
 import ContinueScreen from "./continue";
 import ContinueP2 from "./continuep2";
 import OTP from "./otp";
@@ -15,6 +15,7 @@ import { useTheme } from "@react-navigation/native";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import Input from "@/components/text-input";
 
 export default function Index() {
   const { colors } = useTheme();
@@ -41,7 +42,7 @@ export default function Index() {
           email: registerData.email,
           username: registerData.username,
         },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
     },
     onSuccess: () => setScreen({ path: "continue" }),
@@ -50,17 +51,19 @@ export default function Index() {
     },
   });
 
-  console.log(screen)
+  console.log(screen);
   return (
-    <ThemedView className="gap-6 w-full h-full flex flex-col justify-center">
-      {(screen.path === "otp" || screen.path === "continue" || screen.path === "continueP2") && (
+    <ThemedView className="gap-6 w-full h-full flex flex-col">
+      {(screen.path === "otp" ||
+        screen.path === "continue" ||
+        screen.path === "continueP2") && (
         <TouchableOpacity
-          className="text-foreground flex flex-row items-center self-start"
+          className="text-foreground flex flex-row items-center self-start ml-1"
           onPress={() =>
             setScreen(
               screen.path === "continueP2"
                 ? { path: "continue" }
-                : { path: "register" }
+                : { path: "register" },
             )
           }
         >
@@ -88,46 +91,38 @@ export default function Index() {
             Manage your health the right way
           </ThemedText>
 
-          <ThemedView className="flex items-start gap-2">
-            <ThemedText>Username</ThemedText>
-            <TextInput
-              placeholder="samuel"
+          <Input
+            type="register"
               value={registerData.username}
-              style={{
-                color: colors.text
-              }}
-              className="text-foreground border border-border rounded-2xl px-2 h-14 py-2 w-[350px]"
-              onChangeText={(username) => updateField("username", username)}
-            />
-          </ThemedView>
+            colors={colors}
+            label="Username"
+            placeholder="samuelmadison@gmail.com"
+            keyboardType="default"
+            data={"username"}
+            setData={updateField}
+          />
 
-          <ThemedView className="flex items-start gap-2">
-            <ThemedText>Email</ThemedText>
-            <TextInput
-              placeholder="samuelmadison@gmail.com"
+          <Input
+            type="register"
               value={registerData.email}
-              keyboardType="email-address"
-              style={{
-                color: colors.text
-              }}
-              className="text-foreground border border-border rounded-2xl px-2 h-14 py-2 w-[350px]"
-              onChangeText={(email) => updateField("email", email)}
-            />
-          </ThemedView>
+            colors={colors}
+            label="Email"
+            placeholder="samuelmadison@gmail.com"
+            keyboardType="email-address"
+            data={"email"}
+            setData={updateField}
+          />
 
-          <ThemedView className="flex items-start gap-2">
-            <ThemedText>Password</ThemedText>
-            <TextInput
-              placeholder="samuel123@"
-              value={registerData.password}
-              style={{
-                color: colors.text
-              }}
-              // secureTextEntry
-              className="text-foreground border border-border rounded-2xl px-2 h-14 py-2 w-[350px]"
-              onChangeText={(password) => updateField("password", password)}
-            />
-          </ThemedView>
+          <Input
+          value={registerData.password}
+            type="register"
+            colors={colors}
+            label="Password"
+            placeholder="samuel123@"
+            keyboardType="visible-password"
+            data={"password"}
+            setData={updateField}
+          />
 
           <TouchableOpacity
             style={{ backgroundColor: colors.primary }}

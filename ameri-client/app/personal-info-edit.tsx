@@ -1,12 +1,11 @@
 import {
-  SafeAreaView,
   TextInput,
   TouchableOpacity,
   ScrollView,
   Alert,
   ActivityIndicator,
 } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -35,7 +34,9 @@ const PersonalInfoEdit = () => {
   const { colors } = useTheme();
   const queryClient = useQueryClient();
 
-  const [formData, setFormData] = useState<Pick<UserData, "username" | "email" | "dateOfBirth">>({
+  const [formData, setFormData] = useState<
+    Pick<UserData, "username" | "email" | "dateOfBirth">
+  >({
     username: "",
     email: "",
     dateOfBirth: "",
@@ -64,13 +65,13 @@ const PersonalInfoEdit = () => {
       const res = await api.get(BACKEND_URL + "/user/me");
       if (res.status !== 200) throw new Error("Failed to fetch user data");
       const data = res.data.data;
-console.log("data", data)
+      console.log("data", data);
       setFormData(data);
       return data as UserData;
     },
   });
-  
-  console.log("form data", formData)
+
+  console.log("form data", formData);
 
   /* --- update mutation --- */
   const { mutate: updatePersonalInfo, isPending } = useMutation({
@@ -102,8 +103,6 @@ console.log("data", data)
     updatePersonalInfo(formData);
   };
 
-
-
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -111,8 +110,10 @@ console.log("data", data)
         className="h-full w-full"
       >
         {/* Header */}
-        {
-           !data && isLoading ? (<Loading/>) : data ? <>
+        {!data && isLoading ? (
+          <Loading />
+        ) : data ? (
+          <>
             <ThemedView className="px-4 py-2 border-b border-border/50">
               <TouchableOpacity
                 className="flex flex-row items-center mb-4"
@@ -123,9 +124,11 @@ console.log("data", data)
                   size={24}
                   color={colors.text}
                 />
-                <ThemedText className="text-base ml-1 font-medium">Back</ThemedText>
+                <ThemedText className="text-base ml-1 font-medium">
+                  Back
+                </ThemedText>
               </TouchableOpacity>
-    
+
               <ThemedText className="font-bold text-3xl mb-2">
                 Personal Information
               </ThemedText>
@@ -133,7 +136,7 @@ console.log("data", data)
                 Update your personal details
               </ThemedText>
             </ThemedView>
-    
+
             <ScrollView
               className="flex-1 px-4"
               showsVerticalScrollIndicator={false}
@@ -144,7 +147,9 @@ console.log("data", data)
                   label="Username"
                   defaultValue={data.username}
                   value={formData.username}
-                  onChangeText={(t) => setFormData((p) => ({ ...p, username: t }))}
+                  onChangeText={(t) =>
+                    setFormData((p) => ({ ...p, username: t }))
+                  }
                   placeholder="Enter your username"
                   icon="account"
                 />
@@ -191,7 +196,7 @@ console.log("data", data)
                 />
               </ThemedView>
             </ScrollView>
-    
+
             {/* Save Button */}
             <ThemedView className="sticky bottom-16 left-0 right-0 border-t border-border/50 p-4">
               <TouchableOpacity
@@ -211,12 +216,16 @@ console.log("data", data)
                     </ThemedText>
                   </ThemedView>
                 ) : (
-                  <Text className="text-white font-bold text-lg">Save Changes</Text>
+                  <Text className="text-white font-bold text-lg">
+                    Save Changes
+                  </Text>
                 )}
               </TouchableOpacity>
             </ThemedView>
-          </> : <></>
-        }
+          </>
+        ) : (
+          <></>
+        )}
       </SafeAreaView>
     </SafeAreaProvider>
   );

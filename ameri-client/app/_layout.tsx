@@ -14,7 +14,7 @@ import {
 } from "@react-navigation/native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Platform } from "react-native";
-import "../global.css"
+import "../global.css";
 
 export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient());
@@ -58,6 +58,7 @@ export default function RootLayout() {
       primary: "hsl(221.2 83.2% 53.3%)",
       text: "hsl(222.2 84% 4.9%)",
       secondary: "hsl(222.2 40% 94%)",
+      placeholder: "hsla(0, 0%, 0%, 0.5)",
     },
     dark: {
       background: "hsl(222.2 84% 4.9%)",
@@ -67,6 +68,7 @@ export default function RootLayout() {
       primary: "hsl(217.2 91.2% 59.8%)",
       text: "hsl(210 40% 98%)",
       secondary: "hsl(217.2 32.6% 17.5%)",
+      placeholder: "hsla(0, 0%, 100%, 0.5)",
     },
   };
 
@@ -79,7 +81,7 @@ export default function RootLayout() {
     colors: NAV_THEME.dark,
   };
 
-  console.log(isDarkColorScheme)
+  console.log(isDarkColorScheme);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>

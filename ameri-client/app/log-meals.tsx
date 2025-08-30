@@ -1,5 +1,5 @@
 import {
-  SafeAreaView,
+  
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { clsx } from "clsx";
 import { router } from "expo-router";
 import { useTheme } from "@react-navigation/native";
@@ -113,13 +113,12 @@ const LogMeals = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        style={{ backgroundColor: colors.background }}
         className="h-full w-full"
       >
         {/* Header */}
         <ThemedView className="px-4 py-2 border-b border-border/50">
           <TouchableOpacity
-            className="flex flex-row items-center mb-4"
+            className="flex flex-row items-center mb-4 "
             onPress={() => router.back()}
           >
             <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text} />
@@ -163,7 +162,7 @@ const LogMeals = () => {
                         <TouchableOpacity
                           style={{backgroundColor: colors.background}}
                           className={clsx(
-                            "bg-background px-4 py-4 border-b border-border/30 last:border-b-0 rounded-lg"
+                            "bg-background px-4 py-4"
                           )}
                         >
                           <ThemedText className=" text-base font-medium">
@@ -319,7 +318,7 @@ const LogMeals = () => {
 
         {/* Save Button - Fixed at bottom */}
         <ThemedView
-          className="sticky bottom-16 left-0 right-0 border-t border-border/50 p-4"
+          className="sticky bottom-0 left-0 right-0 border-t border-border/50 p-4"
         >
           <TouchableOpacity
             className="rounded-xl items-center justify-center h-14 shadow-lg"

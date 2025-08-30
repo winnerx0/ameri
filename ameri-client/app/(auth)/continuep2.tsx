@@ -17,6 +17,8 @@ import { ThemedText } from "@/components/ThemedText";
 
 import { api, BACKEND_URL } from "@/utils";
 import { useRegisterStore, useScreen } from "@/utils/store";
+import Input from "@/components/text-input";
+import { AppColors } from "@/types";
 
 /* ---------- shape that ContinueP2 will now store ---------- */
 interface ContinueP2DietaryData {
@@ -94,16 +96,36 @@ const ContinueP2 = () => {
   /* ---------- helpers ---------- */
   const toggleItem = (category: keyof ContinueP2DietaryData, item: string) => {
     setFormData((prev) => {
-      const updated = {
-        ...prev,
-        [category]: (prev[category] as string[]).includes(item)
-          ? (prev[category] as string[]).filter((i) => i !== item)
-          : [...(prev[category] as string[]), item],
+      // Get the latest healthConditions (from registerData, not prev)
+      const currentHealthConditions = registerData.healthConditions || {};
+  
+      // Use either existing values in healthConditions or prev state
+      const currentCategory = (currentHealthConditions[category] as string[]) 
+        ?? (prev[category] as string[]) 
+        ?? [];
+  
+      // Toggle the item inside this category
+      const updatedCategory = currentCategory.includes(item)
+        ? currentCategory.filter((i) => i !== item)
+        : [...currentCategory, item];
+  
+      // Build new healthConditions while preserving other categories
+      const updatedHealthConditions = {
+        ...currentHealthConditions,
+        [category]: updatedCategory,
       };
-      updateField("healthConditions", updated);
-      return updated;
+  
+      // Push this into registerData
+      updateField("healthConditions", updatedHealthConditions);
+  
+      // Keep local form state in sync too
+      return {
+        ...prev,
+        [category]: updatedCategory,
+      };
     });
   };
+
 
   const handleSave = () => updateContinueP2Dietary(formData);
 
@@ -205,6 +227,13 @@ const ContinueP2 = () => {
               <TextInput
                 placeholder="Enter weight in kg"
                 keyboardType="number-pad"
+                placeholderTextColor={
+                  (colors as typeof colors & { placeholder: string })
+                    .placeholder
+                }
+                style={{
+                  color: colors.text,
+                }}
                 value={
                   registerData.weight ? registerData.weight.toString() : ""
                 }
@@ -219,6 +248,13 @@ const ContinueP2 = () => {
               <ThemedText>Height</ThemedText>
               <TextInput
                 placeholder="Enter height in cm"
+                placeholderTextColor={
+                  (colors as typeof colors & { placeholder: string })
+                    .placeholder
+                }
+                style={{
+                  color: colors.text,
+                }}
                 keyboardType="number-pad"
                 value={
                   registerData.height ? registerData.height.toString() : ""

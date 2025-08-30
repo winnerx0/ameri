@@ -23,9 +23,6 @@ interface DietaryData {
   dietaryRestrictions: string[];
   allergies: string[];
   preferredCuisines: string[];
-  dislikedFoods: string[];
-  healthGoals: string[];
-  notes: string;
 }
 
 const DietaryPreferences = () => {
@@ -36,9 +33,6 @@ const DietaryPreferences = () => {
     dietaryRestrictions: [],
     allergies: [],
     preferredCuisines: [],
-    dislikedFoods: [],
-    healthGoals: [],
-    notes: "",
   });
 
   const handleGoBack = () => {
@@ -110,9 +104,6 @@ const DietaryPreferences = () => {
         dietaryRestrictions: [],
         allergies: [],
         preferredCuisines: [],
-        dislikedFoods: [],
-        healthGoals: [],
-        notes: "",
       };
        console.log("data", data);
       setFormData(data);

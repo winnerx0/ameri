@@ -518,7 +518,7 @@ export default function Home() {
               </ThemedText>
 
               {meals && meals.length === 0 ? (
-                <View
+                <ThemedView
                   className={clsx(
                     colorScheme === "dark" && "dark",
                     "border border-border bg-secondary rounded-xl py-8 items-center justify-center",
@@ -532,7 +532,7 @@ export default function Home() {
                   <ThemedText className={clsx("text-muted-foreground mt-2")}>
                     No Meals Logged
                   </ThemedText>
-                </View>
+                </ThemedView>
               ) : (
                 <View style={{ gap: 12 }}>
                   {meals?.map((meal) => (

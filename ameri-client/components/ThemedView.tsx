@@ -1,17 +1,9 @@
 import { View } from "react-native";
 import { useTheme } from "@react-navigation/native";
 import { ViewProps } from "react-native";
+import { AppColors } from "@/types";
 
-type AppColors = {
-  primary: string;
-  secondary?: string;
-  background: string;
-  text: string;
-  border: string;
-  card: string;
-};
-
-type Colors = "primary" | "secondary" | "background" | "text" | "border" | "card"
+type Colors = "primary" | "secondary" | "background" | "text" | "border" | "card" | "placeholder"
 export function ThemedView({
   className,
   children,
