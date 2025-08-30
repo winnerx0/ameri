@@ -36,7 +36,7 @@ public class RegisterRequest {
     @Past(message = "Date of birth should be in the past")
     private LocalDate dateOfBirth;
 
-    private List<String> healthConditions;
+    private JsonNode healthConditions;
 
     @NotNull(message = "Weight required")
     @Min(value = 1, message = "Invalid weight")

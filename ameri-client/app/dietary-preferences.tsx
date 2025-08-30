@@ -1,21 +1,23 @@
 import {
-  SafeAreaView,
-  Text,
-  TextInput,
   TouchableOpacity,
-  View,
   ScrollView,
   Alert,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { clsx } from "clsx";
-import { router } from "expo-router";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useTheme } from "@react-navigation/native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, BACKEND_URL } from "@/utils";
+import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import Loading from "@/components/Loading";
+
+import { api, BACKEND_URL } from "@/utils";
+import { router } from "expo-router";
+import { Text } from "react-native";
 
 interface DietaryData {
   dietaryRestrictions: string[];
@@ -27,7 +29,7 @@ interface DietaryData {
 }
 
 const DietaryPreferences = () => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<DietaryData>({
@@ -39,27 +41,8 @@ const DietaryPreferences = () => {
     notes: "",
   });
 
-  const [isNavigationReady, setIsNavigationReady] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsNavigationReady(true);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [colorScheme]);
-
   const handleGoBack = () => {
-    try {
-      if (isNavigationReady && router.canGoBack()) {
-        router.back();
-      } else {
-        router.replace("/(tabs)/home");
-      }
-    } catch (error) {
-      console.log("Navigation error:", error);
-      router.replace("/(tabs)/home");
-    }
+    router.back();
   };
 
   const dietaryOptions = {
@@ -115,34 +98,37 @@ const DietaryPreferences = () => {
     ],
   };
 
-  // Fetch current dietary preferences
+  /* --- fetch current dietary preferences --- */
   const { isLoading } = useQuery({
     queryKey: ["user-dietary-preferences"],
     queryFn: async () => {
-      const res = await api.get(BACKEND_URL + "/user/dietary-preferences");
+      const res = await api.get(BACKEND_URL + "/user/me");
       if (res.status !== 200)
         throw new Error("Failed to fetch dietary preferences");
-       setFormData(
-         res.data.data || {
-           dietaryRestrictions: [],
-           allergies: [],
-           preferredCuisines: [],
-           dislikedFoods: [],
-           healthGoals: [],
-           notes: "",
-         }
-       ); ;
+      
+      const data = res.data.data || {
+        dietaryRestrictions: [],
+        allergies: [],
+        preferredCuisines: [],
+        dislikedFoods: [],
+        healthGoals: [],
+        notes: "",
+      };
+       console.log("data", data);
+      setFormData(data);
+
+     
+      return data;
     },
-   
   });
 
-  // Update dietary preferences mutation
+  /* --- update dietary preferences mutation --- */
   const { mutate: updateDietaryPreferences, isPending } = useMutation({
     mutationKey: ["update-dietary-preferences"],
     mutationFn: async (data: DietaryData) => {
       const res = await api.put(
         BACKEND_URL + "/user/dietary-preferences",
-        data
+        data,
       );
       if (res.status !== 200)
         throw new Error(res.data?.message || "Update failed");
@@ -151,16 +137,14 @@ const DietaryPreferences = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-data"] });
       queryClient.invalidateQueries({ queryKey: ["user-dietary-preferences"] });
-      Alert.alert("Success", "Dietary preferences updated successfully!");
+      Alert.alert("Success", "Dietary preferences updated!");
       handleGoBack();
     },
-    onError: (error: any) => {
-      console.log("Error updating dietary preferences:", error);
+    onError: () =>
       Alert.alert(
         "Error",
-        "Failed to update dietary preferences. Please try again."
-      );
-    },
+        "Could not update your preferences. Please try again.",
+      ),
   });
 
   const toggleItem = (category: keyof DietaryData, item: string) => {
@@ -174,9 +158,7 @@ const DietaryPreferences = () => {
     }));
   };
 
-  const handleSave = () => {
-    updateDietaryPreferences(formData);
-  };
+  const handleSave = () => updateDietaryPreferences(formData);
 
   const CategorySection = ({
     title,
@@ -191,52 +173,53 @@ const DietaryPreferences = () => {
     category: keyof DietaryData;
     icon: string;
   }) => (
-    <View className="mb-6">
-      <View className="flex-row items-center mb-3">
+    <ThemedView className="mb-6">
+      <ThemedView className="flex-row items-center mb-3">
         <MaterialCommunityIcons
           name={icon as any}
           size={18}
-          color={colorScheme === "dark" ? "white" : "black"}
+          color={colors.text}
         />
-        <Text className="text-foreground font-medium ml-2 text-sm uppercase tracking-wide opacity-70">
+        <ThemedText className="font-medium ml-2 text-sm uppercase tracking-wide opacity-70">
           {title}
-        </Text>
-      </View>
-      <View className="flex-row flex-wrap gap-2">
+        </ThemedText>
+      </ThemedView>
+      <ThemedView className="flex-row flex-wrap gap-2">
         {items.map((item) => (
           <TouchableOpacity
             key={item}
             onPress={() => toggleItem(category, item)}
-            className={clsx(
-              "px-4 py-2 rounded-full border",
-              selected.includes(item)
-                ? "bg-primary border-primary"
-                : "bg-card border-border"
-            )}
+            style={{
+              backgroundColor: selected.includes(item)
+                ? colors.primary
+                : colors.card,
+              borderColor: selected.includes(item)
+                ? colors.primary
+                : colors.border,
+            }}
+            className="px-4 py-2 rounded-full border"
           >
             <Text
-              className={clsx(
-                "text-sm font-medium",
-                selected.includes(item) ? "text-white" : "text-foreground"
-              )}
+              
+              className="text-sm font-medium text-white"
             >
               {item}
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   );
 
   if (isLoading) {
     return (
       <SafeAreaProvider>
-        <SafeAreaView className="bg-background flex-1 items-center justify-center">
-          <ActivityIndicator
-            size="large"
-            color={colorScheme === "dark" ? "white" : "black"}
-          />
-          <Text className="text-foreground mt-4">Loading preferences...</Text>
+        <SafeAreaView
+          style={{ backgroundColor: colors.background }}
+          className="flex-1 items-center justify-center"
+        >
+          <ActivityIndicator size="large" color={colors.primary} />
+          <ThemedText className="mt-4">Loading preferences...</ThemedText>
         </SafeAreaView>
       </SafeAreaProvider>
     );
@@ -245,13 +228,11 @@ const DietaryPreferences = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background h-full w-full"
-        )}
+        style={{ backgroundColor: colors.background }}
+        className="h-full w-full"
       >
         {/* Header */}
-        <View className="px-4 py-2 border-b border-border/50">
+        <ThemedView className="px-4 py-2 border-b border-border/50">
           <TouchableOpacity
             className="flex flex-row items-center mb-4"
             onPress={handleGoBack}
@@ -259,27 +240,25 @@ const DietaryPreferences = () => {
             <MaterialCommunityIcons
               name="chevron-left"
               size={24}
-              color={colorScheme === "dark" ? "white" : "black"}
+              color={colors.text}
             />
-            <Text className="text-foreground text-base ml-1 font-medium">
-              Back
-            </Text>
+            <ThemedText className="text-base ml-1 font-medium">Back</ThemedText>
           </TouchableOpacity>
 
-          <Text className="font-bold text-foreground text-3xl mb-2">
+          <ThemedText className="font-bold text-3xl mb-2">
             Dietary Preferences
-          </Text>
-          <Text className="text-muted-foreground text-base mb-6">
+          </ThemedText>
+          <ThemedText className="text-base mb-6 opacity-70">
             Set your dietary restrictions and food preferences
-          </Text>
-        </View>
+          </ThemedText>
+        </ThemedView>
 
         <ScrollView
           className="flex-1 px-4"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingTop: 20, paddingBottom: 120 }}
         >
-          <View className="space-y-6">
+          <ThemedView className="space-y-6">
             <CategorySection
               title="Dietary Restrictions"
               items={dietaryOptions.restrictions}
@@ -313,22 +292,22 @@ const DietaryPreferences = () => {
             />
 
             {/* Additional Notes */}
-            <View>
-              <View className="flex-row items-center mb-3">
+            <ThemedView>
+              <ThemedView className="flex-row items-center mb-3">
                 <MaterialCommunityIcons
                   name="note-text"
                   size={18}
-                  color={colorScheme === "dark" ? "white" : "black"}
+                  color={colors.text}
                 />
-                <Text className="text-foreground font-medium ml-2 text-sm uppercase tracking-wide opacity-70">
+                <ThemedText className="font-medium ml-2 text-sm uppercase tracking-wide opacity-70">
                   Additional Notes
-                </Text>
-              </View>
-              <View className="relative">
+                </ThemedText>
+              </ThemedView>
+              <ThemedView className="relative">
                 <MaterialCommunityIcons
                   name="pencil"
                   size={18}
-                  color={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
+                  color={colors.text}
                   style={{ position: "absolute", left: 12, top: 13, zIndex: 1 }}
                 />
                 <TextInput
@@ -336,47 +315,46 @@ const DietaryPreferences = () => {
                   multiline
                   numberOfLines={4}
                   style={{
-                    color: colorScheme === "dark" ? "#ffffff" : "#000000",
+                    color: colors.text,
                     textAlignVertical: "top",
                   }}
-                  placeholderTextColor={
-                    colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                  }
+                  placeholderTextColor={colors.text}
                   className="border border-border rounded-xl px-3 pl-12 py-3 text-base h-28"
                   value={formData.notes}
                   onChangeText={(text) =>
                     setFormData((prev) => ({ ...prev, notes: text }))
                   }
                 />
-              </View>
-            </View>
-          </View>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
         </ScrollView>
 
         {/* Save Button */}
-        <View className="absolute bottom-0 left-0 right-0 bg-background border-t border-border/50 p-4">
+        <ThemedView className="sticky bottom-16 left-0 right-0 border-t border-border/50 p-4">
           <TouchableOpacity
-            className={clsx(
-              "bg-primary rounded-xl items-center justify-center h-14 shadow-lg",
-              isPending && "opacity-50"
-            )}
+            style={{
+              backgroundColor: colors.primary,
+              opacity: isPending ? 0.5 : 1,
+            }}
             disabled={isPending}
             onPress={handleSave}
+            className="rounded-xl items-center justify-center h-14 shadow-lg"
           >
             {isPending ? (
-              <View className="flex-row items-center">
-                <ActivityIndicator size="small" color="white" />
-                <Text className="text-white font-bold text-lg ml-2">
+              <ThemedView className="flex-row items-center">
+                <ActivityIndicator size="small" color="#fff" />
+                <ThemedText className="text-white font-bold text-lg ml-2">
                   Saving...
-                </Text>
-              </View>
+                </ThemedText>
+              </ThemedView>
             ) : (
-              <Text className="text-white font-bold text-lg">
+              <ThemedText className="text-white font-bold text-lg">
                 Save Preferences
-              </Text>
+              </ThemedText>
             )}
           </TouchableOpacity>
-        </View>
+        </ThemedView>
       </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -3,8 +3,8 @@ import axios from "axios";
 import { router } from "expo-router";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://20aeeaea6bc8.ngrok-free.app/api/v1";
-
+export const BACKEND_URL = "https://121ef9b4214b.ngrok-free.app/api/v1";
+// export const BACKEND_URL = "http://localhost:8080/api/v1";
 // Create main API instance
 export const api = axios.create({
   baseURL: BACKEND_URL,
@@ -29,7 +29,7 @@ let lastFailedRefreshTime = 0;
 const clearAuthData = async () => {
   // await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
   refreshAttempts = 0;
-  // router.replace("/(auth)")
+  router.replace("/(auth)")
 };
 
 const isTokenExpired = (token: string): boolean => {

@@ -1,23 +1,26 @@
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
-  View,
   FlatList,
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { clsx } from "clsx";
 import { router } from "expo-router";
+import { useTheme } from "@react-navigation/native";
 import SelectDropdown from "react-native-select-dropdown";
 import { Macros, Meal, MealType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { api, BACKEND_URL } from "@/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+/* NEW IMPORTS */
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import { Text } from "react-native";
 
 /* Helper for an empty food item */
 const emptyFood = () => ({
@@ -27,7 +30,7 @@ const emptyFood = () => ({
 });
 
 const LogMeals = () => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   const [meal, setMeal] = useState<Meal>({
     id: "",
@@ -73,9 +76,7 @@ const LogMeals = () => {
       if (res.status !== 201) throw new Error(res.data);
     },
     onSuccess: () => router.back(),
-    onError: (e) => {
-      console.log(e);
-    },
+    onError: (e) => console.log(e),
   });
 
   const MacroInput = ({
@@ -89,58 +90,48 @@ const LogMeals = () => {
     onChangeText: (value: string) => void;
     icon: string;
   }) => (
-    <View className="flex-1 relative">
+    <ThemedView className="flex-1 relative">
       <MaterialCommunityIcons
         name={icon as any}
         size={16}
-        color={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
+        color={colors.text}
         style={{ position: "absolute", left: 12, top: 14, zIndex: 1 }}
       />
       <TextInput
         placeholder={placeholder}
         keyboardType="numeric"
-        style={{
-          color: colorScheme === "dark" ? "#ffffff" : "#000000",
-        }}
-        placeholderTextColor={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
+        placeholderTextColor={colors.text}
+        style={{ color: colors.text }}
         className="border border-border rounded-xl px-3 pl-10 h-12"
         value={value > 0 ? String(value) : ""}
         onChangeText={onChangeText}
         returnKeyType="done"
       />
-    </View>
+    </ThemedView>
   );
 
   return (
     <SafeAreaProvider>
       <SafeAreaView
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background h-full w-full"
-        )}
+        style={{ backgroundColor: colors.background }}
+        className="h-full w-full"
       >
         {/* Header */}
-        <View className="px-4 py-2 border-b border-border/50">
+        <ThemedView className="px-4 py-2 border-b border-border/50">
           <TouchableOpacity
             className="flex flex-row items-center mb-4"
             onPress={() => router.back()}
           >
-            <MaterialCommunityIcons
-              name="chevron-left"
-              size={24}
-              color={colorScheme === "dark" ? "white" : "black"}
-            />
-            <Text className="text-foreground text-base ml-2 font-medium">
-              Back
-            </Text>
+            <MaterialCommunityIcons name="chevron-left" size={24} color={colors.text} />
+            <ThemedText className="text-base ml-2 font-medium">Back</ThemedText>
           </TouchableOpacity>
 
-          <Text className="font-bold text-foreground text-3xl ml-2 mb-2">
+          <ThemedText className="font-bold text-3xl ml-2 mb-2">
             Log Your Meals
-          </Text>
-          <Text className="text-muted-foreground text-base ml-2 mb-6">
+          </ThemedText>
+          <ThemedText className="text-base ml-2 mb-6 opacity-70">
             Track your daily nutrition intake
-          </Text>
+          </ThemedText>
 
           {/* Meal Type Selection */}
           <SelectDropdown
@@ -149,47 +140,42 @@ const LogMeals = () => {
               setMeal((p) => ({ ...p, mealType: mealTypes[i] }))
             }
             renderButton={(selectedItem, isOpened) => (
-              <View
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "bg-card border border-border rounded-xl flex flex-row items-center p-4 justify-between shadow-sm"
-                )}
-              >
-                <View className="flex flex-row items-center">
+              <ThemedView className="border border-border rounded-xl flex flex-row items-center p-4 justify-between shadow-sm">
+                <ThemedView className="flex flex-row items-center">
                   <MaterialCommunityIcons
                     name="silverware-fork-knife"
                     size={20}
-                    color={colorScheme === "dark" ? "white" : "black"}
+                    color={colors.text}
                     style={{ marginRight: 12 }}
                   />
-                  <Text className="text-foreground font-medium text-base">
+                  <ThemedText className="font-medium text-base">
                     {selectedItem || "Select meal type"}
-                  </Text>
-                </View>
+                  </ThemedText>
+                </ThemedView>
                 <MaterialCommunityIcons
                   name={isOpened ? "chevron-up" : "chevron-down"}
-                  color={colorScheme === "dark" ? "white" : "black"}
+                  color={colors.text}
                   size={20}
                 />
-              </View>
+              </ThemedView>
             )}
             renderItem={(item) => (
-              <TouchableOpacity
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "bg-background px-4 py-4 border-b border-border/30 last:border-b-0"
-                )}
-              >
-                <Text className="text-foreground text-base font-medium">
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            )}
+                        <TouchableOpacity
+                          style={{backgroundColor: colors.background}}
+                          className={clsx(
+                            "bg-background px-4 py-4 border-b border-border/30 last:border-b-0 rounded-lg"
+                          )}
+                        >
+                          <ThemedText className=" text-base font-medium">
+                            {item}
+                          </ThemedText>
+                        </TouchableOpacity>
+                      )}
             showsVerticalScrollIndicator={false}
-            dropdownStyle={styles.dropdownMenuStyle}
+            dropdownStyle={[styles.dropdownMenuStyle, { backgroundColor: colors.background }]}
             disableAutoScroll
           />
-        </View>
+        </ThemedView>
 
         {/* Food Items List */}
         <ScrollView
@@ -198,105 +184,78 @@ const LogMeals = () => {
           contentContainerStyle={{ paddingTop: 20, paddingBottom: 120 }}
         >
           {meal.items.map((item, index) => (
-            <View
+            <ThemedView
               key={index}
               className="bg-card border border-border rounded-2xl p-4 mb-4 shadow-sm"
             >
               {/* Food Item Header */}
-              <View className="flex flex-row items-center justify-between mb-4">
-                <Text className="text-foreground font-semibold text-lg">
+              <ThemedView className="flex flex-row items-center justify-between mb-4">
+                <ThemedText className="font-semibold text-lg">
                   Food Item {index + 1}
-                </Text>
+                </ThemedText>
                 {meal.items.length > 1 && (
-                  <TouchableOpacity
-                    onPress={() => removeFood(index)}
-                    className="p-1"
-                  >
-                    <MaterialCommunityIcons
-                      name="close-circle"
-                      size={24}
-                      color="#EF4444"
-                    />
+                  <TouchableOpacity onPress={() => removeFood(index)} className="p-1">
+                    <MaterialCommunityIcons name="close-circle" size={24} color="#EF4444" />
                   </TouchableOpacity>
                 )}
-              </View>
+              </ThemedView>
 
               {/* Food Name Input */}
-              <View className="mb-4">
-                <Text className="text-foreground font-medium mb-2 text-sm uppercase tracking-wide opacity-70">
+              <ThemedView className="mb-4">
+                <ThemedText className="font-medium mb-2 text-sm uppercase tracking-wide opacity-70">
                   Food Name
-                </Text>
-                <View className="relative">
+                </ThemedText>
+                <ThemedView className="relative">
                   <MaterialCommunityIcons
                     name="food"
                     size={18}
-                    color={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
-                    style={{
-                      position: "absolute",
-                      left: 12,
-                      top: 13,
-                      zIndex: 1,
-                    }}
+                    color={colors.text}
+                    style={{ position: "absolute", left: 12, top: 13, zIndex: 1 }}
                   />
                   <TextInput
                     placeholder="Enter food name"
-                    style={{
-                      color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                    }}
-                    placeholderTextColor={
-                      colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                    }
+                    placeholderTextColor={colors.text}
+                    style={{ color: colors.text }}
                     className="border border-border rounded-xl px-3 pl-12 h-12 text-base"
                     value={item.foodName}
                     onChangeText={(v) => updateItem(index, "foodName", v)}
                   />
-                </View>
-              </View>
+                </ThemedView>
+              </ThemedView>
 
               {/* Quantity Input */}
-              <View className="mb-4">
-                <Text className="text-foreground font-medium mb-2 text-sm uppercase tracking-wide opacity-70">
+              <ThemedView className="mb-4">
+                <ThemedText className="font-medium mb-2 text-sm uppercase tracking-wide opacity-70">
                   Quantity
-                </Text>
-                <View className="relative">
+                </ThemedText>
+                <ThemedView className="relative">
                   <MaterialCommunityIcons
                     name="scale"
                     size={18}
-                    color={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
-                    style={{
-                      position: "absolute",
-                      left: 12,
-                      top: 13,
-                      zIndex: 1,
-                    }}
+                    color={colors.text}
+                    style={{ position: "absolute", left: 12, top: 13, zIndex: 1 }}
                   />
                   <TextInput
                     placeholder="Weight in grams"
                     keyboardType="numeric"
-                    style={{
-                      color: colorScheme === "dark" ? "#ffffff" : "#000000",
-                    }}
-                    placeholderTextColor={
-                      colorScheme === "dark" ? "#9CA3AF" : "#6B7280"
-                    }
+                    placeholderTextColor={colors.text}
+                    style={{ color: colors.text }}
                     className="border border-border rounded-xl px-3 pl-12 h-12 text-base"
                     value={String(item.quantityInGrams)}
-                    onChangeText={(v) =>
-                      updateItem(index, "quantityInGrams", v)
-                    }
+                    onChangeText={(v) => updateItem(index, "quantityInGrams", v)}
                   />
-                </View>
-              </View>
+                </ThemedView>
+              </ThemedView>
 
               {/* Macros Section */}
-              <View>
-                <Text className="text-foreground font-medium mb-3 text-sm uppercase tracking-wide opacity-70">
+              <ThemedView>
+                <ThemedText className="font-medium mb-3 text-sm uppercase tracking-wide opacity-70">
                   Nutrition Information
-                </Text>
+                </ThemedText>
 
-                <View className="space-y-3">
+                <ThemedView className="flex flex-col gap-3">
                   {/* Row 1: Calories & Fat */}
-                  <View className="flex-row gap-3">
+                  <ThemedView className="flex-row gap-3">
                     <MacroInput
                       placeholder="Calories"
                       value={item.macros.calories}
@@ -313,10 +272,10 @@ const LogMeals = () => {
                       }
                       icon="water"
                     />
-                  </View>
+                  </ThemedView>
 
                   {/* Row 2: Carbs & Protein */}
-                  <View className="flex-row gap-3">
+                  <ThemedView className="flex-row gap-3">
                     <MacroInput
                       placeholder="Carbs (g)"
                       value={item.macros.carbs}
@@ -333,45 +292,49 @@ const LogMeals = () => {
                       }
                       icon="dumbbell"
                     />
-                  </View>
-                </View>
-              </View>
-            </View>
+                  </ThemedView>
+                </ThemedView>
+              </ThemedView>
+            </ThemedView>
           ))}
 
           {/* Add Food Button */}
           <TouchableOpacity
-            className="bg-secondary border-2 border-dashed border-primary/30 rounded-2xl h-16 items-center justify-center mb-4"
+            className="border-2 border-dashed border-primary/30 rounded-2xl h-16 items-center justify-center mb-4"
+            style={{ backgroundColor: colors.card }}
             onPress={addFood}
           >
-            <View className="flex flex-row items-center">
+            <ThemedView className="flex flex-row items-center">
               <MaterialCommunityIcons
                 name="plus-circle"
                 size={24}
-                color={colorScheme === "dark" ? "white" : "black"}
+                color={colors.text}
               />
-              <Text className="text-foreground font-semibold ml-2 text-base">
+              <ThemedText className="font-semibold ml-2 text-base">
                 Add Another Food
-              </Text>
-            </View>
+              </ThemedText>
+            </ThemedView>
           </TouchableOpacity>
         </ScrollView>
 
         {/* Save Button - Fixed at bottom */}
-        <View className="sticky bottom-0 left-0 right-0 bg-background border-t border-border/50 p-4">
+        <ThemedView
+          className="sticky bottom-16 left-0 right-0 border-t border-border/50 p-4"
+        >
           <TouchableOpacity
-            className={clsx(
-              "bg-primary rounded-xl items-center justify-center h-14 shadow-lg",
-              (isPending || Object.values(meal).some((v) => !v)) && "opacity-50"
-            )}
-            disabled={isPending || Object.values(meal).some((v) => !v)}
+            className="rounded-xl items-center justify-center h-14 shadow-lg"
+            style={{
+              backgroundColor: colors.primary,
+              opacity: isPending || meal.items.some((i) => !i.foodName) ? 0.5 : 1,
+            }}
+            disabled={isPending || meal.items.some((i) => !i.foodName)}
             onPress={() => handleLoggingMeal(meal)}
           >
             <Text className="text-white font-bold text-lg">
               {isPending ? "Saving..." : "Save Meal"}
             </Text>
           </TouchableOpacity>
-        </View>
+        </ThemedView>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -381,10 +344,8 @@ export default LogMeals;
 
 const styles = StyleSheet.create({
   dropdownMenuStyle: {
-    backgroundColor: "hsl(var(--background))",
-    borderRadius: 12,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: "hsl(var(--border))",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,

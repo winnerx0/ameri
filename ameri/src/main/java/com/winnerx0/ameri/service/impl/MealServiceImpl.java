@@ -186,7 +186,7 @@ public class MealServiceImpl implements MealService {
                         "    Explicitly consider the user’s stated health conditions (%s), user's health goal to (%s) and flag any recipe that may be unsuitable.\n" +
                         "    Use metric units only.\n" +
                         "    Keep description ≤ 120 characters and instructions ≤ 200 characters.\n" +
-                        "\n", Optional.ofNullable(user.getHealthConditions()).orElse(List.of("")), user.getGoal().toString())));
+                        "\n", user.getHealthConditions(), user.getGoal().toString())));
 
         if (request.getFile() != null) {
 

@@ -23,7 +23,7 @@ public class UpdateUserRequest {
 
     private LocalDate dateOfBirth;
 
-    private List<String> healthConditions;
+    private JsonNode healthConditions;
 
     private Integer weight;
 

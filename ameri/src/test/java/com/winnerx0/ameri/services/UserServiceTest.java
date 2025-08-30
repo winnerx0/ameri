@@ -4,6 +4,7 @@ import com.winnerx0.ameri.dto.UserDTO;
 import com.winnerx0.ameri.dto.request.UpdateUserRequest;
 import com.winnerx0.ameri.dto.response.UserResponse;
 import com.winnerx0.ameri.model.User;
+import com.winnerx0.ameri.repository.MealRepository;
 import com.winnerx0.ameri.repository.UserRepository;
 import com.winnerx0.ameri.service.impl.UserServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +31,9 @@ public class UserServiceTest {
     private UserServiceImpl userService;
 
     @Mock
+    private MealRepository mealRepository;
+
+    @Mock
     private UserRepository userRepository;
 
     @BeforeEach
@@ -48,9 +52,11 @@ public class UserServiceTest {
     @Test
     void test_if_current_logged_in_user_is_retrieved(){
         User mockUser = new User();
+        mockUser.setId("df");
         mockUser.setEmail("mock@gmail.com");
         when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(mockUser));
 
+        when(mealRepository.findNumberOfLoggedMeals(mockUser.getId())).thenReturn(5L);
         UserResponse<UserDTO> response = userService.getCurrentUser(mockUser.getEmail());
 
         assertEquals("User retrieved successfully", response.getMessage());

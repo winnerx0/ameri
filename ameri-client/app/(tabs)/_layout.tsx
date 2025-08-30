@@ -4,36 +4,31 @@ import { Platform, Text, View } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import "../../global.css";
 import { clsx } from "clsx";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+ 	const { isDarkColorScheme } = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarActiveTintColor: colorScheme === "dark" ? "#60a5fa" : "#3b82f6",
-        tabBarInactiveTintColor: colorScheme === "dark" ? "#6b7280" : "#9ca3af",
-        tabBarStyle: Platform.select({
-          ios: {
-            position: "absolute",
-            backgroundColor:
-              colorScheme === "dark"
-                ? "hsl(222.2 84% 4.9%)"
-                : "hsl(214, 100%, 97%)",
-            borderTopColor: colorScheme === "dark" ? "#374151" : "#e5e7eb",
-          },
-          default: {
-            backgroundColor:
-              colorScheme === "dark"
-                ? "hsl(222.2 84% 4.9%)"
-                : "hsl(214, 100%, 97%)",
-            borderTopColor: colorScheme === "dark" ? "#374151" : "#e5e7eb",
-          },
-        }),
+
+        tabBarActiveTintColor: isDarkColorScheme
+          ? "hsl(217.2 91.2% 59.8%)"
+          : "hsl(221.2 83.2% 53.3%)",
+        tabBarInactiveTintColor: isDarkColorScheme
+          ? "hsl(215 20.2% 65.1%)"
+          : "hsl(215.4 16.3% 46.9%)",
+        tabBarStyle: {
+          backgroundColor: isDarkColorScheme
+            ? "hsl(222.2 84% 4.9%)"
+            : "hsl(0 0% 100%)",
+          borderTopColor: isDarkColorScheme
+            ? "hsl(217.2 32.6% 17.5%)"
+            : "hsl(214.3 31.8% 91.4%)",
+        },
       }}
     >
       <Tabs.Screen

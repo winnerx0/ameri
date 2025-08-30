@@ -9,9 +9,12 @@ import { Meal } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import Loading from "@/components/Loading";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import { useTheme } from "@react-navigation/native";
 
 const MealLogsScreen = () => {
-  const colorScheme = useColorScheme();
+  const {colors} = useTheme();
 
   const {
     data: meals,
@@ -51,11 +54,10 @@ const MealLogsScreen = () => {
     <SafeAreaProvider>
       <SafeAreaView
         className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background w-full"
+          "w-full"
         )}
       >
-        <View className="h-screen flex flex-col">
+        <ThemedView className="h-screen flex flex-col">
           <View className="flex flex-col gap-4 mb-4 pl-4">
             <View className="py-2 w-full">
               <TouchableOpacity
@@ -65,20 +67,19 @@ const MealLogsScreen = () => {
                 <MaterialCommunityIcons
                   name="chevron-left"
                   size={30}
-                  color={colorScheme === "dark" ? "white" : "black"}
+                  color={colors.text}
                 />
                 <Text className="text-foreground text-sm">Back</Text>
               </TouchableOpacity>
             </View>
             <View>
-              <Text
+              <ThemedText
                 className={clsx(
-                  colorScheme === "dark" && "dark",
                   "text-foreground font-semibold text-3xl"
                 )}
               >
                 Meal Logs
-              </Text>
+              </ThemedText>
             </View>
           </View>
           {isMealLoading || isFetchingNextPage ? (
@@ -94,36 +95,35 @@ const MealLogsScreen = () => {
               <View className="flex flex-col h-full">
                 {meals &&
                 meals.pages.flatMap((page) => page!.content).length === 0 ? (
-                  <View
+                  <ThemedView
+                    color="secondary"
                     className={clsx(
-                      colorScheme === "dark" && "dark",
-                      "border border-border bg-secondary rounded-xl py-8 items-center justify-center"
+                      "rounded-xl py-8 items-center justify-center"
                     )}
                   >
                     <MaterialCommunityIcons
                       name="food-off"
                       size={32}
-                      color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}
+                      color={colors.text}
                     />
-                    <Text
+                    <ThemedText
                       className={clsx(
-                        colorScheme === "dark" && "dark",
                         "text-muted-foreground mt-2"
                       )}
                     >
                       No Meals Logged
-                    </Text>
-                  </View>
+                    </ThemedText>
+                  </ThemedView>
                 ) : (
                   <View style={{ gap: 12 }}>
                     {meals!.pages
                       .flatMap((page) => page!.content)
                       .map((meal) => (
-                        <View
+                        <ThemedView
+                          color="secondary"
                           key={meal.id}
                           className={clsx(
-                            colorScheme === "dark" && "dark",
-                            "border border-border bg-secondary rounded-xl p-4"
+                            "border border-border rounded-xl p-4"
                           )}
                         >
                           <View
@@ -137,10 +137,7 @@ const MealLogsScreen = () => {
                               style={{
                                 width: 40,
                                 height: 40,
-                                backgroundColor:
-                                  colorScheme === "dark"
-                                    ? "#4A5568"
-                                    : "#F1F5F9",
+                                backgroundColor: colors.text,
                                 borderRadius: 20,
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -149,56 +146,49 @@ const MealLogsScreen = () => {
                               <MaterialCommunityIcons
                                 name="food"
                                 size={20}
-                                color={
-                                  colorScheme === "dark" ? "#A0AEC0" : "#64748B"
-                                }
+                                color={colors.background}
                               />
                             </View>
                             <View style={{ flex: 1 }}>
-                              <Text
+                              <ThemedText
                                 className={clsx(
-                                  colorScheme === "dark" && "dark",
                                   "text-foreground font-semibold"
                                 )}
                               >
                                 {meal.mealType}
-                              </Text>
-                              <Text
+                              </ThemedText>
+                              <ThemedText
                                 className={clsx(
-                                  colorScheme === "dark" && "dark",
                                   "text-muted-foreground text-sm"
                                 )}
                               >
                                 {meal.items.length} item
                                 {meal.items.length !== 1 ? "s" : ""}
-                              </Text>
+                              </ThemedText>
                             </View>
                             <MaterialCommunityIcons
                               name="chevron-right"
                               size={16}
-                              color={
-                                colorScheme === "dark" ? "#64748B" : "#94A3B8"
-                              }
+                              color={colors.text}
                             />
                           </View>
-                        </View>
+                        </ThemedView>
                       ))}
-                    <Text
+                    <ThemedText
                       className={clsx(
-                        colorScheme === "dark" && "dark",
                         "text-muted-foreground self-center",
                         !hasNextPage && "hidden"
                       )}
                       onPress={() => fetchNextPage()}
                     >
                       View More
-                    </Text>
+                    </ThemedText>
                   </View>
                 )}
               </View>
             </ScrollView>
           )}
-        </View>
+        </ThemedView>
       </SafeAreaView>
     </SafeAreaProvider>
   );

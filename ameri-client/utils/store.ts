@@ -4,7 +4,10 @@ import { Goal, RegisterRequest, Screen } from "@/types";
 interface RegisterStore {
   registerData: RegisterRequest;
   setRegisterData: (data: RegisterRequest) => void;
-  updateField: (field: keyof RegisterRequest, value: string | string[] | number) => void;
+  updateField: (
+    field: keyof RegisterRequest,
+    value: string | string[] | number | any,
+  ) => void;
   resetRegisterData: () => void;
 }
 
@@ -13,11 +16,11 @@ const initialRegisterData: RegisterRequest = {
   email: "",
   password: "",
   gender: null,
-  healthConditions: [],
+  healthConditions: { allergies: [], dietaryRestrictions: [] },
   weight: 0,
   height: 0,
   goal: null,
-  dateOfBirth: ""
+  dateOfBirth: "",
 };
 
 export const useRegisterStore = create<RegisterStore>((set) => ({

@@ -10,7 +10,6 @@ import {
   Alert,
 } from "react-native";
 import React, { useState } from "react";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { clsx } from "clsx";
 import { router } from "expo-router";
@@ -19,6 +18,10 @@ import { api, BACKEND_URL } from "@/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+
+import { useTheme } from "@react-navigation/native";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 interface DetectedIngredient {
   name: string;
@@ -55,7 +58,7 @@ interface GeneratedMealResponse {
 }
 
 const GenerateMeal = () => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [generatedMealData, setGeneratedMealData] =
@@ -84,7 +87,7 @@ const GenerateMeal = () => {
       console.log("Error generating meal:", e);
       Alert.alert(
         "Error",
-        "Failed to generate meal recipes. Please try again."
+        "Failed to generate meal recipes. Please try again.",
       );
     },
   });
@@ -95,7 +98,7 @@ const GenerateMeal = () => {
     if (status !== "granted") {
       Alert.alert(
         "Permission needed",
-        "Camera roll permissions are required to select images."
+        "Camera roll permissions are required to select images.",
       );
       return;
     }
@@ -118,7 +121,7 @@ const GenerateMeal = () => {
     if (status !== "granted") {
       Alert.alert(
         "Permission needed",
-        "Camera permissions are required to take photos."
+        "Camera permissions are required to take photos.",
       );
       return;
     }
@@ -145,13 +148,13 @@ const GenerateMeal = () => {
 
   const getTotalMacros = (recipe: Recipe) => {
     const calories = parseInt(
-      recipe.macros_per_serving.calories.replace("kcal", "")
+      recipe.macros_per_serving.calories.replace("kcal", ""),
     );
     const protein = parseInt(
-      recipe.macros_per_serving.protein.replace("g", "")
+      recipe.macros_per_serving.protein.replace("g", ""),
     );
     const carbs = parseInt(
-      recipe.macros_per_serving.carbohydrates.replace("g", "")
+      recipe.macros_per_serving.carbohydrates.replace("g", ""),
     );
     const fat = parseInt(recipe.macros_per_serving.fat.replace("g", ""));
 
@@ -160,17 +163,13 @@ const GenerateMeal = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background h-full w-full"
-        )}
-      >
+      <SafeAreaView className={clsx("h-full w-full")}>
         {/* Header */}
         <View className="px-4 py-2 border-b border-border/50 flex w-full">
-          <Text className="font-semibold text-foreground text-3xl mb-2 self-center">
+          {/* Using ThemedText for title so the title color stays consistent */}
+          <ThemedText className="mb-2 self-center text-2xl font-bold">
             Generate Recipes
-          </Text>
+          </ThemedText>
         </View>
 
         <ScrollView
@@ -183,12 +182,12 @@ const GenerateMeal = () => {
             <View className="flex flex-col gap-6">
               {/* Image Upload */}
               <View>
-                <Text className="text-foreground font-medium mb-3 text-sm uppercase tracking-wide opacity-70">
-                  Upload Ingredients Photo
-                </Text>
+                <ThemedText className="font-medium mb-3 text-sm uppercase tracking-wide opacity-70 text-center">
+                  Upload Ingredients Photo Or Generate Recipes Without A Photo
+                </ThemedText>
 
                 {selectedImage ? (
-                  <View className="relative">
+                  <ThemedView className="relative">
                     <Image
                       source={{ uri: selectedImage }}
                       className="w-full h-64 rounded-2xl"
@@ -214,24 +213,25 @@ const GenerateMeal = () => {
                         color="white"
                       />
                     </TouchableOpacity>
-                  </View>
+                  </ThemedView>
                 ) : (
                   <TouchableOpacity
-                    className="bg-card border-2 border-dashed border-border rounded-2xl h-64 items-center justify-center"
+                    style={{ backgroundColor: colors.background }}
+                    className="border-2 border-dashed border-border rounded-2xl h-64 items-center justify-center"
                     onPress={showImageOptions}
                   >
                     <MaterialCommunityIcons
                       name="camera-plus"
                       size={48}
-                      color={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
+                      color={colors.text ?? "#6B7280"}
                     />
-                    <Text className="text-muted-foreground font-medium text-lg mt-4">
+                    <ThemedText className="font-medium text-lg mt-4">
                       Add Ingredients Photo
-                    </Text>
-                    <Text className="text-muted-foreground text-sm mt-2 text-center px-4">
+                    </ThemedText>
+                    <ThemedText className="text-sm mt-2 text-center px-4">
                       Take a photo or select from gallery to identify
                       ingredients
-                    </Text>
+                    </ThemedText>
                   </TouchableOpacity>
                 )}
               </View>
@@ -240,7 +240,7 @@ const GenerateMeal = () => {
               <TouchableOpacity
                 className={clsx(
                   "bg-primary rounded-xl items-center justify-center h-14 shadow-lg mt-6",
-                  isPending && "opacity-50"
+                  isPending && "opacity-50",
                 )}
                 disabled={isPending}
                 onPress={() => generateMeal()}
@@ -254,11 +254,6 @@ const GenerateMeal = () => {
                   </View>
                 ) : (
                   <View className="flex-row items-center">
-                    {/* <MaterialCommunityIcons
-                      name="sparkles"
-                      size={20}
-                      color="white"
-                    /> */}
                     <Text className="text-white font-bold text-lg ml-2">
                       Generate Recipes
                     </Text>
@@ -277,9 +272,9 @@ const GenerateMeal = () => {
                     size={24}
                     color="#10B981"
                   />
-                  <Text className="text-green-800 dark:text-green-300 font-bold text-lg ml-2">
+                  <ThemedText className="font-bold text-lg ml-2">
                     Recipes Generated Successfully!
-                  </Text>
+                  </ThemedText>
                 </View>
                 <Text className="text-green-700 dark:text-green-400">
                   Found {generatedMealData.detected_ingredients.length}{" "}
@@ -289,16 +284,16 @@ const GenerateMeal = () => {
               </View>
 
               {/* Detected Ingredients */}
-              <View className="bg-card border border-border rounded-2xl p-4 shadow-sm">
+              <ThemedView className="bg-card border border-border rounded-2xl p-4 shadow-sm">
                 <View className="flex-row items-center mb-4">
                   <MaterialCommunityIcons
                     name="food"
                     size={20}
-                    color={colorScheme === "dark" ? "white" : "black"}
+                    color={colors.text ?? "black"}
                   />
-                  <Text className="text-foreground font-bold text-lg ml-2">
+                  <ThemedText className="font-bold text-lg ml-2">
                     Detected Ingredients
-                  </Text>
+                  </ThemedText>
                 </View>
 
                 <View className="flex-row flex-wrap gap-2">
@@ -312,16 +307,16 @@ const GenerateMeal = () => {
                           {ingredient.name} ({ingredient.confidence}%)
                         </Text>
                       </View>
-                    )
+                    ),
                   )}
                 </View>
-              </View>
+              </ThemedView>
 
               {/* Recipe Cards */}
               {generatedMealData.recipes.map((recipe, index) => {
                 const macros = getTotalMacros(recipe);
                 return (
-                  <View
+                  <ThemedView
                     key={index}
                     className="bg-card border border-border rounded-2xl p-4 shadow-sm"
                   >
@@ -336,7 +331,7 @@ const GenerateMeal = () => {
                                 : "silverware-fork-knife"
                             }
                             size={18}
-                            color={colorScheme === "dark" ? "white" : "black"}
+                            color={colors.text ?? "black"}
                           />
                           <Text className="text-foreground font-bold text-lg ml-2">
                             {recipe.name}
@@ -354,25 +349,28 @@ const GenerateMeal = () => {
                     </View>
 
                     {/* Macros */}
-                    <View className="bg-secondary/50 rounded-xl p-3 mb-4">
-                      <Text className="text-foreground font-semibold mb-2">
+                    <ThemedView
+                      color="secondary"
+                      className="rounded-xl p-3 mb-4"
+                    >
+                      <ThemedText className="text-foreground font-semibold mb-2">
                         Nutrition per serving:
-                      </Text>
+                      </ThemedText>
                       <View className="flex-row justify-between">
-                        <Text className="text-sm text-muted-foreground">
+                        <ThemedText className="text-sm text-muted-foreground">
                           🔥 {macros.calories} cal
-                        </Text>
-                        <Text className="text-sm text-muted-foreground">
+                        </ThemedText>
+                        <ThemedText className="text-sm text-muted-foreground">
                           🥩 {macros.protein}g protein
-                        </Text>
-                        <Text className="text-sm text-muted-foreground">
+                        </ThemedText>
+                        <ThemedText className="text-sm text-muted-foreground">
                           🌾 {macros.carbs}g carbs
-                        </Text>
-                        <Text className="text-sm text-muted-foreground">
+                        </ThemedText>
+                        <ThemedText className="text-sm text-muted-foreground">
                           🥑 {macros.fat}g fat
-                        </Text>
+                        </ThemedText>
                       </View>
-                    </View>
+                    </ThemedView>
 
                     {/* Ingredients Used */}
                     <View className="mb-4">
@@ -412,19 +410,19 @@ const GenerateMeal = () => {
                         ))}
                       </View>
                     </View>
-                  </View>
+                  </ThemedView>
                 );
               })}
 
               {/* Action Button */}
               <TouchableOpacity
-                className="bg-primary border border-border rounded-2xl items-center justify-center h-14"
+                className="bg-primary rounded-2xl items-center justify-center h-14"
                 onPress={() => {
                   setGeneratedMealData(null);
                   setSelectedImage(null);
                 }}
               >
-                <Text className="text-white  font-semibold">
+                <Text className="text-white font-semibold">
                   Generate New Recipes
                 </Text>
               </TouchableOpacity>

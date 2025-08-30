@@ -38,6 +38,11 @@ export type RegisterResponse = {
   message: string;
 };
 
+interface ContinueP2DietaryData {
+  dietaryRestrictions: string[];
+  allergies: string[];
+}
+
 export type UserData = {
   dateOfBirth: string;
   weight: number;
@@ -46,7 +51,7 @@ export type UserData = {
   username: string;
   goal: Goal | null;
   email: string;
-  healthConditions: string[];
+  healthConditions: ContinueP2DietaryData;
   loggedMeals: number;
 };
 

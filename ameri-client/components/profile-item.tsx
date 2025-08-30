@@ -1,6 +1,8 @@
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { clsx } from "clsx";
-import { Text, View, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { useTheme } from "@react-navigation/native";
+
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 const ProfileItem = ({
   title,
@@ -11,42 +13,22 @@ const ProfileItem = ({
   value: string;
   onPress: () => void;
 }) => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={clsx(
-        colorScheme === "dark" ? "dark" : "",
-        "bg-card border border-border rounded-lg p-4 flex-row justify-between items-center"
-      )}
+      style={{
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+      }}
+      className="border rounded-lg p-4 flex-row justify-between items-center"
     >
-      <View>
-        <Text
-          className={clsx(
-            colorScheme === "dark" ? "dark" : "",
-            "text-muted-foreground text-sm"
-          )}
-        >
-          {title}
-        </Text>
-        <Text
-          className={clsx(
-            colorScheme === "dark" ? "dark" : "",
-            "text-foreground text-base font-medium mt-1"
-          )}
-        >
-          {value}
-        </Text>
-      </View>
-      <Text
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "text-muted-foreground text-lg"
-        )}
-      >
-        →
-      </Text>
+      <ThemedView>
+        <ThemedText className="text-sm opacity-70">{title}</ThemedText>
+        <ThemedText className="text-base font-medium mt-1">{value}</ThemedText>
+      </ThemedView>
+      <ThemedText className="text-lg opacity-70">→</ThemedText>
     </TouchableOpacity>
   );
 };

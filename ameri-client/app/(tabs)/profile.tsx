@@ -1,28 +1,34 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import {
-  Text,
-  View,
   TouchableOpacity,
   Image,
   ScrollView,
   RefreshControl,
 } from "react-native";
-import { clsx } from "clsx";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import ProfileItem from "@/components/profile-item";
 import { useQuery } from "@tanstack/react-query";
+import { useTheme } from "@react-navigation/native";
 import api, { BACKEND_URL } from "@/utils";
 import { UserData } from "@/types";
 import Loading from "@/components/Loading";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+/* NEW imports */
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+
+import ProfileItem from "@/components/profile-item";
+import { Text } from "react-native";
+import { useScreen } from "@/utils/store";
+
 export default function Profile() {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
+  const { setScreen } = useScreen()
 
   const logout = async () => {
     await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
+    setScreen({path: "login"})
     router.replace("/(auth)");
   };
 
@@ -32,10 +38,9 @@ export default function Profile() {
       const res = await api(BACKEND_URL + "/user/me");
       if (res.status !== 200) throw new Error("Network response was not ok");
       return res.data.data as UserData;
-    },
+    }
   });
 
-  // Fetch dietary preferences for display
   const { data: dietaryData } = useQuery({
     queryKey: ["user-dietary-preferences"],
     queryFn: async () => {
@@ -58,16 +63,9 @@ export default function Profile() {
     );
   };
 
-  console.log(data);
-
   return (
     <SafeAreaProvider>
-      <SafeAreaView
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background flex-1"
-        )}
-      >
+      <SafeAreaView style={{ backgroundColor: colors.background }} className="flex-1">
         {isLoading ? (
           <Loading />
         ) : (
@@ -80,136 +78,70 @@ export default function Profile() {
               }
             >
               {/* Header */}
-              <View className="items-center pt-8 pb-6">
-                <View
-                  className={clsx(
-                    colorScheme === "dark" ? "dark" : "",
-                    "w-24 h-24 rounded-full bg-primary items-center justify-center mb-4"
-                  )}
+              <ThemedView className="items-center pt-8 pb-6">
+                <ThemedView
+                  color="primary"
+                  className="w-24 h-24 rounded-full items-center justify-center mb-4"
                 >
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" ? "dark" : "",
-                      "text-white text-2xl font-bold"
-                    )}
-                  >
+                  <ThemedText className=" text-2xl font-bold">
                     {data.username.charAt(0).toUpperCase()}
-                  </Text>
-                </View>
-                <Text
-                  className={clsx(
-                    colorScheme === "dark" ? "dark" : "",
-                    "text-foreground text-xl font-bold"
-                  )}
-                >
+                  </ThemedText>
+                </ThemedView>
+                <ThemedText className="text-xl font-bold">
                   {data.username}
-                </Text>
-                <Text
-                  className={clsx(
-                    colorScheme === "dark" ? "dark" : "",
-                    "text-muted-foreground text-base"
-                  )}
-                >
+                </ThemedText>
+                <ThemedText className="text-base opacity-70">
                   {data.email}
-                </Text>
-              </View>
+                </ThemedText>
+              </ThemedView>
 
               {/* Stats Cards */}
-              <View className="flex-row justify-between mb-6">
-                <View
-                  className={clsx(
-                    colorScheme === "dark" ? "dark" : "",
-                    "bg-card border border-border rounded-lg p-4 flex-1 mr-2 items-center"
-                  )}
+              <ThemedView className="flex-row justify-between mb-6">
+                <ThemedView
+                  color="card"
+                  className="border border-border rounded-lg p-4 flex-1 mr-2 items-center"
                 >
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" ? "dark" : "",
-                      "text-foreground text-2xl font-bold"
-                    )}
-                  >
+                  <ThemedText className="text-2xl font-bold">
                     {data.loggedMeals}
-                  </Text>
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" ? "dark" : "",
-                      "text-muted-foreground text-sm"
-                    )}
-                  >
+                  </ThemedText>
+                  <ThemedText className="text-sm opacity-70">
                     Meals Logged
-                  </Text>
-                </View>
+                  </ThemedText>
+                </ThemedView>
 
-                <View
-                  className={clsx(
-                    colorScheme === "dark" ? "dark" : "",
-                    "bg-card border border-border rounded-lg p-4 flex-1 ml-2 items-center"
-                  )}
+                <ThemedView
+                  color="card"
+                  className="border border-border rounded-lg p-4 flex-1 ml-2 items-center"
                 >
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" ? "dark" : "",
-                      "text-foreground text-2xl font-bold"
-                    )}
-                  >
-                    23
-                  </Text>
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" ? "dark" : "",
-                      "text-muted-foreground text-sm"
-                    )}
-                  >
+                  <ThemedText className="text-2xl font-bold">23</ThemedText>
+                  <ThemedText className="text-sm opacity-70">
                     Day Streak
-                  </Text>
-                </View>
-              </View>
+                  </ThemedText>
+                </ThemedView>
+              </ThemedView>
 
               {/* Profile Options */}
-              <View className="gap-3">
+              <ThemedView className="gap-3">
                 <ProfileItem
                   title="Personal Information"
                   value={`${data.username || "Name"}, ${data.email}`}
                   onPress={() => router.push("/personal-info-edit")}
-                  // icon="account-edit"
                 />
 
                 <ProfileItem
                   title="Dietary Preferences"
                   value={formatDietaryRestrictions()}
                   onPress={() => router.push("/dietary-preferences")}
-                  // icon="food"
                 />
-
-                {/* <ProfileItem
-                  title="Nutrition Goals"
-                  value="Set daily calorie and macro targets"
-                  onPress={() => router.push("/nutrition-goals")}
-                  // icon="target"
-                /> */}
-
-                {/* <ProfileItem
-                  title="App Settings"
-                  value="Notifications, theme, units"
-                  onPress={() => router.push("/app-settings")}
-                  icon="cog"
-                /> */}
-              </View>
+              </ThemedView>
 
               {/* Sign Out Button */}
               <TouchableOpacity
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "bg-red-600 rounded-lg p-4 mt-8 mb-16"
-                )}
+                style={{ backgroundColor: colors.notification }}
+                className="rounded-lg p-4 mt-8 mb-16"
                 onPress={logout}
               >
-                <Text
-                  className={clsx(
-                    colorScheme === "dark" ? "dark" : "",
-                    "text-destructive-foreground font-semibold text-center text-base"
-                  )}
-                >
+                <Text className="text-white font-semibold text-center text-base">
                   Sign Out
                 </Text>
               </TouchableOpacity>

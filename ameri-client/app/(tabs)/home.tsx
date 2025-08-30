@@ -5,9 +5,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  useColorScheme,
 } from "react-native";
-// import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { Meal, NutritionSummary, UserData } from "@/types";
 import { api, BACKEND_URL } from "@/utils";
 import { AxiosError } from "axios";
@@ -20,9 +19,11 @@ import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Loading from "@/components/Loading";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
 
 export default function Home() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
 
   const [show, setShow] = useState<boolean>(false);
   const [date, setDate] = useState<Date | null>(null);
@@ -73,7 +74,7 @@ export default function Home() {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         if (res.status === 500) {
@@ -130,12 +131,7 @@ export default function Home() {
   console.log(new Date().getUTCHours());
   return (
     <SafeAreaProvider>
-      <SafeAreaView
-        className={clsx(
-          colorScheme === "dark" ? "dark" : "",
-          "bg-background h-screen flex flex-col"
-        )}
-      >
+      <SafeAreaView className={clsx("h-screen flex flex-col")}>
         {isUserDataLoading && isMealLoading && isSummaryLoading ? (
           <Loading />
         ) : (
@@ -152,22 +148,17 @@ export default function Home() {
           >
             {/* Header Section */}
             <View style={{ marginBottom: 24 }}>
-              <Text
-                className={clsx(
-                  colorScheme === "dark"
-                    ? "dark text-zinc-400"
-                    : "text-zinc-600",
-                  "text-[16px] font-semibold tracking-wide mt-6"
-                )}
+              <ThemedText
+                className={clsx("text-[16px] font-semibold tracking-wide mt-6")}
               >
                 {new Date().getUTCHours() <= 0 && new Date().getUTCHours() < 11
                   ? "Good Morning"
                   : new Date().getUTCHours() >= 12 &&
-                    new Date().getUTCHours() <= 16
-                  ? "Good Afternoon"
-                  : "Good Evening"}
+                      new Date().getUTCHours() <= 16
+                    ? "Good Afternoon"
+                    : "Good Evening"}
                 , {userData?.username}
-              </Text>
+              </ThemedText>
             </View>
 
             {/* Date Picker */}
@@ -178,16 +169,11 @@ export default function Home() {
               }}
               className={clsx(
                 colorScheme === "dark" && "dark",
-                "bg-primary h-10 flex flex-row gap-2 justify-center items-center self-start px-3 mb-6"
+                "bg-primary h-10 flex flex-row gap-2 justify-center items-center self-start px-3 mb-6",
               )}
             >
               <MaterialCommunityIcons name="calendar" size={16} color="white" />
-              <Text
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "text-white text-sm font-semibold"
-                )}
-              >
+              <Text className={clsx("text-white text-sm font-semibold")}>
                 {date?.toDateString() ?? "Today"}
               </Text>
               <MaterialCommunityIcons
@@ -210,20 +196,17 @@ export default function Home() {
             )}
 
             {/* Daily Metadata Card */}
-            <View
+            <ThemedView
+              color="secondary"
               className={clsx(
-                colorScheme === "dark" && "dark",
-                "border border-border bg-secondary rounded-2xl p-4 mb-6"
+                "rounded-2xl p-4 mb-6",
               )}
             >
-              <Text
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "text-foreground font-bold text-lg mb-4"
-                )}
+              <ThemedText
+                className={clsx("text-foreground font-bold text-lg mb-4")}
               >
                 Daily Metadata
-              </Text>
+              </ThemedText>
 
               <View style={{ flexDirection: "row", gap: 12 }}>
                 {/* Nutrition Stats Section */}
@@ -491,7 +474,7 @@ export default function Home() {
                   </View>
                 </View>
               </View>
-            </View>
+            </ThemedView>
 
             {/* Action Buttons */}
             <View style={{ flexDirection: "row", gap: 12, marginBottom: 32 }}>
@@ -500,8 +483,7 @@ export default function Home() {
                   borderRadius: 16,
                 }}
                 className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "flex-1 bg-primary h-12 flex-row gap-2 justify-center items-center rounded-2xl"
+                  "flex-1 bg-primary h-12 flex-row gap-2 justify-center items-center rounded-2xl",
                 )}
                 onPress={() => router.push("/generate-meal")}
               >
@@ -516,8 +498,7 @@ export default function Home() {
                   borderRadius: 16,
                 }}
                 className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "flex-1 bg-primary h-12 rounded-2xl flex-row gap-2 justify-center items-center"
+                  "flex-1 bg-primary h-12 rounded-2xl flex-row gap-2 justify-center items-center",
                 )}
                 onPress={() => router.push("/log-meals")}
               >
@@ -530,20 +511,17 @@ export default function Home() {
 
             {/* Previous Meals Section */}
             <View>
-              <Text
-                className={clsx(
-                  colorScheme === "dark" && "dark",
-                  "text-foreground font-bold text-xl mb-4"
-                )}
+              <ThemedText
+                className={clsx("text-foreground font-bold text-xl mb-4")}
               >
                 Previous Meals
-              </Text>
+              </ThemedText>
 
               {meals && meals.length === 0 ? (
                 <View
                   className={clsx(
                     colorScheme === "dark" && "dark",
-                    "border border-border bg-secondary rounded-xl py-8 items-center justify-center"
+                    "border border-border bg-secondary rounded-xl py-8 items-center justify-center",
                   )}
                 >
                   <MaterialCommunityIcons
@@ -551,23 +529,18 @@ export default function Home() {
                     size={32}
                     color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}
                   />
-                  <Text
-                    className={clsx(
-                      colorScheme === "dark" && "dark",
-                      "text-muted-foreground mt-2"
-                    )}
-                  >
+                  <ThemedText className={clsx("text-muted-foreground mt-2")}>
                     No Meals Logged
-                  </Text>
+                  </ThemedText>
                 </View>
               ) : (
                 <View style={{ gap: 12 }}>
                   {meals?.map((meal) => (
-                    <View
+                    <ThemedView
+                      color="secondary"
                       key={meal.id}
                       className={clsx(
-                        colorScheme === "dark" && "dark",
-                        "border border-border bg-secondary rounded-xl p-4"
+                        "rounded-xl p-4",
                       )}
                     >
                       <View
@@ -597,18 +570,17 @@ export default function Home() {
                           />
                         </View>
                         <View style={{ flex: 1 }}>
-                          <Text
+                          <ThemedText
                             className={clsx(
-                              colorScheme === "dark" && "dark",
-                              "text-foreground font-semibold"
+                              "text-foreground font-semibold",
                             )}
                           >
                             {meal.mealType}
-                          </Text>
+                          </ThemedText>
                           <Text
                             className={clsx(
                               colorScheme === "dark" && "dark",
-                              "text-muted-foreground text-sm"
+                              "text-muted-foreground text-sm",
                             )}
                           >
                             {meal.items.length} item
@@ -621,17 +593,17 @@ export default function Home() {
                           color={colorScheme === "dark" ? "#64748B" : "#94A3B8"}
                         />
                       </View>
-                    </View>
+                    </ThemedView>
                   ))}
-                  <Text
+                  <ThemedText
                     className={clsx(
                       colorScheme === "dark" && "dark",
-                      "text-muted-foreground self-center"
+                      "text-muted-foreground self-center",
                     )}
                     onPress={() => router.push("/meal-logs")}
                   >
                     View More
-                  </Text>
+                  </ThemedText>
                 </View>
               )}
             </View>

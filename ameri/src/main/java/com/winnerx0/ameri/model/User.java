@@ -47,9 +47,9 @@ public class User implements UserDetails {
 //    @Column(nullable = false)
     private LocalDate dateOfBirth;
 
-//    @JdbcTypeCode(SqlTypes.JSON)
-//    @Column(columnDefinition = "jsonb")
-    private List<String> healthConditions = new ArrayList<>();
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private JsonNode healthConditions;
 
     @Enumerated(EnumType.STRING)
     private Goal goal;

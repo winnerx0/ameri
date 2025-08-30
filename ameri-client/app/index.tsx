@@ -16,13 +16,13 @@ const Index = () => {
         console.log("token", token);
 
         if (currentScreen === "otp" && !token) {
-          setScreen({ path: "otp" });
+           router.replace("/(auth)");
         } else if (currentScreen === "otp" && token) {
-          setScreen({ path: "otp" });
+          router.replace("/(auth)");
         } else if (token) {
           router.replace("/(tabs)/home");
         } else {
-         router.replace("/login");
+         router.replace("/(auth)");
         }
       } catch (error) {
         console.log("Auth check error:", error);

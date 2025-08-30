@@ -4,12 +4,13 @@ import { useState } from "react";
 import { LoginRequest, LoginResponse } from "@/types";
 import axios, { isAxiosError } from "axios";
 import { BACKEND_URL } from "@/utils";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
+import { useTheme } from "@react-navigation/native";
 import { useScreen } from "@/utils/store";
+import { ThemedText } from "@/components/ThemedText";
 export default function LoginScreen() {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   const [data, setData] = useState<LoginRequest>({
     email: "",
@@ -57,45 +58,31 @@ export default function LoginScreen() {
     },
   });
   return (
-    <View className="flex flex-col gap-6 items-center">
-      <Text className="text-3xl font-bold text-foreground">Ameri</Text>
-      <Text className="italic text-foreground">
+    <View className="flex flex-col gap-6 items-center h-full justify-center">
+      <ThemedText className="text-3xl font-bold">Ameri</ThemedText>
+      <ThemedText className="italic text-foreground">
         Manage your health the right way
-      </Text>
+      </ThemedText>
       <View className="flex items-start gap-2">
-        <Text
-          style={{
-            color: colorScheme === "dark" ? "#ffffff" : "#000000",
-          }}
-        >
-          Email
-        </Text>
+        <ThemedText>Email</ThemedText>
         <TextInput
           placeholder="samuelmadison@gmail.com"
           keyboardType="email-address"
           style={{
-            color: colorScheme === "dark" ? "#ffffff" : "#000000",
+            color: colors.text,
           }}
-          placeholderTextColor={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px]"
           onChangeText={(email) => setData((prev) => ({ ...prev, email }))}
         />
       </View>
       <View className="flex items-start gap-2">
-        <Text
-          style={{
-            color: colorScheme === "dark" ? "#ffffff" : "#000000",
-          }}
-        >
-          Password
-        </Text>
+        <ThemedText>Password</ThemedText>
         <TextInput
           placeholder="samuel123@"
           keyboardType="visible-password"
           style={{
-            color: colorScheme === "dark" ? "#ffffff" : "#000000",
+            color: colors.text,
           }}
-          placeholderTextColor={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
           onChangeText={(password) =>
             setData((prev) => ({ ...prev, password }))
@@ -103,20 +90,13 @@ export default function LoginScreen() {
         />
       </View>
       <View className="flex items-start gap-2">
-        <Text
-          style={{
-            color: colorScheme === "dark" ? "#ffffff" : "#000000",
-          }}
-        >
-          Confirm Password
-        </Text>
+        <ThemedText>Confirm Password</ThemedText>
         <TextInput
           placeholder="samuel123@"
           keyboardType="visible-password"
           style={{
-            color: colorScheme === "dark" ? "#ffffff" : "#000000",
+            color: colors.text,
           }}
-          placeholderTextColor={colorScheme === "dark" ? "#9CA3AF" : "#6B7280"}
           className="border border-border rounded-2xl px-2 h-14 py-2 w-[350px] text-foreground"
           onChangeText={(confirmPassword) =>
             setData((prev) => ({ ...prev, confirmPassword }))
@@ -131,7 +111,10 @@ export default function LoginScreen() {
         <Text className="text-white">{isPending ? "Loading..." : "Login"}</Text>
       </TouchableOpacity>
       <View className="mt-4 flex flex-row items-center">
-        <Text className="text-foreground"> Don&apos;t have an account ? </Text>
+        <ThemedText className="text-foreground">
+          {" "}
+          Don&apos;t have an account ?{" "}
+        </ThemedText>
         <TouchableOpacity
           onPress={() => setScreen({ path: "register" })}
           className=""

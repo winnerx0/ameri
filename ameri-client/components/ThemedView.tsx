@@ -1,14 +1,40 @@
-import { View, type ViewProps } from 'react-native';
+import { View } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { ViewProps } from "react-native";
 
-import { useThemeColor } from '@/hooks/useThemeColor';
-
-export type ThemedViewProps = ViewProps & {
-  lightColor?: string;
-  darkColor?: string;
+type AppColors = {
+  primary: string;
+  secondary?: string;
+  background: string;
+  text: string;
+  border: string;
+  card: string;
 };
 
-export function ThemedView({ style, lightColor, darkColor, ...otherProps }: ThemedViewProps) {
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+type Colors = "primary" | "secondary" | "background" | "text" | "border" | "card"
+export function ThemedView({
+  className,
+  children,
+  color,
+  props,
+  border
+}: {
+  className?: string;
+  children?: React.ReactNode;
+  color?: Colors;
+  props?: ViewProps | object[];
+  border?: Colors;
+}) {
+  const { colors } = useTheme();
 
-  return <View style={[{ backgroundColor }, style]} {...otherProps} />;
+  const typedColors = colors as AppColors;
+  return (
+    <View
+      {...props}
+      className={className}
+      style={[{ backgroundColor: typedColors[color ?? "background"], borderColor: border ? typedColors[border] : typedColors.border}]}
+    >
+      {children}
+    </View>
+  );
 }
