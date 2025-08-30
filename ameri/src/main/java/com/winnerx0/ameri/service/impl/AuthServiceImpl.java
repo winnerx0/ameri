@@ -9,6 +9,7 @@ import java.util.Optional;
 import com.winnerx0.ameri.dto.request.RefreshTokenRequest;
 import com.winnerx0.ameri.dto.request.VerifyAccountRequest;
 import com.winnerx0.ameri.dto.response.TokenResponse;
+import com.winnerx0.ameri.enums.Role;
 import com.winnerx0.ameri.model.Otp;
 import com.winnerx0.ameri.repository.OtpRepository;
 import com.winnerx0.ameri.service.EmailService;
@@ -81,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         user.setGender(registerRequest.getGender());
         user.setEnabled(false);
         user.setHealthConditions(registerRequest.getHealthConditions());
-        user.setRole("ROLE_USER");
+        user.setRole(Role.USER);
         user.setGoal(registerRequest.getGoal());
 
         userRepository.save(user);

@@ -15,7 +15,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import Loading from "@/components/Loading";
 
-import { api, BACKEND_URL } from "@/utils";
+import { api, BACKEND_URL, dietaryOptions } from "@/utils";
 import { router } from "expo-router";
 import { Text } from "react-native";
 
@@ -39,88 +39,40 @@ const DietaryPreferences = () => {
     router.back();
   };
 
-  const dietaryOptions = {
-    restrictions: [
-      "Vegetarian",
-      "Vegan",
-      "Pescatarian",
-      "Gluten-Free",
-      "Dairy-Free",
-      "Keto",
-      "Paleo",
-      "Low-Carb",
-      "Low-Fat",
-      "Low-Sodium",
-      "Halal",
-      "Kosher",
-    ],
-    allergies: [
-      "Nuts",
-      "Peanuts",
-      "Shellfish",
-      "Fish",
-      "Eggs",
-      "Dairy",
-      "Soy",
-      "Wheat",
-      "Sesame",
-      "Sulfites",
-    ],
-    cuisines: [
-      "Italian",
-      "Mexican",
-      "Asian",
-      "Indian",
-      "Mediterranean",
-      "American",
-      "French",
-      "Thai",
-      "Japanese",
-      "Chinese",
-      "Greek",
-      "Lebanese",
-    ],
-    goals: [
-      "Weight Loss",
-      "Weight Gain",
-      "Muscle Building",
-      "Heart Health",
-      "Lower Cholesterol",
-      "Blood Sugar Control",
-      "Energy Boost",
-      "Better Digestion",
-    ],
-  };
-
   /* --- fetch current dietary preferences --- */
-  const { isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["user-dietary-preferences"],
     queryFn: async () => {
-      const res = await api.get(BACKEND_URL + "/user/me");
-      if (res.status !== 200)
-        throw new Error("Failed to fetch dietary preferences");
-      
-      const data = res.data.data || {
-        dietaryRestrictions: [],
-        allergies: [],
-        preferredCuisines: [],
-      };
-       console.log("data", data);
-      setFormData(data);
+      try {
+        const res = await api.get(BACKEND_URL + "/user/me", {
+          validateStatus: (status) => status === 200,
+        });
+        if (res.status !== 200)
+          throw new Error("Failed to fetch dietary preferences");
 
-     
-      return data;
+        const data = res.data.data.healthConditions || {
+          dietaryRestrictions: [],
+          allergies: [],
+        };
+
+        setFormData(data);
+
+        return data as typeof dietaryOptions;
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
+
+  console.log("data", formData);
 
   /* --- update dietary preferences mutation --- */
   const { mutate: updateDietaryPreferences, isPending } = useMutation({
     mutationKey: ["update-dietary-preferences"],
     mutationFn: async (data: DietaryData) => {
-      const res = await api.put(
-        BACKEND_URL + "/user/dietary-preferences",
-        data,
-      );
+      const res = await api.put(BACKEND_URL + "/user/me", {
+        healthConditions: data,
+      });
       if (res.status !== 200)
         throw new Error(res.data?.message || "Update failed");
       return res.data;
@@ -134,13 +86,11 @@ const DietaryPreferences = () => {
     onError: () =>
       Alert.alert(
         "Error",
-        "Could not update your preferences. Please try again.",
+        "Could not update your preferences. Please try again."
       ),
   });
 
   const toggleItem = (category: keyof DietaryData, item: string) => {
-    if (category === "notes") return;
-
     setFormData((prev) => ({
       ...prev,
       [category]: (prev[category] as string[]).includes(item)
@@ -191,8 +141,10 @@ const DietaryPreferences = () => {
             className="px-4 py-2 rounded-full border"
           >
             <Text
-              
-              className="text-sm font-medium text-white"
+              style={{
+                color: selected.includes(item) ? "white" : colors.text,
+              }}
+              className="text-white text-sm font-medium"
             >
               {item}
             </Text>
@@ -204,15 +156,7 @@ const DietaryPreferences = () => {
 
   if (isLoading) {
     return (
-      <SafeAreaProvider>
-        <SafeAreaView
-          style={{ backgroundColor: colors.background }}
-          className="flex-1 items-center justify-center"
-        >
-          <ActivityIndicator size="large" color={colors.primary} />
-          <ThemedText className="mt-4">Loading preferences...</ThemedText>
-        </SafeAreaView>
-      </SafeAreaProvider>
+      <Loading/>
     );
   }
 
@@ -266,21 +210,21 @@ const DietaryPreferences = () => {
               icon="alert-circle"
             />
 
-            <CategorySection
+            {/* <CategorySection
               title="Preferred Cuisines"
               items={dietaryOptions.cuisines}
               selected={formData.preferredCuisines}
               category="preferredCuisines"
               icon="earth"
-            />
+            /> */}
 
-            <CategorySection
+            {/* <CategorySection
               title="Health Goals"
               items={dietaryOptions.goals}
               selected={formData.healthGoals}
               category="healthGoals"
               icon="target"
-            />
+            /> */}
 
             {/* Additional Notes */}
             <ThemedView>
@@ -293,29 +237,6 @@ const DietaryPreferences = () => {
                 <ThemedText className="font-medium ml-2 text-sm uppercase tracking-wide opacity-70">
                   Additional Notes
                 </ThemedText>
-              </ThemedView>
-              <ThemedView className="relative">
-                <MaterialCommunityIcons
-                  name="pencil"
-                  size={18}
-                  color={colors.text}
-                  style={{ position: "absolute", left: 12, top: 13, zIndex: 1 }}
-                />
-                <TextInput
-                  placeholder="Any other dietary notes or preferences..."
-                  multiline
-                  numberOfLines={4}
-                  style={{
-                    color: colors.text,
-                    textAlignVertical: "top",
-                  }}
-                  placeholderTextColor={colors.text}
-                  className="border border-border rounded-xl px-3 pl-12 py-3 text-base h-28"
-                  value={formData.notes}
-                  onChangeText={(text) =>
-                    setFormData((prev) => ({ ...prev, notes: text }))
-                  }
-                />
               </ThemedView>
             </ThemedView>
           </ThemedView>
@@ -332,18 +253,12 @@ const DietaryPreferences = () => {
             onPress={handleSave}
             className="rounded-xl items-center justify-center h-14 shadow-lg"
           >
-            {isPending ? (
-              <ThemedView className="flex-row items-center">
-                <ActivityIndicator size="small" color="#fff" />
-                <ThemedText className="text-white font-bold text-lg ml-2">
-                  Saving...
-                </ThemedText>
-              </ThemedView>
-            ) : (
-              <ThemedText className="text-white font-bold text-lg">
-                Save Preferences
-              </ThemedText>
-            )}
+            <Text
+              className="text-white font-bold text-lg disabled:opacity-50"
+              disabled={isPending}
+            >
+              Save Preferences
+            </Text>
           </TouchableOpacity>
         </ThemedView>
       </SafeAreaView>

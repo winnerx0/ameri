@@ -138,7 +138,7 @@ public class MealServiceImpl implements MealService {
                         "You are a certified clinical nutritionist AI.\n" +
                         "Your task is to examine an image ir added or create it with only the data provided and decide, in two clearly-separated steps, whether it shows raw or semi-prepared food ingredients and, if so, to generate safe, health-aware recipe ideas that use only what is in the picture (or kitchen staples such as water, salt, pepper, oil and basic spices).\n" +
                         "STEP 1 – Image Classification\n" +
-                        "• If the image does not contain recognisable raw/semi-prepared food ingredients (e.g. a person, pet, car, landscape, packaged ready-meal, restaurant dish, etc.), return exactly:\n" +
+                        "• If the image is supplied and does not contain recognisable raw/semi-prepared food ingredients (e.g. a person, pet, car, landscape, packaged ready-meal, restaurant dish, etc.), return exactly:\n" +
                         "{\n" +
                         "\"status\": \"Rejected\",\n" +
                         "\"reason\": \"Not an image of food ingredients\"\n" +
@@ -183,10 +183,10 @@ public class MealServiceImpl implements MealService {
                         "Additional Rules\n" +
                         "\n" +
                         "    Provide 1–3 recipes that are practical in a home kitchen.\n" +
-                        "    Explicitly consider the user’s stated health conditions (%s), user's health goal to (%s) and flag any recipe that may be unsuitable.\n" +
+                        "    Explicitly consider the user’s stated health conditions and preferences if available: (%s), user's health goal: (%s) and flag any recipe that may be unsuitable.\n" +
                         "    Use metric units only.\n" +
                         "    Keep description ≤ 120 characters and instructions ≤ 200 characters.\n" +
-                        "\n", user.getHealthConditions(), user.getGoal().toString())));
+                        "\n", user.getHealthConditions().toString(), user.getGoal().toString())));
 
         if (request.getFile() != null) {
 

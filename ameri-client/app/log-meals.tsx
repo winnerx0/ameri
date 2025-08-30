@@ -21,6 +21,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Text } from "react-native";
+import MacroInput from "@/components/macro-input";
 
 /* Helper for an empty food item */
 const emptyFood = () => ({
@@ -78,37 +79,6 @@ const LogMeals = () => {
     onSuccess: () => router.back(),
     onError: (e) => console.log(e),
   });
-
-  const MacroInput = ({
-    placeholder,
-    value,
-    onChangeText,
-    icon,
-  }: {
-    placeholder: string;
-    value: number;
-    onChangeText: (value: string) => void;
-    icon: string;
-  }) => (
-    <ThemedView className="flex-1 relative">
-      <MaterialCommunityIcons
-        name={icon as any}
-        size={16}
-        color={colors.text}
-        style={{ position: "absolute", left: 12, top: 14, zIndex: 1 }}
-      />
-      <TextInput
-        placeholder={placeholder}
-        keyboardType="numeric"
-        placeholderTextColor={colors.text}
-        style={{ color: colors.text }}
-        className="border border-border rounded-xl px-3 pl-10 h-12"
-        value={value > 0 ? String(value) : ""}
-        onChangeText={onChangeText}
-        returnKeyType="done"
-      />
-    </ThemedView>
-  );
 
   return (
     <SafeAreaProvider>

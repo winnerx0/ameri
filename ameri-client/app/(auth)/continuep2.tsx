@@ -9,16 +9,14 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@react-navigation/native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 
-import { api, BACKEND_URL } from "@/utils";
+import { api, BACKEND_URL, dietaryOptions } from "@/utils";
 import { useRegisterStore, useScreen } from "@/utils/store";
-import Input from "@/components/text-input";
-import { AppColors } from "@/types";
 
 /* ---------- shape that ContinueP2 will now store ---------- */
 interface ContinueP2DietaryData {
@@ -32,49 +30,12 @@ const ContinueP2 = () => {
 
   const { setScreen } = useScreen();
 
-  const { registerData, updateField } = useRegisterStore();
+  const { registerData, updateField, setRegisterData } = useRegisterStore();
   /* ---------- local state ---------- */
   const [formData, setFormData] = useState<ContinueP2DietaryData>({
     dietaryRestrictions: [],
     allergies: [],
   });
-
-  const [isNavigationReady, setIsNavigationReady] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => setIsNavigationReady(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  /* ---------- static option lists ---------- */
-  const dietaryOptions = {
-    restrictions: [
-      "Vegetarian",
-      "Vegan",
-      "Pescatarian",
-      "Gluten-Free",
-      "Dairy-Free",
-      "Keto",
-      "Paleo",
-      "Low-Carb",
-      "Low-Fat",
-      "Low-Sodium",
-      "Halal",
-      "Kosher",
-    ],
-    allergies: [
-      "Nuts",
-      "Peanuts",
-      "Shellfish",
-      "Fish",
-      "Eggs",
-      "Dairy",
-      "Soy",
-      "Wheat",
-      "Sesame",
-      "Sulfites",
-    ],
-    goals: [],
-  };
 
   /* ---------- mutation to save ---------- */
   const { mutate: updateContinueP2Dietary, isPending } = useMutation({
@@ -116,7 +77,7 @@ const ContinueP2 = () => {
       };
   
       // Push this into registerData
-      updateField("healthConditions", updatedHealthConditions);
+      setRegisterData({ ...registerData, healthConditions: updatedHealthConditions });
   
       // Keep local form state in sync too
       return {

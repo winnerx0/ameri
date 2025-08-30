@@ -1,5 +1,6 @@
 package com.winnerx0.ameri.config;
 
+import com.winnerx0.ameri.enums.Role;
 import com.winnerx0.ameri.model.User;
 import com.winnerx0.ameri.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +57,7 @@ public class OauthConfig {
 
                 newUser.setEmail(user.getEmail());
                 newUser.setName(user.getName());
-                newUser.setRole("USER");
+                newUser.setRole(Role.USER);
                 newUser.setEnabled(true);
                 userRepository.save(newUser);
                 return newUser;

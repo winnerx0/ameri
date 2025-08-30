@@ -3,8 +3,8 @@ import axios from "axios";
 import { router } from "expo-router";
 import { decode } from "js-base64";
 
-export const BACKEND_URL = "https://c29cb5f36f09.ngrok-free.app/api/v1";
-// export const BACKEND_URL = "http://localhost:8080/api/v1";
+// export const BACKEND_URL = "https://c29cb5f36f09.ngrok-free.app/api/v1";
+export const BACKEND_URL = "http://localhost:8080/api/v1";
 // Create main API instance
 export const api = axios.create({
   baseURL: BACKEND_URL,
@@ -29,7 +29,7 @@ let lastFailedRefreshTime = 0;
 const clearAuthData = async () => {
   // await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
   refreshAttempts = 0;
-  router.replace("/(auth)")
+  router.replace("/(auth)");
 };
 
 const isTokenExpired = (token: string): boolean => {
@@ -39,7 +39,7 @@ const isTokenExpired = (token: string): boolean => {
     const payload = JSON.parse(json);
     const expTime = payload.exp * 1000;
     const refreshTime = expTime - 5 * 60 * 1000; // Refresh 5 minutes before expiry
-    
+
     return Date.now() >= refreshTime;
   } catch (error) {
     console.error("Error parsing token:", error);
@@ -57,8 +57,12 @@ const refreshAccessToken = async (): Promise<string> => {
   if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
     const timeSinceLastFailure = now - lastFailedRefreshTime;
     if (timeSinceLastFailure < REFRESH_COOLDOWN) {
-      const remainingTime = Math.ceil((REFRESH_COOLDOWN - timeSinceLastFailure) / 1000);
-      throw new Error(`Too many refresh attempts. Try again in ${remainingTime} seconds.`);
+      const remainingTime = Math.ceil(
+        (REFRESH_COOLDOWN - timeSinceLastFailure) / 1000
+      );
+      throw new Error(
+        `Too many refresh attempts. Try again in ${remainingTime} seconds.`
+      );
     } else {
       // Reset attempts after cooldown
       refreshAttempts = 0;
@@ -67,17 +71,19 @@ const refreshAccessToken = async (): Promise<string> => {
 
   isRefreshing = true;
   refreshAttempts++;
-  
+
   refreshPromise = new Promise(async (resolve, reject) => {
     try {
       const refreshToken = await AsyncStorage.getItem("refreshToken");
-      
+
       if (!refreshToken) {
         throw new Error("No refresh token available");
       }
 
-      console.log(`Token refresh attempt ${refreshAttempts}/${MAX_REFRESH_ATTEMPTS}`);
-      
+      console.log(
+        `Token refresh attempt ${refreshAttempts}/${MAX_REFRESH_ATTEMPTS}`
+      );
+
       const res = await authApi.post("/auth/refresh-token", {
         refreshToken,
       });
@@ -86,11 +92,16 @@ const refreshAccessToken = async (): Promise<string> => {
         const newAccessToken = res.data.accessToken;
         const newRefreshToken = res.data.refreshToken;
 
-        console.log("access token ", newAccessToken, "refresh token ", newRefreshToken)
-        
+        console.log(
+          "access token ",
+          newAccessToken,
+          "refresh token ",
+          newRefreshToken
+        );
+
         await AsyncStorage.setItem("accessToken", newAccessToken);
         await AsyncStorage.setItem("refreshToken", newRefreshToken);
-        
+
         // Reset attempts on successful refresh
         refreshAttempts = 0;
         console.log("Token refreshed successfully");
@@ -100,13 +111,13 @@ const refreshAccessToken = async (): Promise<string> => {
       }
     } catch (error) {
       console.error(`Token refresh attempt ${refreshAttempts} failed:`, error);
-      
+
       if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
         console.error("Max refresh attempts reached. Clearing auth data.");
         lastFailedRefreshTime = Date.now();
         await clearAuthData();
       }
-      
+
       reject(error);
     } finally {
       isRefreshing = false;
@@ -122,7 +133,7 @@ api.interceptors.request.use(
   async (config) => {
     try {
       let accessToken = await AsyncStorage.getItem("accessToken");
-      
+
       if (accessToken) {
         // Only refresh token in request interceptor if it's expired
         if (isTokenExpired(accessToken)) {
@@ -135,7 +146,7 @@ api.interceptors.request.use(
             accessToken = null;
           }
         }
-        
+
         if (accessToken) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
@@ -143,7 +154,7 @@ api.interceptors.request.use(
     } catch (error) {
       console.error("Error in request interceptor:", error);
     }
-    
+
     return config;
   },
   (error) => {
@@ -160,9 +171,11 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       console.warn("Received 401 error, clearing auth data");
       await clearAuthData();
-      return Promise.reject(new Error("Authentication failed. Please login again."));
+      return Promise.reject(
+        new Error("Authentication failed. Please login again.")
+      );
     }
-    
+
     return Promise.reject(error);
   }
 );
@@ -171,22 +184,24 @@ api.interceptors.response.use(
 export const checkAuthStatus = async () => {
   const accessToken = await AsyncStorage.getItem("accessToken");
   const refreshToken = await AsyncStorage.getItem("refreshToken");
-  
+
   if (!accessToken || !refreshToken) {
     return { isAuthenticated: false, needsLogin: true };
   }
-  
+
   if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
     const timeSinceLastFailure = Date.now() - lastFailedRefreshTime;
     if (timeSinceLastFailure < REFRESH_COOLDOWN) {
-      return { 
-        isAuthenticated: false, 
-        needsLogin: true, 
-        cooldownRemaining: Math.ceil((REFRESH_COOLDOWN - timeSinceLastFailure) / 1000)
+      return {
+        isAuthenticated: false,
+        needsLogin: true,
+        cooldownRemaining: Math.ceil(
+          (REFRESH_COOLDOWN - timeSinceLastFailure) / 1000
+        ),
       };
     }
   }
-  
+
   try {
     if (isTokenExpired(accessToken)) {
       return { isAuthenticated: false, canRefresh: true };
@@ -209,3 +224,32 @@ export const manualTokenRefresh = async (): Promise<boolean> => {
 };
 
 export default api;
+
+export const dietaryOptions = {
+  restrictions: [
+    "Vegetarian",
+    "Vegan",
+    "Pescatarian",
+    "Gluten-Free",
+    "Dairy-Free",
+    "Keto",
+    "Paleo",
+    "Low-Carb",
+    "Low-Fat",
+    "Low-Sodium",
+    "Halal",
+    "Kosher",
+  ],
+  allergies: [
+    "Nuts",
+    "Peanuts",
+    "Shellfish",
+    "Fish",
+    "Eggs",
+    "Dairy",
+    "Soy",
+    "Wheat",
+    "Sesame",
+    "Sulfites",
+  ],
+};

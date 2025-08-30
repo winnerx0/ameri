@@ -3,6 +3,7 @@ package com.winnerx0.ameri.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.winnerx0.ameri.enums.Gender;
 import com.winnerx0.ameri.enums.Goal;
+import com.winnerx0.ameri.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -14,7 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,7 +62,8 @@ public class User implements UserDetails {
 
     private boolean enabled;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
